@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.1",
+    "@symfony/stimulus-bridge": "^3.2.0",
+    "@symfony/ux-svelte": "file:vendor/symfony/ux-svelte/assets",
+    "svelte": "^5.0",
+    "vite-plugin-symfony": "^7.1.0"
+  }
+}

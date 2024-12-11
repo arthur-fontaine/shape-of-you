@@ -4,18 +4,23 @@ tasks:
   dev:
     deps:
       - symfony-dev
-      - start-dev-deps
+      - start-docker-dev
+      - start-vite-dev
 
   test:
     deps:
-      - start-dev-deps
+      - start-docker-dev
       - run-tests
 
   symfony-dev:
     cmds:
       - symfony local:server:start
 
-  start-dev-deps:
+  start-vite-dev:
+    cmds:
+      - npm run dev
+
+  start-docker-dev:
     cmds:
       - docker compose -f docker-compose.dev.yml up -d --wait
 
