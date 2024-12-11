@@ -13,6 +13,12 @@ To get started, you need to have the following tools installed on your machine:
 
 Also, copy the `.env.example` file to `.env` and fill in the necessary environment variables.
 
+Install the project dependencies.
+
+```bash
+composer install
+```
+
 ## Development
 
 ```bash

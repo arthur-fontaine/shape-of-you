@@ -17,7 +17,7 @@ tasks:
 
   start-dev-deps:
     cmds:
-      - docker-compose -f docker-compose.dev.yml up -d --wait
+      - docker compose -f docker-compose.dev.yml up -d --wait
 
   run-tests:
     cmds:
