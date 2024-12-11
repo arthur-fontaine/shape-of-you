@@ -6,10 +6,19 @@ tasks:
       - symfony-dev
       - start-dev-deps
 
+  test:
+    deps:
+      - start-dev-deps
+      - run-tests
+
   symfony-dev:
     cmds:
       - symfony local:server:start
 
   start-dev-deps:
     cmds:
-      - docker-compose -f docker-compose.dev.yml up -d
+      - docker-compose -f docker-compose.dev.yml up -d --wait
+
+  run-tests:
+    cmds:
+      - php bin/phpunit
