@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  dev:
+    deps:
+      - symfony-dev
+      - start-dev-deps
+
+  symfony-dev:
+    cmds:
+      - symfony local:server:start
+
+  start-dev-deps:
+    cmds:
+      - docker-compose -f docker-compose.dev.yml up -d
