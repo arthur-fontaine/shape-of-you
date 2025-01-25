@@ -51,6 +51,9 @@ class Clothing
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'featuredClothings')]
     private Collection $postsFeaturedOn;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $imageUrl = null;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
@@ -206,6 +209,18 @@ class Clothing
         if ($this->postsFeaturedOn->removeElement($postsFeaturedOn)) {
             $postsFeaturedOn->removeFeaturedClothing($this);
         }
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): static
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
