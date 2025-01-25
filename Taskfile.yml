@@ -22,7 +22,7 @@ tasks:
 
   start-docker-dev:
     cmds:
-      - docker compose -f docker-compose.dev.yml up -d --wait
+      - docker compose up -d --wait
 
   run-tests:
     cmds:

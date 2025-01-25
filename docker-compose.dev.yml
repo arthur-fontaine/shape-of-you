@@ -1,5 +1,0 @@
-services:
-  database:
-    image: postgres:17
-    env_file:
-      - .env
