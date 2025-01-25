@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\ClothingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,6 +32,17 @@ class Clothing
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $ecologyRate5 = null;
+
+    /**
+     * @var Collection<int, ClothingLink>
+     */
+    #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', orphanRemoval: true)]
+    private Collection $links;
+
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +108,36 @@ class Clothing
     public function setEcologyRate5(?int $ecologyRate5): static
     {
         $this->ecologyRate5 = $ecologyRate5;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ClothingLink>
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(ClothingLink $link): static
+    {
+        if (!$this->links->contains($link)) {
+            $this->links->add($link);
+            $link->setClothing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLink(ClothingLink $link): static
+    {
+        if ($this->links->removeElement($link)) {
+            // set the owning side to null (unless already changed)
+            if ($link->getClothing() === $this) {
+                $link->setClothing(null);
+            }
+        }
 
         return $this;
     }
