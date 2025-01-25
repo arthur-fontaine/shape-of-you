@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -88,12 +89,20 @@ class User
     #[ORM\OneToMany(targetEntity: PostRate::class, mappedBy: 'rater', orphanRemoval: true)]
     private Collection $postRates;
 
+    /**
+     * @var Collection<int, self>
+     */
+    #[JoinTable(name: 'user_friend')]
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'friends')]
+    private Collection $friends;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
         $this->dressing = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->postRates = new ArrayCollection();
+        $this->friends = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -366,6 +375,30 @@ class User
                 $postRate->setRater(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
+    }
+
+    public function addFriend(self $friend): static
+    {
+        if (!$this->friends->contains($friend)) {
+            $this->friends->add($friend);
+        }
+
+        return $this;
+    }
+
+    public function removeFriend(self $friend): static
+    {
+        $this->friends->removeElement($friend);
 
         return $this;
     }
