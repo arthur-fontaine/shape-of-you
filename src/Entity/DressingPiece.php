@@ -24,6 +24,10 @@ class DressingPiece
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
+    #[ORM\ManyToOne(inversedBy: 'dressingPieces')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Clothing $clothing = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +65,18 @@ class DressingPiece
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getClothing(): ?Clothing
+    {
+        return $this->clothing;
+    }
+
+    public function setClothing(?Clothing $clothing): static
+    {
+        $this->clothing = $clothing;
 
         return $this;
     }

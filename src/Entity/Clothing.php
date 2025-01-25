@@ -54,11 +54,18 @@ class Clothing
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $imageUrl = null;
 
+    /**
+     * @var Collection<int, DressingPiece>
+     */
+    #[ORM\OneToMany(targetEntity: DressingPiece::class, mappedBy: 'clothing')]
+    private Collection $dressingPieces;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
         $this->clothingLists = new ArrayCollection();
         $this->postsFeaturedOn = new ArrayCollection();
+        $this->dressingPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +228,36 @@ class Clothing
     public function setImageUrl(?string $imageUrl): static
     {
         $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DressingPiece>
+     */
+    public function getDressingPieces(): Collection
+    {
+        return $this->dressingPieces;
+    }
+
+    public function addDressingPiece(DressingPiece $dressingPiece): static
+    {
+        if (!$this->dressingPieces->contains($dressingPiece)) {
+            $this->dressingPieces->add($dressingPiece);
+            $dressingPiece->setClothing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDressingPiece(DressingPiece $dressingPiece): static
+    {
+        if ($this->dressingPieces->removeElement($dressingPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($dressingPiece->getClothing() === $this) {
+                $dressingPiece->setClothing(null);
+            }
+        }
 
         return $this;
     }
