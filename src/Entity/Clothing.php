@@ -39,9 +39,16 @@ class Clothing
     #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', orphanRemoval: true)]
     private Collection $links;
 
+    /**
+     * @var Collection<int, ClothingList>
+     */
+    #[ORM\ManyToMany(targetEntity: ClothingList::class, mappedBy: 'clothings')]
+    private Collection $clothingLists;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
+        $this->clothingLists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,6 +144,33 @@ class Clothing
             if ($link->getClothing() === $this) {
                 $link->setClothing(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ClothingList>
+     */
+    public function getClothingLists(): Collection
+    {
+        return $this->clothingLists;
+    }
+
+    public function addClothingList(ClothingList $clothingList): static
+    {
+        if (!$this->clothingLists->contains($clothingList)) {
+            $this->clothingLists->add($clothingList);
+            $clothingList->addClothing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClothingList(ClothingList $clothingList): static
+    {
+        if ($this->clothingLists->removeElement($clothingList)) {
+            $clothingList->removeClothing($this);
         }
 
         return $this;

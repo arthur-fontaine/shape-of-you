@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -61,6 +63,17 @@ class User
         generated: "ALWAYS",
     )]
     private ?bool $hasFinishedOnboarding = null;
+
+    /**
+     * @var Collection<int, ClothingList>
+     */
+    #[ORM\OneToMany(targetEntity: ClothingList::class, mappedBy: 'creator', orphanRemoval: true)]
+    private Collection $clothingLists;
+
+    public function __construct()
+    {
+        $this->clothingLists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -214,5 +227,35 @@ class User
     public function hasFinishedOnboarding(): ?bool
     {
         return $this->hasFinishedOnboarding;
+    }
+
+    /**
+     * @return Collection<int, ClothingList>
+     */
+    public function getClothingLists(): Collection
+    {
+        return $this->clothingLists;
+    }
+
+    public function addClothingList(ClothingList $clothingList): static
+    {
+        if (!$this->clothingLists->contains($clothingList)) {
+            $this->clothingLists->add($clothingList);
+            $clothingList->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClothingList(ClothingList $clothingList): static
+    {
+        if ($this->clothingLists->removeElement($clothingList)) {
+            // set the owning side to null (unless already changed)
+            if ($clothingList->getCreator() === $this) {
+                $clothingList->setCreator(null);
+            }
+        }
+
+        return $this;
     }
 }
