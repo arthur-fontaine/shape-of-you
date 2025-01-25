@@ -41,9 +41,16 @@ class Post
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $modifiedAt = null;
 
+    /**
+     * @var Collection<int, PostRate>
+     */
+    #[ORM\OneToMany(targetEntity: PostRate::class, mappedBy: 'post', orphanRemoval: true)]
+    private Collection $rates;
+
     public function __construct()
     {
         $this->featuredClothings = new ArrayCollection();
+        $this->rates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,6 +138,36 @@ class Post
     public function setModifiedAt(?\DateTimeImmutable $modifiedAt): static
     {
         $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostRate>
+     */
+    public function getRates(): Collection
+    {
+        return $this->rates;
+    }
+
+    public function addRate(PostRate $rate): static
+    {
+        if (!$this->rates->contains($rate)) {
+            $this->rates->add($rate);
+            $rate->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRate(PostRate $rate): static
+    {
+        if ($this->rates->removeElement($rate)) {
+            // set the owning side to null (unless already changed)
+            if ($rate->getPost() === $this) {
+                $rate->setPost(null);
+            }
+        }
 
         return $this;
     }

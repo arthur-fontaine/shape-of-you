@@ -82,11 +82,18 @@ class User
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $posts;
 
+    /**
+     * @var Collection<int, PostRate>
+     */
+    #[ORM\OneToMany(targetEntity: PostRate::class, mappedBy: 'rater', orphanRemoval: true)]
+    private Collection $postRates;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
         $this->dressing = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->postRates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -327,6 +334,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($post->getAuthor() === $this) {
                 $post->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostRate>
+     */
+    public function getPostRates(): Collection
+    {
+        return $this->postRates;
+    }
+
+    public function addPostRate(PostRate $postRate): static
+    {
+        if (!$this->postRates->contains($postRate)) {
+            $this->postRates->add($postRate);
+            $postRate->setRater($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostRate(PostRate $postRate): static
+    {
+        if ($this->postRates->removeElement($postRate)) {
+            // set the owning side to null (unless already changed)
+            if ($postRate->getRater() === $this) {
+                $postRate->setRater(null);
             }
         }
 
