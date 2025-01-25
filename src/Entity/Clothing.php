@@ -45,10 +45,17 @@ class Clothing
     #[ORM\ManyToMany(targetEntity: ClothingList::class, mappedBy: 'clothings')]
     private Collection $clothingLists;
 
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'featuredClothings')]
+    private Collection $postsFeaturedOn;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
         $this->clothingLists = new ArrayCollection();
+        $this->postsFeaturedOn = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +178,33 @@ class Clothing
     {
         if ($this->clothingLists->removeElement($clothingList)) {
             $clothingList->removeClothing($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPostsFeaturedOn(): Collection
+    {
+        return $this->postsFeaturedOn;
+    }
+
+    public function addPostsFeaturedOn(Post $postsFeaturedOn): static
+    {
+        if (!$this->postsFeaturedOn->contains($postsFeaturedOn)) {
+            $this->postsFeaturedOn->add($postsFeaturedOn);
+            $postsFeaturedOn->addFeaturedClothing($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostsFeaturedOn(Post $postsFeaturedOn): static
+    {
+        if ($this->postsFeaturedOn->removeElement($postsFeaturedOn)) {
+            $postsFeaturedOn->removeFeaturedClothing($this);
         }
 
         return $this;
