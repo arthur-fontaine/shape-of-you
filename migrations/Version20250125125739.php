@@ -11,7 +11,7 @@ final class Version20250125125739 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Create clothing_list and clothing_list_clothing tables';
     }
 
     public function up(Schema $schema): void

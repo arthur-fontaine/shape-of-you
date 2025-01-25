@@ -70,9 +70,16 @@ class User
     #[ORM\OneToMany(targetEntity: ClothingList::class, mappedBy: 'creator', orphanRemoval: true)]
     private Collection $clothingLists;
 
+    /**
+     * @var Collection<int, DressingPiece>
+     */
+    #[ORM\OneToMany(targetEntity: DressingPiece::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $dressing;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
+        $this->dressing = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -253,6 +260,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($clothingList->getCreator() === $this) {
                 $clothingList->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DressingPiece>
+     */
+    public function getDressing(): Collection
+    {
+        return $this->dressing;
+    }
+
+    public function addDressing(DressingPiece $dressing): static
+    {
+        if (!$this->dressing->contains($dressing)) {
+            $this->dressing->add($dressing);
+            $dressing->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDressing(DressingPiece $dressing): static
+    {
+        if ($this->dressing->removeElement($dressing)) {
+            // set the owning side to null (unless already changed)
+            if ($dressing->getOwner() === $this) {
+                $dressing->setOwner(null);
             }
         }
 
