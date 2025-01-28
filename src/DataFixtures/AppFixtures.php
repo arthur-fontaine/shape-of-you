@@ -22,7 +22,6 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
-        $this->loadAdminNotifications($manager);
         $this->loadClothing($manager);
         $this->loadClothingLinks($manager);
         $this->loadClothingLists($manager);
@@ -32,6 +31,11 @@ class AppFixtures extends Fixture
         $this->loadPosts($manager);
         $this->loadPostRates($manager);
         $this->loadUserFriends($manager);
+
+        $manager->flush();
+
+        // This must be done after the flush because it depends on the users being persisted
+        $this->loadAdminNotifications($manager);
 
         $manager->flush();
     }
