@@ -60,6 +60,9 @@ class Clothing
     #[ORM\OneToMany(targetEntity: DressingPiece::class, mappedBy: 'clothing')]
     private Collection $dressingPieces;
 
+    #[ORM\Column(length: 100)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
@@ -258,6 +261,18 @@ class Clothing
                 $dressingPiece->setClothing(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
