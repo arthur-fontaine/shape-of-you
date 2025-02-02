@@ -419,7 +419,7 @@ class User implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
+        return $this->email;
     }
 
     public function setRoles(array $roles): static
