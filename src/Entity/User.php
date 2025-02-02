@@ -8,10 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinTable;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,6 +96,9 @@ class User
     #[JoinTable(name: 'user_friend')]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'friends')]
     private Collection $friends;
+
+    #[ORM\Column]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -399,6 +403,28 @@ class User
     public function removeFriend(self $friend): static
     {
         $this->friends->removeElement($friend);
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
