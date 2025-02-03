@@ -16,8 +16,10 @@ use App\Entity\PostRate;
 use App\Entity\User;
 use App\Enum\ClothingType;
 use App\Enum\Color;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements UserPasswordHasherInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -56,7 +58,7 @@ class AppFixtures extends Fixture
             $user->setLegMeasurementCm(rand(70, 100));
             $user->setFootMeasurementCm(rand(20, 30));
             $user->setFake(false);
-            $user->setPassword('password');
+            $user->setPassword($this->hashPassword($user, 'password'));
             $user->setRoles(['ROLE_USER']);
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
@@ -221,5 +223,20 @@ class AppFixtures extends Fixture
             }
             $manager->persist($user);
         }
+    }
+
+    public function hashPassword(PasswordAuthenticatedUserInterface $user, #[\SensitiveParameter] string $plainPassword): string
+    {
+        return password_hash($plainPassword, PASSWORD_DEFAULT);
+    }
+
+    public function isPasswordValid(PasswordAuthenticatedUserInterface $user, #[\SensitiveParameter] string $plainPassword): bool
+    {
+        return password_verify($plainPassword, $user->getPassword());
+    }
+
+    public function needsRehash(PasswordAuthenticatedUserInterface $user): bool
+    {
+        return false;
     }
 }
