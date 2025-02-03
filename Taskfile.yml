@@ -14,7 +14,7 @@ tasks:
 
   symfony-dev:
     cmds:
-      - symfony local:server:start
+      - symfony server:start
 
   start-vite-dev:
     cmds:
