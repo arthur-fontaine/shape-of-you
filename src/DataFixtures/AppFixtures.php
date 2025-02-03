@@ -56,6 +56,7 @@ class AppFixtures extends Fixture
             $user->setLegMeasurementCm(rand(70, 100));
             $user->setFootMeasurementCm(rand(20, 30));
             $user->setFake(false);
+            $user->setPassword('password');
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
         }
