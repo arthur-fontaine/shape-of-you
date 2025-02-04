@@ -13,48 +13,24 @@
     }
 </script>
 
-<style>
-    .navbar {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #fff;
-        border-top: 1px solid #ddd;
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 0;
-    }
-
-    .post {
-        margin-bottom: 20px;
-    }
-
-    .post img {
-        width: 100%;
-        height: auto;
-    }
-
-    .like-btn {
-        background: none;
-        border: none;
-        color: #ff0000;
-        cursor: pointer;
-    }
-</style>
-
-<div class="posts">
+<div class="space-y-4 p-4">
     {#each posts as post}
-        <div class="post">
-            <h3>{post.user}</h3>
-            <img src={post.image} alt="Post image">
-            <button class="like-btn" on:click={() => likePost(post.id)}>❤️ {post.likes}</button>
+        <div class="mb-3 bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="p-4">
+                <h3 class="text-lg font-semibold">{post.user}</h3>
+            </div>
+            <img src={post.image} alt="Post image" class="w-full h-auto">
+            <div class="p-4 flex items-center justify-between">
+                <button class="bg-none border-none text-red-500 cursor-pointer" on:click={() => likePost(post.id)}>❤️ {post.likes}</button>
+            </div>
         </div>
     {/each}
 </div>
 
-<div class="navbar">
-    <a href="/home">Home</a>
-    <a href="/home">Search</a>
-    <a href="/home">Reels</a>
-    <a href="/home">Profile</a>
+
+<div class="fixed bottom-0 w-full bg-white border-t border-gray-200 flex justify-around py-2">
+    <a href="/home" class="text-gray-600 hover:text-gray-800">Home</a>
+    <a href="/home" class="text-gray-600 hover:text-gray-800">Search</a>
+    <a href="/home" class="text-gray-600 hover:text-gray-800">Reels</a>
+    <a href="/home" class="text-gray-600 hover:text-gray-800">Profile</a>
 </div>
