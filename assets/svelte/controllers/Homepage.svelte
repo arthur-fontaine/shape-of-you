@@ -53,9 +53,9 @@
 </div>
 
 <div class="navbar">
-    <a href="/">Home</a>
-    <a href="/search">Search</a>
-    <a href="/reels">Reels</a>
-    <a href="/activity">Activity</a>
-    <a href="/profile">Profile</a>
+    <a href="/home">Home</a>
+    <a href="/home">Search</a>
+    <a href="/home">Reels</a>
+    <a href="/home">Activity</a>
+    <a href="/home">Profile</a>
 </div>
