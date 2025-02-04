@@ -18,13 +18,9 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('login/login.html.twig', [
-            'svelte_component' => 'Security',
-            'props' => [
-                'error' => $error ? $error->getMessageKey() : '',
-                'lastUsername' => $lastUsername,
-                'csrf_token' => $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue(),
-            ],
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
         ]);
     }
 
