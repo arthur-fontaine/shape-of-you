@@ -60,6 +60,7 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
             $user->setFake(false);
             $user->setPassword($this->hashPassword($user, 'password'));
             $user->setRoles(['ROLE_USER']);
+            $user->setIsVerified(true);
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
         }

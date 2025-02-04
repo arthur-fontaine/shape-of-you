@@ -35,6 +35,20 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
 
             // encode the plain password
+            $user->setName('User 11');
+            $user->setEmail('user11@example.com');
+            $user->setEnabled(true);
+            $user->setWeightKg(rand(60, 100));
+            $user->setSizeCm(rand(150, 200));
+            $user->setHipMeasurementCm(rand(80, 120));
+            $user->setChestMeasurementCm(rand(80, 120));
+            $user->setWaistMeasurementCm(rand(60, 100));
+            $user->setArmMeasurementCm(rand(50, 70));
+            $user->setLegMeasurementCm(rand(70, 100));
+            $user->setFootMeasurementCm(rand(20, 30));
+            $user->setFake(false);
+            $user->setRoles(['ROLE_USER']);
+            $user->setIsVerified(true);
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $entityManager->persist($user);
