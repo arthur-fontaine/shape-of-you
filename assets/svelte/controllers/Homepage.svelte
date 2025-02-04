@@ -56,6 +56,5 @@
     <a href="/home">Home</a>
     <a href="/home">Search</a>
     <a href="/home">Reels</a>
-    <a href="/home">Activity</a>
     <a href="/home">Profile</a>
 </div>
