@@ -1,7 +1,7 @@
 <script lang="ts">
     let posts = [
-        { id: 1, user: 'user1', image: 'image1.jpg', likes: 0 },
-        { id: 2, user: 'user2', image: 'image2.jpg', likes: 0 },
+        { id: 1, user: 'user1', image: './image/image1.webp', likes: 0 },
+        { id: 2, user: 'user2', image: './image/image1.webp', likes: 0 },
         // Add more posts as needed
     ];
 
