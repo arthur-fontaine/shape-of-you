@@ -31,25 +31,35 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+            $name = $form->get('name')->getData();
+            $email = $form->get('email')->getData();
+            $weightKg = $form->get('weightKg')->getData();
+            $sizeCm = $form->get('sizeCm')->getData();
+            $hipMeasurementCm = $form->get('hipMeasurementCm')->getData();
+            $chestMeasurementCm = $form->get('chestMeasurementCm')->getData();
+            $waistMeasurementCm = $form->get('waistMeasurementCm')->getData();
+            $armMeasurementCm = $form->get('armMeasurementCm')->getData();
+            $legMeasurementCm = $form->get('legMeasurementCm')->getData();
+            $footMeasurementCm = $form->get('footMeasurementCm')->getData();
 
-            // encode the plain password
-            $user->setName('User 11');
-            $user->setEmail('user11@example.com');
+
+            $user->setName($name);
+            $user->setEmail($email);
+            $user->setWeightKg($weightKg);
+            $user->setSizeCm($sizeCm);
+            $user->setHipMeasurementCm($hipMeasurementCm);
+            $user->setChestMeasurementCm($chestMeasurementCm);
+            $user->setWaistMeasurementCm($waistMeasurementCm);
+            $user->setArmMeasurementCm($armMeasurementCm);
+            $user->setLegMeasurementCm($legMeasurementCm);
+            $user->setFootMeasurementCm($footMeasurementCm);
+            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             $user->setEnabled(true);
-            $user->setWeightKg(rand(60, 100));
-            $user->setSizeCm(rand(150, 200));
-            $user->setHipMeasurementCm(rand(80, 120));
-            $user->setChestMeasurementCm(rand(80, 120));
-            $user->setWaistMeasurementCm(rand(60, 100));
-            $user->setArmMeasurementCm(rand(50, 70));
-            $user->setLegMeasurementCm(rand(70, 100));
-            $user->setFootMeasurementCm(rand(20, 30));
             $user->setFake(false);
             $user->setRoles(['ROLE_USER']);
             $user->setIsVerified(true);
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
 
             $entityManager->persist($user);
             $entityManager->flush();

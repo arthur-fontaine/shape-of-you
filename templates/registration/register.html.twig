@@ -13,11 +13,36 @@
 
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.name, {
+            label: 'name'
+        }) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
+        {{ form_row(registrationForm.weightKg, {
+            label: 'weight (Kg)'
+        }) }}
+        {{ form_row(registrationForm.sizeCm, {
+            label: 'size (cm)'
+        }) }}
+        {{ form_row(registrationForm.hipMeasurementCm, {
+            label: 'hip (cm)'
+        }) }}
+        {{ form_row(registrationForm.chestMeasurementCm, {
+            label: 'chest (cm)'
+        }) }}
+        {{ form_row(registrationForm.waistMeasurementCm, {
+            label: 'waist (cm)'
+        }) }}
+        {{ form_row(registrationForm.armMeasurementCm, {
+            label: 'arm (cm)'
+        }) }}
+        {{ form_row(registrationForm.legMeasurementCm, {
+            label: 'leg (cm)'
+        }) }}
+        {{ form_row(registrationForm.footMeasurementCm, {
+            label: 'foot (cm)'
+        }) }}
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}
