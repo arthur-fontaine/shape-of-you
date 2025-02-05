@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 
 import symfonyPlugin from 'vite-plugin-symfony';
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+import tailwindcss from '@tailwindcss/vite'
+
 
 export default defineConfig({
   plugins: [
@@ -9,6 +11,7 @@ export default defineConfig({
     symfonyPlugin({
       stimulus: true
     }),
+    tailwindcss(),
   ],
   build: {
     rollupOptions: {

@@ -10,11 +10,12 @@ tasks:
   test:
     cmds:
       - task start-docker-dev
+      - task migrate -- --env=test --force
       - task run-tests
 
   symfony-dev:
     cmds:
-      - symfony local:server:start
+      - symfony server:start
 
   start-vite-dev:
     cmds:
@@ -27,3 +28,7 @@ tasks:
   run-tests:
     cmds:
       - php bin/phpunit
+
+  migrate:
+    cmds:
+      - yes | php bin/console doctrine:schema:update {{.CLI_ARGS}}
