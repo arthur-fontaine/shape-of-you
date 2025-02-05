@@ -8,9 +8,9 @@ tasks:
       - start-vite-dev
 
   test:
-    deps:
-      - start-docker-dev
-      - run-tests
+    cmds:
+      - task start-docker-dev
+      - task run-tests
 
   symfony-dev:
     cmds:
