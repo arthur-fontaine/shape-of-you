@@ -10,7 +10,7 @@ tasks:
   test:
     cmds:
       - task start-docker-dev
-      - task migrate
+      - task migrate -- --env=test --force
       - task run-tests
 
   symfony-dev:
@@ -31,4 +31,4 @@ tasks:
 
   migrate:
     cmds:
-      - yes | php bin/console doctrine:migrations:migrate --env=test
+      - yes | php bin/console doctrine:schema:update {{.CLI_ARGS}}
