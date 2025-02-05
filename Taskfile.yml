@@ -10,6 +10,7 @@ tasks:
   test:
     cmds:
       - task start-docker-dev
+      - task migrate
       - task run-tests
 
   symfony-dev:
@@ -27,3 +28,7 @@ tasks:
   run-tests:
     cmds:
       - php bin/phpunit
+
+  migrate:
+    cmds:
+      - yes | symfony console doctrine:migrations:migrate
