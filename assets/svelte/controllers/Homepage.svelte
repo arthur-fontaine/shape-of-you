@@ -5,7 +5,7 @@
         // Add more posts as needed
     ];
 
-    function likePost(postId) {
+    function likePost(postId: number) {
         const post = posts.find(p => p.id === postId);
         if (post) {
             post.likes += 1;
@@ -25,12 +25,4 @@
             </div>
         </div>
     {/each}
-</div>
-
-
-<div class="fixed bottom-0 w-full bg-white border-t border-gray-200 flex justify-around py-2">
-    <a href="/home" class="text-gray-600 hover:text-gray-800">Home</a>
-    <a href="/home" class="text-gray-600 hover:text-gray-800">Search</a>
-    <a href="/home" class="text-gray-600 hover:text-gray-800">Reels</a>
-    <a href="/home" class="text-gray-600 hover:text-gray-800">Profile</a>
 </div>
