@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@source '../../templates/**/*.twig';
+
+@layer components {
+  .spinner {
+    &::before {
+      content: "";
+      display: block;
+      width: 1em;
+      height: 1em;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spinner 500ms linear infinite;
+    }
+  }
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
