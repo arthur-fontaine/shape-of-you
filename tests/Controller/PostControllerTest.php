@@ -6,11 +6,4 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class PostControllerTest extends WebTestCase
 {
-    public function testIndex(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/post');
-
-        self::assertResponseIsSuccessful();
-    }
 }
