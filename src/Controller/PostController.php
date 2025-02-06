@@ -33,7 +33,7 @@ final class PostController extends AbstractController
     public function createNewPost(Request $request): Response
     {
         $form = $this->createForm(NewPostFormType::class);
-        $form->handleRequest($request);
+        $form->submit(array_merge($request->request->all(), $request->files->all()));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $filename = $this->mediaRepository->upload($form->get('image')->getData());
