@@ -23,17 +23,15 @@ final class PostController extends AbstractController
         $this->postRepository = $postRepository;
     }
 
-    #[Route('/posts/new', name: 'app_post_new', methods: ['GET', 'POST'])]
-    public function index(Request $request): Response
+    #[Route('/posts/new', name: 'app_post_new', methods: ['GET'], requirements: ['_format' => 'html'])]
+    public function renderNewPostPage(Request $request): Response
     {
-        if ($request->isMethod('GET')) {
-            return $this->render('posts/new.html.twig', [
-                'controller_name' => 'PostController',
-            ]);
-        }
+        return $this->render('posts/new.html.twig');
+    }
 
-        // Handle the submit of the form to create a new post
-
+    #[Route('/posts/new', name: 'api_post_new', methods: ['POST'], requirements: ['_format' => 'json'])]
+    public function createNewPost(Request $request): Response
+    {
         $form = $this->createForm(NewPostFormType::class);
         $form->handleRequest($request);
 
@@ -42,7 +40,7 @@ final class PostController extends AbstractController
 
             $this->postRepository->create($this->getUser(), $form->get('text')->getData(), [$filename]);
 
-            return new JsonResponse();
+            return new Response();
         }
 
         throw new BadRequestHttpException($form->getErrors(true, false));
