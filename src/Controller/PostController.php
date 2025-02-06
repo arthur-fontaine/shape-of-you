@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Form\NewPostFormType;
 use App\Repository\MediaRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -32,17 +30,21 @@ final class PostController extends AbstractController
     #[Route('/posts/new', name: 'api_post_new', methods: ['POST'], requirements: ['_format' => 'json'])]
     public function createNewPost(Request $request): Response
     {
-        $form = $this->createForm(NewPostFormType::class);
-        $form->submit(array_merge($request->request->all(), $request->files->all()));
+        $data = array_merge($request->request->all(), $request->files->all());
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $filename = $this->mediaRepository->upload($form->get('image')->getData());
-
-            $this->postRepository->create($this->getUser(), $form->get('text')->getData(), [$filename]);
-
-            return new Response();
+        if (!isset($data['text']) || !isset($data['image'])) {
+            throw new BadRequestHttpException('Missing required parameters');
         }
 
-        throw new BadRequestHttpException($form->getErrors(true, false));
+        $image = is_array($data['image'])
+            ? $data['image'][0]
+            : $data['image'];
+        $filename = strpos($image->getContent(), 'data:image/') === 0
+            ? $this->mediaRepository->uploadBase64($image->getContent())
+            : $this->mediaRepository->upload($image);
+
+        $this->postRepository->create($this->getUser(), $data['text'], [$filename]);
+
+        return new Response();
     }
 }

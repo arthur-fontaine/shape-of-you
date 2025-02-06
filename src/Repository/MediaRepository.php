@@ -11,6 +11,9 @@ class MediaRepository
   public function __construct(string $path)
   {
     $this->path = $path;
+    if (!is_dir($this->path)) {
+      mkdir($this->path, 0777, true);
+    }
   }
 
   public function uploadBase64(string $base64): string
