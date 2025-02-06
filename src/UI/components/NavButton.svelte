@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Search from "../../../icons/search.svg";
-  import Menu from "../../../icons/menu.svg";
-  import Plus from "../../../icons/plus.svg";
-  import Profile from "../../../icons/profile.svg";
+  import Search from "../assets/icons/search.svg";
+  import Menu from "../assets/icons/menu.svg";
+  import Plus from "../assets/icons/plus.svg";
+  import Profile from "../assets/icons/profile.svg";
   import { onMount } from "svelte";
 
   let props: { showHome?: boolean } = $props();

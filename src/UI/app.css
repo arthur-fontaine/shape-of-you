@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source '../templates/**/*.twig';
+@source '../../templates/**/*.twig';
 
 @layer components {
   .spinner {

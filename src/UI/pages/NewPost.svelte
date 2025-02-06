@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createMutation } from "../../../utils/query";
+  import { createMutation } from "../utils/query";
   const post = createMutation();
 
   function onSubmit(e: SubmitEvent) {
