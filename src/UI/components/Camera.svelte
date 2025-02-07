@@ -1,5 +1,5 @@
 <script lang="ts">
-  const props = $props<{
+  const props: {
     width?: number;
     height?: number;
     facingMode?: boolean;
@@ -7,7 +7,7 @@
     enableModeSwitch?: boolean;
     captureAsInput?: string;
     onCapture?: (image: string) => void;
-  }>();
+  } = $props();
 
   let facingMode = $state<boolean>(props.facingMode || false);
 
