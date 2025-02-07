@@ -15,8 +15,16 @@
   <div class="p-4 flex items-center justify-between">
     <CustomSlider min={0} max={10} step={0.01} bind:value={rate10}>
       <span class="relative">
-        <span class="absolute top-0 left-0 text-xs text-gray-500">
-          {rate10.toFixed(2)}
+        <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white px-1 text-sm w-min whitespace-nowrap">
+          {#if rate10 < 5}
+            Bof...
+          {:else if rate10 < 7}
+            Pas mal
+          {:else if rate10 < 9}
+            Super !
+          {:else}
+            Génial !!
+          {/if}
         </span>
         🔥
       </span>
