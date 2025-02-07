@@ -12,6 +12,7 @@
     value?: number;
     trackClass?: string;
     thumbClass?: string;
+    onUserChange?: (value: number) => void;
   } = $props();
 
   value = value ?? props.min;
@@ -38,6 +39,7 @@
     value = calculateNewValue(
       "touches" in event ? event.touches[0].clientX : event.clientX,
     );
+    props.onUserChange?.(value);
   }
 
   function onTrackPress(event: MouseEvent | TouchEvent) {
@@ -45,15 +47,25 @@
     value = calculateNewValue(
       "touches" in event ? event.touches[0].clientX : event.clientX,
     );
+    props.onUserChange?.(value);
     function onMove(event: MouseEvent | TouchEvent) {
       onTrackMove(event);
     }
     document.addEventListener("mousemove", onMove);
+    document.addEventListener("touchmove", onMove);
     document.addEventListener(
       "mouseup",
       () => {
         move = false;
         document.removeEventListener("mousemove", onMove);
+      },
+      { once: true },
+    );
+    document.addEventListener(
+      "touchend",
+      () => {
+        move = false;
+        document.removeEventListener("touchmove", onMove);
       },
       { once: true },
     );

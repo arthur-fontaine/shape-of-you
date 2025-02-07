@@ -26,13 +26,16 @@ export const createQuery = <T>(url: string = location.href) => {
   })
 }
 
-export const createMutation = <T, U>(url: string = location.href) => {
+export const createMutation = <T, U>(
+  url: string = location.href,
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST',
+) => {
   initQueryClient();
   return createMutation_({
     mutationKey: [url],
     mutationFn: async (data: U) => {
       const res = await fetch(url, {
-        method: 'POST',
+        method,
         body: data instanceof FormData ? data : JSON.stringify(data),
         headers: {
           ...data instanceof FormData ? {} : { 'Content-Type': 'application/json' },
