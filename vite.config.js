@@ -16,7 +16,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        "app": "./assets/app.js",
+        "app": "./src/UI/app.js",
       }
     },
   },

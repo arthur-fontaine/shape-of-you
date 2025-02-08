@@ -51,6 +51,7 @@ class Post
     {
         $this->featuredClothings = new ArrayCollection();
         $this->rates = new ArrayCollection();
+        $this->setPostedAt(new \DateTimeImmutable());
     }
 
     public function getId(): ?int
