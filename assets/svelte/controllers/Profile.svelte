@@ -1,5 +1,7 @@
-<script>
+<script lang="ts">
 
+    let props: { user?: { name: string } } = $props();
+    console.log(props);
 </script>
 
 <div class="min-h-screen bg-gray-100">
@@ -8,7 +10,7 @@
             <div class="flex items-center space-x-4">
                 <img alt="Profile Picture" class="w-24 h-24 rounded-full">
                 <div>
-                    <h2 class="text-2xl font-bold">Username</h2>
+                    <h2 class="text-2xl font-bold">{props.user.name}</h2>
                 </div>
             </div>
             <div class="mt-4 flex space-x-8">

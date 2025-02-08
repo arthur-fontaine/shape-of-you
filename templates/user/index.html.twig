@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div {{ svelte_component('Profile') }}></div>
+    <div>{{ user.name }}</div>
+    <div {{ svelte_component('Profile', { 'user' : user}) }}></div>
 {% endblock %}
