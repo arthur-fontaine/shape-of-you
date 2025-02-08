@@ -2,5 +2,5 @@
 
 {% block body %}
     <div>{{ user.name }}</div>
-    <div {{ svelte_component('Profile', { 'user' : user}) }}></div>
+    <div {{ svelte_component('pages/Profile', { 'user' : user|json_encode}) }}></div>
 {% endblock %}
