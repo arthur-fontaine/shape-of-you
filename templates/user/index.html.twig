@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div>{{ user.name }}</div>
-    <div {{ svelte_component('pages/Profile', { 'user' : user|json_encode}) }}></div>
+    <div {{ svelte_component('pages/Profile', {
+        user : user|json_encode
+    }) }}></div>
 {% endblock %}

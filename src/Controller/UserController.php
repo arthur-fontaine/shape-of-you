@@ -3,21 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
-    #[Route('/user/{id}', name: 'app_user')]
-    public function index(User $user): Response
+    #[Route('/profil', name: 'app_user')]
+    public function index(): Response
     {
-        //recupere les post de l'utilisateur
-        $posts = $user->getPosts();
-        //dd($user, count($posts), count($user->getFriends()));
+        $user = $this->getUser();
         return $this->render('user/index.html.twig', [
             'user' => $user,
-            'posts' => $posts,
         ]);
     }
 }
