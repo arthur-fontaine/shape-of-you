@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { IUser} from "../types/User";
+    import profile from "../assets/icons/profile.svg";
 
     const {user}: {
         user: IUser;
@@ -11,7 +12,7 @@
     <div class="bg-white shadow-md">
         <div class="max-w-5xl mx-auto p-4">
             <div class="flex items-center space-x-4">
-                <img src="./image/icon_user.png" alt="profile" class="w-24 h-24 rounded-full border">
+                <img src={profile} alt="profile" class="w-24 h-24 rounded-full border">
                 <div>
                     <h2 class="text-2xl font-bold">{parsedUser.name}</h2>
                 </div>

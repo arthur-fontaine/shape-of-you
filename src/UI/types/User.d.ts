@@ -15,6 +15,6 @@ export interface IUser {
     hasFinishedOnboarding: boolean;
     role: string;
     isVerified: boolean;
-    friends: array;
+    friends: IUser[];
     posts: array;
 }
