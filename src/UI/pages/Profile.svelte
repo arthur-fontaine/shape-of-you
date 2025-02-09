@@ -6,7 +6,7 @@
     } = $props();
     const parsedUser: IUser = JSON.parse(user);
 
-    console.log(parsedUser.posts);
+    console.log(parsedUser);
 </script>
 
 <div class="min-h-screen bg-gray-100">
@@ -26,14 +26,20 @@
                     <span class="font-bold">{(parsedUser.friends).length}</span> followers
                 </div>
             </div>
+            <div class="mt-4 flex space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Publication</button>
+                <button class="bg-gray-500 text-white px-4 py-2 rounded">Bookmark</button>
+            </div>
         </div>
     </div>
     <div class="max-w-5xl mx-auto mt-6 grid grid-cols-3 gap-4">
+        {#each parsedUser.posts as post (post.id)}
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="" alt="Post" class="w-full h-48 object-cover">
+                <img src="{post.mediaUrls[0] || './image/default_post.png'}" alt="Post" class="w-full h-48 object-cover">
                 <div class="p-4">
-                    <p class="text-gray-800">text</p>
+                    <p class="text-gray-800">{post.text}</p>
                 </div>
             </div>
+        {/each}
     </div>
 </div>
