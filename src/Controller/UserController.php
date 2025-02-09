@@ -18,4 +18,13 @@ final class UserController extends AbstractController
             'user' => $user,
         ]);
     }
+
+    #[Route('/bookmark', name: 'app_user_bookmark')]
+    public function bookmark(): Response
+    {
+        $user = $this->getUser();
+        return $this->render('user/bookmark.html.twig', [
+            'user' => $user,
+        ]);
+    }
 }

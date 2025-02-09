@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div {{ svelte_component('pages/BookmarkList', {
+        user : user|json_encode
+    }) }}></div>
+{% endblock %}

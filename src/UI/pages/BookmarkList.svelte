@@ -31,13 +31,11 @@
         </div>
     </div>
     <div class="max-w-5xl mx-auto mt-6 grid grid-cols-3 gap-4">
-        {#each parsedUser.posts as post (post.id)}
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="{post.mediaUrls[0] || './image/default_post.png'}" alt="Post" class="w-full h-48 object-cover">
+                <img src="" alt="Post" class="w-full h-48 object-cover">
                 <div class="p-4">
-                    <p class="text-gray-800">{post.text}</p>
+                    <p class="text-gray-800">Bookmark</p>
                 </div>
             </div>
-        {/each}
     </div>
 </div>
