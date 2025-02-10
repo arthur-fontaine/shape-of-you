@@ -11,6 +11,7 @@ use App\Service\OllamaRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -21,8 +22,14 @@ final class SearchController extends AbstractController
         private ClothingRepository $clothingRepository
     ) {}
 
-    #[Route('/search', name: 'api_search')]
-    public function index(Request $request): JsonResponse
+    #[Route('/search', name: 'app_search', methods: ['GET'], requirements: ['_format' => 'html'])]
+    public function index(): Response
+    {
+        return $this->render('search/index.html.twig');
+    }
+
+    #[Route('/search', name: 'api_search', methods: ['POST'], requirements: ['_format' => 'json'])]
+    public function search(Request $request): JsonResponse
     {
         $image = $request->files->get('image');
         if ($image === null) {
