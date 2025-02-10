@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\ClothingListRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ final class UserController extends AbstractController
     {
         $user = $this->getUser();
         return $this->render('user/bookmark.html.twig', [
-            'user' => $user,
+            'user' => $user
         ]);
     }
 }

@@ -469,6 +469,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'email' => $this->getEmail(),
             'friends' => $this->getFriends()->toArray(),
             'posts' => $this->getPosts()->toArray(),
+            'clothingLists' => $this->getClothingLists()->toArray(),
         ];
     }
 }

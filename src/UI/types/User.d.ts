@@ -1,3 +1,5 @@
+import {IClothingList} from "./ClothingList";
+
 export interface IUser {
     userId: number;
     name: string;
@@ -17,4 +19,5 @@ export interface IUser {
     isVerified: boolean;
     friends: IUser[];
     posts: array;
+    clothingLists: array;
 }
