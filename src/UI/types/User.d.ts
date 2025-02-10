@@ -19,5 +19,5 @@ export interface IUser {
     isVerified: boolean;
     friends: IUser[];
     posts: array;
-    clothingLists: array;
+    clothingLists: IClothingList[];
 }
