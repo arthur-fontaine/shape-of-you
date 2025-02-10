@@ -2,6 +2,6 @@
 
 {% block body %}
     <div {{ svelte_component('pages/BookmarkList', {
-        user : user|json_encode
+        user : user
     }) }}></div>
 {% endblock %}
