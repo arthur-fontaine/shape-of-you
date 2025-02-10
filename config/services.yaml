@@ -24,5 +24,9 @@ services:
         arguments:
             $path: './data'
 
+    App\Service\OllamaApi:
+        arguments:
+            $apiUrl: '%env(OLLAMA_API_URL)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

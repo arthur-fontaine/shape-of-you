@@ -16,20 +16,20 @@ class ClothingRepository extends ServiceEntityRepository
         parent::__construct($registry, Clothing::class);
     }
 
-    //    /**
-    //     * @return Clothing[] Returns an array of Clothing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Clothing[] Returns an array of Clothing objects
+     */
+    public function findByFields(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        foreach ($criteria as $field => $value) {
+            $qb->andWhere("c.$field = :$field")
+                ->setParameter($field, $value);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Clothing
     //    {

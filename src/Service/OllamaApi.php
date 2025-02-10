@@ -7,7 +7,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class OllamaApi
 {
   public function __construct(
-    private string $model,
     private string $apiUrl,
     private HttpClientInterface $client,
   ) {}
@@ -15,15 +14,17 @@ class OllamaApi
   /**
    * @param OllamaMessage[] $messages
    */
-  public function chat(array $messages, array|null $format = null): string
+  public function chat(array $messages, string $model, array|null $format = null): string
   {
     $response = $this->client->request(
       "POST",
       $this->apiUrl . "chat",
       [
-        "headers" => [],
-        "body" => [
-          "model" => $this->model,
+        "headers" => [
+          "Content-Type" => "application/json",
+        ],
+        "json" => [
+          "model" => $model,
           "messages" => array_map(
             fn (OllamaMessage $message) => $message->toArray(),
             $messages

@@ -35,10 +35,13 @@ final class SearchController extends AbstractController
         if ($image === null) {
             throw new BadRequestHttpException('Missing image');
         }
+        if ($image->getMimeType() !== 'image/jpeg' && $image->getMimeType() !== 'image/png') {
+            throw new BadRequestHttpException('Invalid image type');
+        }
         $base64Image = base64_encode(file_get_contents($image->getPathname()));
 
-        $colors = implode(' - ', array_map(fn(Color $color) => $color->name, Color::cases()));
-        $types = implode(' - ', array_map(fn(ClothingType $type) => $type->name, ClothingType::cases()));
+        $colors = implode(' - ', array_map(fn(Color $color) => $color->value, Color::cases()));
+        $types = implode(' - ', array_map(fn(ClothingType $type) => $type->value, ClothingType::cases()));
         $clothingInfos = $this->ollama->chat(
             [
                 new OllamaMessage(
@@ -52,16 +55,17 @@ final class SearchController extends AbstractController
                     ' . $types . '
                     ',
                     OllamaRole::USER,
-                    ['images' => $base64Image]
+                    ['images' => [$base64Image]]
                 )
             ],
+            'llama3.2-vision',
             [
                 'type' => 'object',
                 'properties' => [
                     'color' => ['type' => 'string'],
-                    'type'=> ['type'=> 'string'],
+                    'type' => ['type' => 'string'],
                 ],
-                'required'=> ['color', 'type'],
+                'required' => ['color', 'type'],
             ]
         );
 
@@ -70,8 +74,9 @@ final class SearchController extends AbstractController
             throw new BadRequestHttpException('Invalid response from Ollama API');
         }
 
-        $clothings = $this->clothingRepository->findBy([
+        $clothings = $this->clothingRepository->findByFields([
             'color' => Color::from($clothingInfos['color']),
+            'type' => ClothingType::from($clothingInfos['type']),
         ]) ?? [];
 
         return $this->json($clothings);
