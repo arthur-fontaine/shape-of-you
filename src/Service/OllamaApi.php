@@ -13,9 +13,9 @@ class OllamaApi
   ) {}
 
   /**
-   * @param Message[] $messages
+   * @param OllamaMessage[] $messages
    */
-  public function chat(array $messages, array $format): string
+  public function chat(array $messages, array|null $format = null): string
   {
     $response = $this->client->request(
       "POST",
@@ -25,7 +25,7 @@ class OllamaApi
         "body" => [
           "model" => $this->model,
           "messages" => array_map(
-            fn (Message $message) => $message->toArray(),
+            fn (OllamaMessage $message) => $message->toArray(),
             $messages
           ),
           "stream" => false,
@@ -38,11 +38,11 @@ class OllamaApi
   }
 }
 
-class Message
+class OllamaMessage
 {
   public function __construct(
     private string $message,
-    private Role $role,
+    private OllamaRole $role,
     private array $additionalData = [],
   ) {}
 
@@ -51,7 +51,7 @@ class Message
     return $this->message;
   }
 
-  public function getRole(): Role
+  public function getRole(): OllamaRole
   {
     return $this->role;
   }
@@ -73,8 +73,10 @@ class Message
   }
 }
 
-enum Role
+enum OllamaRole: string
 {
-  case USER;
-  case BOT;
+  case USER = "user";
+  case ASSISTANT = "assistant";
+  case SYSTEM = "system";
+  case TOOL = "tool";
 }
