@@ -1,0 +1,4 @@
+{
+  "eslint.enable": false,
+  "php.version": "8.4"
+}

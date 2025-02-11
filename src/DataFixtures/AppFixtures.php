@@ -16,6 +16,7 @@ use App\Entity\PostRate;
 use App\Entity\User;
 use App\Enum\ClothingType;
 use App\Enum\Color;
+use App\Enum\Gender;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -44,6 +45,8 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
 
     private function loadUsers(ObjectManager $manager)
     {
+        $genders = Gender::cases();
+
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
             $user->setName('User ' . $i);
@@ -61,6 +64,9 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
             $user->setPassword($this->hashPassword($user, 'password'));
             $user->setRoles(['ROLE_USER']);
             $user->setIsVerified(true);
+            $user->setGender($genders[array_rand($genders)]);
+            $user->setBirthday(new \DateTimeImmutable('-' . rand(18, 60) . ' years'));
+            $user->setCountryIso2('FR');
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
         }

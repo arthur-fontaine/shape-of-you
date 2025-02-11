@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use \App\Enum\Gender;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -111,6 +112,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
     private ?UserVector $vector = null;
+
+    #[ORM\Column(enumType: Gender::class)]
+    private ?Gender $gender = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $birthday = null;
+
+    #[ORM\Column(length: 2)]
+    private ?string $countryIso2 = null;
 
     public function __construct()
     {
@@ -478,6 +488,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->vector = $vector;
+
+        return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
+    }
+
+    public function setGender(Gender $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getBirthday(): ?\DateTimeImmutable
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(\DateTimeImmutable $birthday): static
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    public function getCountryIso2(): ?string
+    {
+        return $this->countryIso2;
+    }
+
+    public function setCountryIso2(string $countryIso2): static
+    {
+        $this->countryIso2 = $countryIso2;
 
         return $this;
     }
