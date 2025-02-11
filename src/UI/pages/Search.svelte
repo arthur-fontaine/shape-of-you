@@ -9,6 +9,12 @@
 
   function onSubmit(e: SubmitEvent) {
     const formData = new FormData(e.target as HTMLFormElement);
+    if (!formData.get("search") && formData.get("image")) {
+      formData.delete("search");
+    }
+    if (!formData.get("image") && formData.get("search")) {
+      formData.delete("image");
+    }
     $search.mutate(formData);
   }
 
@@ -26,7 +32,7 @@
       <input
         type="file"
         name="image"
-        accept="image/*"
+        accept="image/png, image/jpeg"
         hidden
         on:change={onImageSelected}
       />
