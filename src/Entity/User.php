@@ -109,6 +109,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?UserVector $vector = null;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
@@ -458,6 +461,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getvector(): ?UserVector
+    {
+        return $this->vector;
+    }
+
+    public function setvector(UserVector $vector): static
+    {
+        // set the owning side of the relation if necessary
+        if ($vector->getOwner() !== $this) {
+            $vector->setOwner($this);
+        }
+
+        $this->vector = $vector;
 
         return $this;
     }
