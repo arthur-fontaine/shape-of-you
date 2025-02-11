@@ -17,8 +17,13 @@ class UserVector
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
-    #[ORM\Column(type: 'vector')]
+    #[ORM\Column(type: 'vector', length: 15)]
     private array $vector = [];
+
+    #[ORM\Column(
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -45,6 +50,18 @@ class UserVector
     public function setVector(array $vector): static
     {
         $this->vector = $vector;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
