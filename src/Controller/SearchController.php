@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Clothing;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\ClothingRepository;
@@ -46,7 +47,7 @@ final class SearchController extends AbstractController
             [
                 new OllamaMessage(
                     '
-                    Describe this clothing item.
+                    Describe all clothing items you can see.
 
                     The possible colors are:
                     ' . $colors . '
@@ -60,12 +61,15 @@ final class SearchController extends AbstractController
             ],
             'llama3.2-vision',
             [
-                'type' => 'object',
-                'properties' => [
-                    'color' => ['type' => 'string'],
-                    'type' => ['type' => 'string'],
+                'type' => 'array',
+                'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'color' => ['type' => 'string'],
+                        'type' => ['type' => 'string'],
+                    ],
+                    'required' => ['color', 'type'],
                 ],
-                'required' => ['color', 'type'],
             ]
         );
 
@@ -74,10 +78,18 @@ final class SearchController extends AbstractController
             throw new BadRequestHttpException('Invalid response from Ollama API');
         }
 
-        $clothings = $this->clothingRepository->findByFields([
-            'color' => Color::from($clothingInfos['color']),
-            'type' => ClothingType::from($clothingInfos['type']),
-        ]) ?? [];
+        /** @var Clothing[] $clothings */
+        $clothings = [];
+
+        foreach ($clothingInfos as $clothingInfo) {
+            $clothings = array_merge(
+                $clothings,
+                $this->clothingRepository->findByFields([
+                    'color' => Color::from($clothingInfo['color']),
+                    'type' => ClothingType::from($clothingInfo['type']),
+                ]) ?? []
+            );
+        }
 
         return $this->json($clothings);
     }
