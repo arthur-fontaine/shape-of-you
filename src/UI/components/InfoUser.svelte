@@ -2,7 +2,9 @@
     import type { IUser } from "../types/User";
     import profile from "../assets/icons/profile.svg";
 
-    export let user: IUser;
+    const { user }: {
+        user: IUser;
+    } = $props();
 </script>
 
 <div class="bg-white shadow-md">

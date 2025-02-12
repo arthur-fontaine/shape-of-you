@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { IUser} from "../types/User";
-    import profile from "../assets/icons/profile.svg";
     import InfoUser from "../components/InfoUser.svelte";
 
     const {user}: {

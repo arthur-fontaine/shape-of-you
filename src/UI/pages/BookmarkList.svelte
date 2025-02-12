@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { IUser} from "../types/User";
-    import type { IClothingList } from "../types/ClothingList";
     import InfoUser from "../components/InfoUser.svelte";
 
     const {user}: {
