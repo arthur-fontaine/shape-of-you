@@ -16,28 +16,17 @@ class ClothingRepository extends ServiceEntityRepository
         parent::__construct($registry, Clothing::class);
     }
 
-    //    /**
-    //     * @return Clothing[] Returns an array of Clothing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Clothing
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function toArray(Clothing $clothing): array
+    {
+        return [
+            'id' => $clothing->getId(),
+            'name' => $clothing->getName(),
+            'type' => $clothing->getType()->value,
+            'imageUrl' => $clothing->getImageUrl(),
+            'color' => $clothing->getColor(),
+            'socialRate5' => $clothing->getSocialRate5(),
+            'ecologyRate5' => $clothing->getEcologyRate5(),
+            'measurements' => $clothing->getMeasurements() 
+        ];
+    }
 }
