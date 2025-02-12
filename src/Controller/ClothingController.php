@@ -18,8 +18,18 @@ final class ClothingController extends AbstractController
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
     public function show(Clothing $clothing): Response
     {
-        $clothingData = $this->clothingRepository->toArray($clothing);
-        
+        $clothingData = [
+            'id' => $clothing->getId(),
+            'name' => $clothing->getName(),
+            'type' => $clothing->getType()->value,
+            'imageUrl' => $clothing->getImageUrl(),
+            'color' => $clothing->getColor(),
+            'socialRate5' => $clothing->getSocialRate5(),
+            'ecologyRate5' => $clothing->getEcologyRate5(),
+            'measurements' => $clothing->getMeasurements() 
+        ];
+    }
+
         $links = array_map(function($link) {
             $prices = $link->getPrices();
             $latestPrice = $prices->isEmpty() ? null : $prices->last();
