@@ -122,6 +122,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 2)]
     private ?string $countryIso2 = null;
 
+    /**
+     * @var Collection<int, Clothing>
+     */
+    #[JoinTable(name: 'user_clothing_recommendation')]
+    #[ORM\ManyToMany(targetEntity: Clothing::class)]
+    private Collection $clothingRecommendations;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
@@ -129,6 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->postRates = new ArrayCollection();
         $this->friends = new ArrayCollection();
+        $this->clothingRecommendations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -524,6 +532,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCountryIso2(string $countryIso2): static
     {
         $this->countryIso2 = $countryIso2;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Clothing>
+     */
+    public function getClothingRecommendations(): Collection
+    {
+        return $this->clothingRecommendations;
+    }
+
+    public function addClothingRecommendation(Clothing $clothingRecommendation): static
+    {
+        if (!$this->clothingRecommendations->contains($clothingRecommendation)) {
+            $this->clothingRecommendations->add($clothingRecommendation);
+        }
+
+        return $this;
+    }
+
+    public function removeClothingRecommendation(Clothing $clothingRecommendation): static
+    {
+        $this->clothingRecommendations->removeElement($clothingRecommendation);
 
         return $this;
     }
