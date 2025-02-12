@@ -17,7 +17,7 @@ final class Version20250211124331 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql('CREATE EXTENSION IF NOT EXISTS vector');
-        $this->addSql('CREATE TABLE user_vector (id SERIAL NOT NULL, owner_id INT NOT NULL, vector vector(1024) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE user_vector (id SERIAL NOT NULL, owner_id INT NOT NULL, vector vector(15) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_7E3C53667E3C61F9 ON user_vector (owner_id)');
         $this->addSql('ALTER TABLE user_vector ADD CONSTRAINT FK_7E3C53667E3C61F9 FOREIGN KEY (owner_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }

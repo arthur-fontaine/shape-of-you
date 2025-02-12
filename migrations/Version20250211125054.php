@@ -37,7 +37,7 @@ final class Version20250211125054 extends AbstractMigration
                 $$ LANGUAGE plpgsql IMMUTABLE RETURNS NULL ON NULL INPUT;
         ');
         $this->addSql('
-            CREATE FUNCTION user_clothing_vector_array(user_id INT) RETURNS FLOAT[] AS $$
+            CREATE FUNCTION user_vector_array(user_id INT) RETURNS FLOAT[] AS $$
                 DECLARE
                     clothing_vector FLOAT[];
                     user_gender TEXT;
@@ -130,6 +130,6 @@ final class Version20250211125054 extends AbstractMigration
         $this->addSql('ALTER TABLE "user" DROP birthday');
         $this->addSql('ALTER TABLE "user" DROP country_iso2');
         $this->addSql('DROP FUNCTION user_dressing_value(INT)');
-        $this->addSql('DROP FUNCTION user_clothing_vector_array(INT)');
+        $this->addSql('DROP FUNCTION user_vector_array(INT)');
     }
 }

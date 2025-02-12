@@ -24,7 +24,7 @@ final class Version20250211231622 extends AbstractMigration
                     INSERT INTO user_vector (owner_id, vector)
                     SELECT 
                         id,
-                        user_clothing_vector_array(id)
+                        user_vector_array(id)
                     FROM "user"
                     ON CONFLICT (owner_id) 
                     DO UPDATE SET 
