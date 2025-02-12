@@ -10,6 +10,7 @@ AS
 $$
   SELECT clothing_id
   FROM
-      user_clothing_ratings(user_id)
+      user_clothing_ratings(user_id) r
+  ORDER BY r.rating DESC
   LIMIT total_limit * distr / 100;
 $$ LANGUAGE SQL;
