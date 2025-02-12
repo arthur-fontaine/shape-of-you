@@ -28,7 +28,6 @@ final class ClothingController extends AbstractController
             'ecologyRate5' => $clothing->getEcologyRate5(),
             'measurements' => $clothing->getMeasurements() 
         ];
-    }
 
         $links = array_map(function($link) {
             $prices = $link->getPrices();
