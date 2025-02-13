@@ -129,6 +129,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Clothing::class)]
     private Collection $clothingRecommendations;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?UserMoodPrompt $moodPrompt = null;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
@@ -556,6 +559,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeClothingRecommendation(Clothing $clothingRecommendation): static
     {
         $this->clothingRecommendations->removeElement($clothingRecommendation);
+
+        return $this;
+    }
+
+    public function getMoodPrompt(): ?UserMoodPrompt
+    {
+        return $this->moodPrompt;
+    }
+
+    public function setMoodPrompt(UserMoodPrompt $moodPrompt): static
+    {
+        // set the owning side of the relation if necessary
+        if ($moodPrompt->getOwner() !== $this) {
+            $moodPrompt->setOwner($this);
+        }
+
+        $this->moodPrompt = $moodPrompt;
 
         return $this;
     }
