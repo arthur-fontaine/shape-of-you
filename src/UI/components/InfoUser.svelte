@@ -5,6 +5,7 @@
     const { user }: {
         user: IUser;
     } = $props();
+
 </script>
 
 <div class="bg-white shadow-md">
