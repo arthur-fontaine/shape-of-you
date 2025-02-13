@@ -20,8 +20,8 @@ class MigrationEventListener implements EventSubscriberInterface
       MigrationsEventArgs $args,
     )
     {
-        $directory = __DIR__ . '/../../database/functions';
-        $files = glob($directory . '/*.sql');
+        $directory = __DIR__ . '/../../database';
+        $files = glob($directory .'/**/*.sql');
 
         $connection = $args->getConnection();
 

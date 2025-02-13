@@ -122,15 +122,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 2)]
     private ?string $countryIso2 = null;
 
-    /**
-     * @var Collection<int, Clothing>
-     */
-    #[JoinTable(name: 'user_clothing_recommendation')]
-    #[ORM\ManyToMany(targetEntity: Clothing::class)]
-    private Collection $clothingRecommendations;
-
     #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
     private ?UserMoodPrompt $moodPrompt = null;
+
+    /**
+     * @var Collection<int, UserClothingRecommendation>
+     */
+    #[ORM\OneToMany(targetEntity: UserClothingRecommendation::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $clothingRecommendations;
 
     public function __construct()
     {
@@ -539,30 +538,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Clothing>
-     */
-    public function getClothingRecommendations(): Collection
-    {
-        return $this->clothingRecommendations;
-    }
-
-    public function addClothingRecommendation(Clothing $clothingRecommendation): static
-    {
-        if (!$this->clothingRecommendations->contains($clothingRecommendation)) {
-            $this->clothingRecommendations->add($clothingRecommendation);
-        }
-
-        return $this;
-    }
-
-    public function removeClothingRecommendation(Clothing $clothingRecommendation): static
-    {
-        $this->clothingRecommendations->removeElement($clothingRecommendation);
-
-        return $this;
-    }
-
     public function getMoodPrompt(): ?UserMoodPrompt
     {
         return $this->moodPrompt;
@@ -576,6 +551,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->moodPrompt = $moodPrompt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserClothingRecommendation>
+     */
+    public function getClothingRecommendations(): Collection
+    {
+        return $this->clothingRecommendations;
+    }
+
+    public function addClothingRecommendation(UserClothingRecommendation $clothingRecommendation): static
+    {
+        if (!$this->clothingRecommendations->contains($clothingRecommendation)) {
+            $this->clothingRecommendations->add($clothingRecommendation);
+            $clothingRecommendation->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClothingRecommendation(UserClothingRecommendation $clothingRecommendation): static
+    {
+        if ($this->clothingRecommendations->removeElement($clothingRecommendation)) {
+            // set the owning side to null (unless already changed)
+            if ($clothingRecommendation->getOwner() === $this) {
+                $clothingRecommendation->setOwner(null);
+            }
+        }
 
         return $this;
     }

@@ -13,6 +13,6 @@ final class CalculateUserRecommendationsMessageHandler
 
     public function __invoke(CalculateUserRecommendationsMessage $message): void
     {
-        $this->entityManager->getConnection()->executeQuery('CALL calculate_user_recommendations()');
+        $this->entityManager->getConnection()->executeQuery('CALL calculate_user_hybrid_recommendations()');
     }
 }
