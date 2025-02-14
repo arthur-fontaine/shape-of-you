@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
     "@hotwired/stimulus": "^3.0.0",

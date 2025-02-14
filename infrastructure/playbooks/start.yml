@@ -1,0 +1,22 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Start the application
+      command: frankenphp php-server --worker Runtime\\FrankenPhpSymfony\\Runtime
+      args:
+        chdir: /srv/current
+      
+    - name: Start the messenger worker
+      command: php bin/console messenger:consume async
+      args:
+        chdir: /srv/current
+
+    - name: Compute user vectors
+      command: php bin/console app:compute-user-vectors
+      args:
+        chdir: /srv/current
+
+    - name: Compute user recommendations
+      command: php bin/console app:compute-user-recommendations
+      args:
+        chdir: /srv/current

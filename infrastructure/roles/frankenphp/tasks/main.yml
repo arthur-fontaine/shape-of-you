@@ -1,0 +1,22 @@
+- name: Download FrankenPHP installer
+  get_url:
+    url: https://frankenphp.dev/install.sh
+    dest: /tmp/frankenphp-install.sh
+    mode: 0755
+
+- name: Install FrankenPHP
+  command: sh /tmp/frankenphp-install.sh
+
+- name: Move FrankenPHP to /usr/local/bin/
+  command: mv frankenphp /usr/local/bin/
+  
+- name: Ensure FrankenPHP is executable
+  file:
+    path: /usr/local/bin/frankenphp
+    mode: '0755'
+
+- name: Clean up installer
+  file:
+    path: /tmp/frankenphp-install.sh
+    state: absent
+  

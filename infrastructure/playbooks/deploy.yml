@@ -1,0 +1,37 @@
+- hosts: servers
+  become: yes
+  vars:
+    ansistrano_deploy_to: "/srv"
+    ansistrano_keep_releases: 3
+    ansistrano_shared_paths:
+      - var/log
+      - var/sessions
+    ansistrano_shared_files:
+      - .env
+  roles:
+    - { role: ansistrano.deploy }
+  tasks:
+    - name: Install Composer dependencies
+      command: composer install --no-dev --optimize-autoloader
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
+    - name: Clear PHP cache
+      command: php bin/console cache:clear --env=prod
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
+    - name: Install NPM dependencies
+      command: npm install
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
+    - name: Build Vite
+      command: npm run build
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
+    - name: Migrate database
+      command: php bin/console doctrine:migrations:migrate --no-interaction
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
