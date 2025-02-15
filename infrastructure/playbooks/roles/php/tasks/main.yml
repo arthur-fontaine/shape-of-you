@@ -1,0 +1,44 @@
+- name: Install GPG
+  package:
+    name: gnupg
+    state: present
+
+- name: Add PHP repository key
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    state: present
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Add PHP repository
+  apt_repository:
+    repo: deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Install PHP
+  apt:
+    name: php8.4
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Install PHP extensions
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - php8.4-cli
+    - php8.4-xml
+    - php8.4-curl
+    - php8.4-zip
+    - php8.4-pgsql
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Stop Apache
+  service:
+    name: apache2
+    state: stopped
+    enabled: no
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'

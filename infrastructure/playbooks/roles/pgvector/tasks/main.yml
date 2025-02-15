@@ -1,0 +1,35 @@
+- name: Install Make
+  package:
+    name: make
+    state: present
+
+- name: Install GCC
+  package:
+    name: gcc
+    state: present
+
+- name: Install Git
+  package:
+    name: git
+    state: present
+
+- name: Install PostgreSQL development libraries
+  apt:
+    name: postgresql-server-dev-17
+    state: present
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Clone pgvector repository
+  git:
+    repo: "https://github.com/pgvector/pgvector.git"
+    dest: "/tmp/pgvector"
+    version: "v0.8.0"
+
+- name: Compile pgvector
+  make:
+    chdir: "/tmp/pgvector"
+
+- name: Install pgvector
+  make:
+    chdir: "/tmp/pgvector"
+    target: install

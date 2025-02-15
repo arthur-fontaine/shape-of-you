@@ -1,20 +1,26 @@
 - hosts: servers
   become: yes
   vars:
+    ansistrano_deploy_from: "{{ playbook_dir }}/../.."
     ansistrano_deploy_to: "/srv"
     ansistrano_keep_releases: 3
     ansistrano_shared_paths:
       - var/log
       - var/sessions
-    ansistrano_shared_files:
-      - .env
   roles:
     - { role: ansistrano.deploy }
   tasks:
+    - name: Create .env.local
+      copy:
+        content: "APP_ENV=prod\nAPP_DEBUG=0"
+        dest: "{{ ansistrano_release_path.stdout }}/.env.local"
+
     - name: Install Composer dependencies
-      command: composer install --no-dev --optimize-autoloader
+      command: composer install --optimize-autoloader
       args:
         chdir: "{{ ansistrano_release_path.stdout }}"
+      environment:
+        COMPOSER_ALLOW_SUPERUSER: "1"
 
     - name: Clear PHP cache
       command: php bin/console cache:clear --env=prod
@@ -31,7 +37,17 @@
       args:
         chdir: "{{ ansistrano_release_path.stdout }}"
 
+    - name: Create database
+      command: php bin/console doctrine:database:create --if-not-exists
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
     - name: Migrate database
       command: php bin/console doctrine:migrations:migrate --no-interaction
+      args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+
+    - name: Create AI procedures and functions in the database
+      command: php bin/console app:create-ai-in-db
       args:
         chdir: "{{ ansistrano_release_path.stdout }}"

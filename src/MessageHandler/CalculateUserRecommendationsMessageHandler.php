@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class CalculateUserRecommendationsMessageHandler
 {
-    private function __construct(private EntityManagerInterface $entityManager) {}
+    public function __construct(private EntityManagerInterface $entityManager) {}
 
     public function __invoke(CalculateUserRecommendationsMessage $message): void
     {

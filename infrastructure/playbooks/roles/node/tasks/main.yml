@@ -1,0 +1,29 @@
+- name: Install cURL
+  package:
+    name: curl
+    state: present
+
+- name: Download the NodeSource setup script
+  get_url:
+    url: https://deb.nodesource.com/setup_22.x
+    dest: /tmp/setup_22.x
+    mode: '0755'
+
+- name: Run the NodeSource setup script
+  command: /tmp/setup_22.x
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+
+- name: Install Node.js
+  apt:
+    name: nodejs
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+
+- name: Verify Node.js installation
+  shell: node --version
+  register: node_version
+
+- debug:
+    msg: "Node.js version installed: {{ node_version.stdout }}"

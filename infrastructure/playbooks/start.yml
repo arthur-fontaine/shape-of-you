@@ -2,12 +2,14 @@
   become: yes
   tasks:
     - name: Start the application
-      command: frankenphp php-server --worker Runtime\\FrankenPhpSymfony\\Runtime
+      shell: frankenphp php-server -r public --domain debian.orb.local </dev/null >/dev/null 2>&1 &
+      environment:
+        APP_RUNTIME: Runtime\\FrankenPhpSymfony\\Runtime
       args:
         chdir: /srv/current
       
     - name: Start the messenger worker
-      command: php bin/console messenger:consume async
+      shell: php bin/console messenger:consume </dev/null >/dev/null 2>&1 &
       args:
         chdir: /srv/current
 

@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 #[AsMessageHandler]
 final class SyncUserVectorsMessageHandler
 {
-    private function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $bus) {}
+    public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $bus) {}
 
     public function __invoke(SyncUserVectorsMessage $message): void
     {

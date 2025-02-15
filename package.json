@@ -16,5 +16,10 @@
     "@tailwindcss/vite": "^4.0.3",
     "@tanstack/svelte-query": "^5.66.0",
     "tailwindcss": "^4.0.3"
+  },
+  "overrides": {
+    "@symfony/ux-svelte": {
+      "svelte": "^5.0"
+    }
   }
 }
