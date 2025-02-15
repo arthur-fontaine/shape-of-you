@@ -5,6 +5,7 @@
     const {user}: {
         user: IUser;
     } = $props();
+    console.log(user);
 </script>
 
 <div class="min-h-screen bg-gray-100">

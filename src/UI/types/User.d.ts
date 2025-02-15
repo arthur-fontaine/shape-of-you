@@ -1,4 +1,5 @@
 import {IClothingList} from "./ClothingList";
+import {IPost} from "./Post";
 
 export interface IUser {
     userId: number;
@@ -18,6 +19,6 @@ export interface IUser {
     role: string;
     isVerified: boolean;
     friends: IUser[];
-    posts: array;
+    posts: IPost[];
     clothingLists: IClothingList[];
 }

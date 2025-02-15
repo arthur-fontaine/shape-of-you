@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IClothing, IClothingLink } from '../types/clothing';
+  import type { IClothing, IClothingLink } from '../types/Clothing';
 
   const props: {
     clothing: IClothing;

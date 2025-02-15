@@ -108,6 +108,7 @@ class ClothingList implements \JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'isBookmarkList' => $this->isBookmarkList,
+            'clothingCollection' => $this->getClothings()->toArray(),
         ];
     }
 }
