@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {IClothingList} from "../types/ClothingList";
     import type {IClothing} from "../types/Clothing";
+    import ClothingCollection from "../components/ClothingCollection.svelte";
 
     const props: {
         clothingList: IClothingList;
@@ -17,7 +18,7 @@
     <div>
         {#each clothingCollection as clothing}
             <div>
-                {clothing.name}
+                <ClothingCollection {clothing} />
             </div>
         {/each}
     </div>
