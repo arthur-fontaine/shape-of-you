@@ -1,8 +1,6 @@
 - import_playbook: bootstrap.yml
 - hosts: servers
   become: yes
-  vars_files:
-    - vars/database.yml
   roles:
     - php
     - frankenphp
