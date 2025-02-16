@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div {{ svelte_component('pages/Bookmark', {
+        clothingList: clothingList,
+        clothingCollection: clothingCollection,
+    }) }}></div>
+{% endblock %}
