@@ -10,7 +10,7 @@
 
     const bookmark = props.clothingList;
     const clothingCollection = props.clothingCollection;
-    console.log(clothingCollection);
+
 </script>
 
 <div class="space-y-4 p-4">
@@ -18,7 +18,7 @@
     <div>
         {#each clothingCollection as clothing}
             <div>
-                <ClothingCollection {clothing} />
+                <ClothingCollection {clothing} idBookmark={bookmark.id} />
             </div>
         {/each}
     </div>

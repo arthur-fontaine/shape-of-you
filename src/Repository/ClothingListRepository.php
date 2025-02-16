@@ -40,4 +40,9 @@ class ClothingListRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function removeClothing($clothing): void
+    {
+        $this->getEntityManager()->remove($clothing);
+        $this->getEntityManager()->flush();
+    }
 }

@@ -2,7 +2,16 @@
 
     import type {IClothing} from "../types/Clothing";
 
-    const { clothing }: { clothing: IClothing } = $props();
+
+
+    const props: {
+        clothing: IClothing;
+        idBookmark: string;
+    } = $props();
+
+    const clothing = props.clothing;
+    const idBookmark = props.idBookmark;
+    
 
 </script>
 
@@ -17,7 +26,7 @@
                 class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white px-1 text-sm w-min whitespace-nowrap"
         >
         </span>
-          <button>Delete</button>
+          <a href="/bookmark/delete/{idBookmark}/{clothing.id}">Delete</a>
       </span>
     </div>
 </div>

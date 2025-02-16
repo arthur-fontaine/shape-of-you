@@ -12,6 +12,7 @@
     "vite-plugin-symfony": "^7.1.0"
   },
   "dependencies": {
+    "@sveltejs/kit": "^2.17.2",
     "@tailwindcss/vite": "^4.0.3",
     "@tanstack/svelte-query": "^5.66.0",
     "@types/lodash-es": "^4.17.12",

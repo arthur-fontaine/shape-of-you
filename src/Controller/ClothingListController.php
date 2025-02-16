@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Clothing;
 use App\Entity\ClothingLink;
 use App\Entity\ClothingList;
+use App\Repository\ClothingListRepository;
 use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,5 +42,17 @@ final class ClothingListController extends AbstractController
             'clothingList' => $clothingList,
             'clothingCollection' => json_decode($serializer->serialize($clothingList->getClothings()->toArray(), 'json', $context)),
         ]);
+    }
+
+    #[Route('/bookmark/delete/{id}/{idClothing}', name: 'app_user_clothing_list_delete_element', methods: ['DELETE'])]
+    public function deleteElement(ClothingList $clothingList, int $clothingId, ClothingListRepository $clothingListRepository): Response
+    {
+        $clothing = $clothingListRepository->find($clothingId);
+
+        if ($clothing) {
+            $clothingListRepository->removeClothing($clothing);
+        }
+
+        return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
     }
 }
