@@ -46,6 +46,21 @@ final class DressingController extends AbstractController
         ]);
     }
 
+    #[Route('/dressing/remove', name: 'app_dressing_piece_remove', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function removeDressingPiece(Request $request): Response
+    {
+        $data = $request->toArray();
+
+
+        if (!isset($data['clothingId'])) {
+            throw new BadRequestHttpException('dressingPieceId is required');
+        }
+
+        $this->dressingPieceRepository->removeDressingPiece($data['clothingId'], $this->getUser());
+
+        return new Response();
+    }
+
     #[Route('/dressing/add/{id}', name: 'app_dressing_piece', requirements: ['id' => '\d+', '_format' => 'html'], methods: ['GET'])]
     public function renderNewDressingPiece(Clothing $clothing, Request $request): Response
     {

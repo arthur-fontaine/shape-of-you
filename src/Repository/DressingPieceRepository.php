@@ -49,4 +49,13 @@ class DressingPieceRepository extends ServiceEntityRepository
         $this->_em->flush();
         return $dressingPiece;
     }
+
+    public function removeDressingPiece(int $clothingId, User $user): void
+    {
+        $dressingPiece = $this->findOneBy(['clothing' => $clothingId, 'owner' => $user->getId()]);
+        if ($dressingPiece) {
+            $this->getEntityManager()->remove($dressingPiece);
+            $this->getEntityManager()->flush();
+        }
+    }
 }
