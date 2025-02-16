@@ -85,6 +85,18 @@ final class ClothingListController extends AbstractController
         return new Response();
     }
 
+    #[Route('/bookmarks/remove', name: 'app_user_clothing_list_remove_element', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function remove(Request $request): Response
+    {
+        $data = $request->toArray();
+        if (!isset($data['clothingId']) || !isset($data['bookmarkId'])) {
+            throw new BadRequestHttpException('Missing required parameters');
+        }
+        $this->clothingListRepository->removeClothing($data['clothingId'], $data['bookmarkId']);
+
+        return new Response();
+    }
+
 
     #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_render', requirements: ['_format' => 'html'], methods: ['GET'])]
     public function renderAddElement(Clothing $clothing): Response

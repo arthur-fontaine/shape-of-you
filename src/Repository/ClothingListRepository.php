@@ -42,9 +42,11 @@ class ClothingListRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    public function removeClothing($clothing): void
+    public function removeClothing(int $clothinId, int $bookmarkId): void
     {
-        $this->getEntityManager()->remove($clothing);
+        $bookmark = $this->find($bookmarkId);
+        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothinId)->first();
+        $bookmark->removeClothing($clothing);
         $this->getEntityManager()->flush();
     }
 
@@ -61,7 +63,7 @@ class ClothingListRepository extends ServiceEntityRepository
         return $clothingList;
     }
 
-    public function delete(mixed $bookmarkId): void
+    public function delete(int $bookmarkId): void
     {
         $bookmark = $this->find($bookmarkId);
         $this->getEntityManager()->remove($bookmark);
