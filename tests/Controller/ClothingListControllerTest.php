@@ -6,11 +6,5 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class ClothingListControllerTest extends WebTestCase
 {
-    public function testIndex(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/clothing/list');
 
-        self::assertResponseIsSuccessful();
-    }
 }

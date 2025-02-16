@@ -64,14 +64,30 @@ final class ClothingListController extends AbstractController
         return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
     }
 
-    #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_delete', methods: ['GET'])]
-    public function addElement(Clothing $clothing): Response
+    #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_render', requirements: ['_format' => 'html'], methods: ['GET'])]
+    public function renderAddElement(Clothing $clothing): Response
     {
         $clothingList = $this->getUser()->getClothingLists()->toArray();
         return $this->render('clothing_list/modal.html.twig', [
             'clothingList' => $clothingList,
             'clothingId' => $clothing->getId()
         ]);
+    }
+
+    #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_add_element', methods: ['POST'])]
+    public function addElement(Request $request): Response
+    {
+        $data = $request->request->all();
+
+
+        $clothingList = $this->clothingListRepository->find($data['collection']);
+        $clothing = $this->clothingListRepository->find($data['clothingId']);
+
+        if ($clothingList && $clothing) {
+            $clothingList->addClothing($clothing);
+        }
+
+        return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
     }
 
     #[Route('/bookmarks/new', name: 'app_bookmark_new', requirements: ['_format' => 'html'], methods: ['GET'])]
