@@ -10,6 +10,7 @@
     const clothingList = props.clothingList;
     const clothingId = props.clothingId;
 
+    console.log(clothingId);
     const bookmark = createMutation();
     function onSubmit(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);

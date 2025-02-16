@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Clothing;
 use App\Entity\ClothingList;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -68,5 +69,15 @@ class ClothingListRepository extends ServiceEntityRepository
         $bookmark = $this->find($bookmarkId);
         $this->getEntityManager()->remove($bookmark);
         $this->getEntityManager()->flush();
+    }
+
+    public function addClothing(int $clothingId, int $bookmarkId)
+    {
+        $bookmark = $this->find($bookmarkId);
+        $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($clothingId);
+        $bookmark->addClothing($clothing);
+        $this->getEntityManager()->flush();
+
+        return $bookmark;
     }
 }

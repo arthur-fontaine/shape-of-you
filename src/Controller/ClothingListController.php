@@ -112,14 +112,11 @@ final class ClothingListController extends AbstractController
     public function addElement(Request $request): Response
     {
         $data = $request->request->all();
-
-
-        $clothingList = $this->clothingListRepository->find($data['collection']);
-        $clothing = $this->clothingListRepository->find($data['clothingId']);
-
-        if ($clothingList && $clothing) {
-            $clothingList->addClothing($clothing);
+        if (!isset($data['clothingId']) || !isset($data['collection'])) {
+            throw new BadRequestHttpException('Missing required parameters');
         }
+
+        $clothingList = $this->clothingListRepository->addClothing($data['clothingId'], $data['collection']);
 
         return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
     }
