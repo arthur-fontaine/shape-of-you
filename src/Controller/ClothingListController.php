@@ -52,17 +52,37 @@ final class ClothingListController extends AbstractController
         ]);
     }
 
-    #[Route('/bookmark/delete/{id}/{idClothing}', name: 'app_user_clothing_list_delete_element', methods: ['DELETE'])]
-    public function deleteElement(ClothingList $clothingList, int $clothingId, ClothingListRepository $clothingListRepository): Response
+    #[Route('/bookmarks/new', name: 'app_bookmark_new', requirements: ['_format' => 'html'], methods: ['GET'])]
+    public function renderNewBookmarkPage(Request $request): Response
     {
-        $clothing = $clothingListRepository->find($clothingId);
+        return $this->render('clothing_list/new.html.twig');
+    }
 
-        if ($clothing) {
-            $clothingListRepository->removeClothing($clothing);
+    #[Route('/bookmarks/new', name: 'api_bookmark_new', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function createNewBookmark(Request $request): Response
+    {
+        $data = $request->request->all();
+
+        if (!isset($data['name'])) {
+            throw new BadRequestHttpException('Missing required parameters');
         }
 
-        return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
+        $isBookmark = ($data['isBookmark'] != 'null') ? $data['isBookmark'] : false;
+        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], $isBookmark);
+
+        $this->getUser()->addClothingList($clothingList);
+
+        return $this->redirectToRoute('/bookmark');
     }
+
+    #[Route('/bookmark/delete/{id}', name: 'app_user_clothing_list_delete', methods: ['DELETE'])]
+    public function delete(ClothingList $clothingList): Response
+    {
+        dd($clothingList);
+        $this->clothingListRepository->delete($clothingList);
+        return new Response();
+    }
+
 
     #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_render', requirements: ['_format' => 'html'], methods: ['GET'])]
     public function renderAddElement(Clothing $clothing): Response
@@ -88,28 +108,5 @@ final class ClothingListController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
-    }
-
-    #[Route('/bookmarks/new', name: 'app_bookmark_new', requirements: ['_format' => 'html'], methods: ['GET'])]
-    public function renderNewBookmarkPage(Request $request): Response
-    {
-        return $this->render('clothing_list/new.html.twig');
-    }
-
-    #[Route('/bookmarks/new', name: 'api_bookmark_new', requirements: ['_format' => 'json'], methods: ['POST'])]
-    public function createNewBookmark(Request $request): Response
-    {
-        $data = $request->request->all();
-
-        if (!isset($data['name'])) {
-            throw new BadRequestHttpException('Missing required parameters');
-        }
-
-        $isBookmark = ($data['isBookmark'] != 'null') ? $data['isBookmark'] : false;
-        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], $isBookmark);
-
-        $this->getUser()->addClothingList($clothingList);
-
-        return new Response();
     }
 }

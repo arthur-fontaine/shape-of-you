@@ -8,7 +8,6 @@
         const sentFormData = new FormData();
         sentFormData.append("name", formData.get("name") as string);
         sentFormData.append("isBookmark", formData.get("isBookmark") as string);
-        console.log(formData.get("isBookmark"));
         $bookmark.mutate(sentFormData);
     }
 </script>
