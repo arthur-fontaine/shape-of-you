@@ -46,6 +46,12 @@
           >
               Ajouter une collection
           </a>
+          <a
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  href="/dressing/add/{props.clothing.id}"
+          >
+              Ajouter au dressing
+          </a>
       </div>
 
     <section class="mt-6">

@@ -6,6 +6,7 @@ use App\Entity\Clothing;
 use App\Entity\ClothingLink;
 use App\Entity\ClothingList;
 use App\Entity\DressingPiece;
+use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,6 +35,14 @@ final class DressingController extends AbstractController
         ];
         return $this->render('dressing/index.html.twig', [
             'dressing' => json_decode($serializer->serialize($this->getUser()->getDressing()->toArray(), 'json', $context)),
+        ]);
+    }
+
+    #[Route('/dressing/add/{id}', name: 'app_dressing_piece', requirements: ['id' => '\d+', '_format' => 'html'], methods: ['GET'])]
+    public function renderNewDressingPiece(Clothing $clothing): Response
+    {
+        return $this->render('dressing/new.html.twig', [
+            'clothing' => $clothing,
         ]);
     }
 }
