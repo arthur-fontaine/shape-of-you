@@ -41,8 +41,9 @@ final class DressingController extends AbstractController
     #[Route('/dressing/add/{id}', name: 'app_dressing_piece', requirements: ['id' => '\d+', '_format' => 'html'], methods: ['GET'])]
     public function renderNewDressingPiece(Clothing $clothing): Response
     {
+        $clothingId = $clothing->getId();
         return $this->render('dressing/new.html.twig', [
-            'clothing' => $clothing,
+            'clothingId' => $clothingId,
         ]);
     }
 }
