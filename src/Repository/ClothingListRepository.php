@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\ClothingList;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @extends ServiceEntityRepository<ClothingList>
@@ -44,5 +46,18 @@ class ClothingListRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->remove($clothing);
         $this->getEntityManager()->flush();
+    }
+
+    public function create(User $user, string $name, bool $isBookmark): ClothingList
+    {
+        $clothingList = new ClothingList();
+        $clothingList->setCreator($user);
+        $clothingList->setName($name);
+        $clothingList->setBookmarkList($isBookmark);
+
+        $this->getEntityManager()->persist($clothingList);
+        $this->getEntityManager()->flush();
+
+        return $clothingList;
     }
 }
