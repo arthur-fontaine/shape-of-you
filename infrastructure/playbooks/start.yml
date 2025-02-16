@@ -1,10 +1,16 @@
 - hosts: servers
   become: yes
+  vars_files:
+    - ../vars/config.yml
   tasks:
+    - name: Stop the application if it is running
+      shell: pkill -f "frankenphp php-server -r public --domain {{ domain }}"
+      args:
+        chdir: /srv/current
+      ignore_errors: yes
+
     - name: Start the application
-      shell: frankenphp php-server -r public --domain debian.orb.local </dev/null >/dev/null 2>&1 &
-      environment:
-        APP_RUNTIME: Runtime\\FrankenPhpSymfony\\Runtime
+      shell: frankenphp php-server -r public --domain {{ domain }} </dev/null >/dev/null 2>&1 &
       args:
         chdir: /srv/current
       

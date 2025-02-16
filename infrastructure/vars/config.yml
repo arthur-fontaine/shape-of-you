@@ -1,3 +1,5 @@
 node_version: 22
 postgres_version: 17
 php_version: 8.4
+
+domain: debian.orb.local
