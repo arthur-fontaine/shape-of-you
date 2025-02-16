@@ -20,7 +20,9 @@ final class DressingController extends AbstractController
     #[Route('/dressing', name: 'app_dressing')]
     public function index(SerializerInterface $serializer): Response
     {
-        $dressing = $this->getUser()->getDressing();
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, ?string $format, array $context): string {
                 if (!$object instanceof Clothing && !$object instanceof ClothingLink && !$object instanceof ClothingList && !$object instanceof DressingPiece) {
@@ -31,7 +33,7 @@ final class DressingController extends AbstractController
             },
         ];
         return $this->render('dressing/index.html.twig', [
-            'dressing' => json_decode($serializer->serialize($dressing->toArray(), 'json', $context)),
+            'dressing' => json_decode($serializer->serialize($this->getUser()->getDressing()->toArray(), 'json', $context)),
         ]);
     }
 }
