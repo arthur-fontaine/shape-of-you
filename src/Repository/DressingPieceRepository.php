@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Clothing;
 use App\Entity\DressingPiece;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -41,12 +42,16 @@ class DressingPieceRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-    public function createDressingPiece(array $data, User $getUser)
+    public function createDressingPiece(array $data, User $user): DressingPiece
     {
+        $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($data['clothingId']);
         $dressingPiece = new DressingPiece();
-        $dressingPiece->setClothing($data['clothing']);
-        $this->_em->persist($dressingPiece);
-        $this->_em->flush();
+        $dressingPiece->setClothing($clothing);
+        $dressingPiece->setOwner($user);
+        $dressingPiece->setComment($data['comment']);
+        $dressingPiece->setRate10($data['rate']);
+        $this->getEntityManager()->persist($dressingPiece);
+        $this->getEntityManager()->flush();
         return $dressingPiece;
     }
 
@@ -58,4 +63,5 @@ class DressingPieceRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
 }

@@ -1,20 +1,22 @@
 <script lang="ts">
     import {createMutation} from "../utils/query";
+    import type {IClothing} from "../types/Clothing";
 
     const props: {
-        clothingId: number;
+        clothing: IClothing;
     } = $props();
 
-    const clothingId = props.clothingId;
+    const clothing = props.clothing;
 
-    const dressingMutation = createMutation(`/dressing/add`, "POST");
+    const dressingMutation = createMutation(`/dressing/new`, "POST");
+
 
     function onSubmit(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
         const sentFormData = new FormData();
         sentFormData.append("rate", formData.get("rate") as string);
         sentFormData.append("comment", formData.get("comment") as string);
-        sentFormData.append("clothingId", clothingId.toString());
+        sentFormData.append("clothingId", clothing.id.toString());
         $dressingMutation.mutate(sentFormData);
     }
 

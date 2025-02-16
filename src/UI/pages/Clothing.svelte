@@ -48,7 +48,7 @@
           </a>
           <a
                   class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                  href="/dressing/add/{props.clothing.id}"
+                  href="/dressing/new/{props.clothing.id}"
           >
               Ajouter au dressing
           </a>

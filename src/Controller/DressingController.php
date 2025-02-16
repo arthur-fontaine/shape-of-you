@@ -61,17 +61,26 @@ final class DressingController extends AbstractController
         return new Response();
     }
 
-    #[Route('/dressing/add/{id}', name: 'app_dressing_piece', requirements: ['id' => '\d+', '_format' => 'html'], methods: ['GET'])]
-    public function renderNewDressingPiece(Clothing $clothing, Request $request): Response
+    #[Route('/dressing/new/{id}', name: 'app_dressing_piece_new_render', requirements: ['_format' => 'html'], methods: ['GET'])]
+    public function newDressingPieceRender(Clothing $clothing, SerializerInterface $serializer): Response
     {
-        $clothingId = $clothing->getId();
-        return $this->render('dressing/new.html.twig', [
-            'clothing' => $clothing,
-        ]);
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, ?string $format, array $context): string {
+                if (!$object instanceof Clothing && !$object instanceof ClothingLink && !$object instanceof ClothingList && !$object instanceof DressingPiece) {
+                    throw new CircularReferenceException('A circular reference has been detected when serializing the object of class "'.get_debug_type($object).'".');
+                }
+
+                return '';
+            },
+        ];
+        return $this->render('dressing/new.html.twig',
+            [
+                'clothing' => json_decode($serializer->serialize($clothing, 'json', $context)),
+            ]);
     }
 
-    #[Route('/dressing/add', name: 'app_dressing_add_piece', requirements: ['_format' => 'json'], methods: ['POST'])]
-    public function addDressingPiece(Request $request): Response
+    #[Route('/dressing/new', name: 'app_dressing_piece_new', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function newDressingPiece(Request $request): Response
     {
         $data = $request->request->all();
 
@@ -79,8 +88,7 @@ final class DressingController extends AbstractController
             throw new BadRequestHttpException('clothingId is required');
         }
 
-        $dressingPiece = $this->dressingPieceRepository->createDressingPiece($data, $this->getUser());
-
+        $dressing =  $this->dressingPieceRepository->createDressingPiece($data, $this->getUser());
 
         return new Response();
     }
