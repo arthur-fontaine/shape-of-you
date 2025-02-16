@@ -60,4 +60,11 @@ class ClothingListRepository extends ServiceEntityRepository
 
         return $clothingList;
     }
+
+    public function delete(mixed $bookmarkId): void
+    {
+        $bookmark = $this->find($bookmarkId);
+        $this->getEntityManager()->remove($bookmark);
+        $this->getEntityManager()->flush();
+    }
 }

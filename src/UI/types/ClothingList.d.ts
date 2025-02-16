@@ -1,6 +1,6 @@
 import { IClothing } from './Clothing';
 export interface IClothingList {
-    clothingId: number;
+    id: number;
     name: string;
     isBookmarked: boolean;
     clothingCollection: IClothing[];

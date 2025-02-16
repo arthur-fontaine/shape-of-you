@@ -6,7 +6,6 @@ use App\Entity\Clothing;
 use App\Entity\ClothingLink;
 use App\Entity\ClothingList;
 use App\Repository\ClothingListRepository;
-use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,11 +74,14 @@ final class ClothingListController extends AbstractController
         return $this->redirectToRoute('/bookmark');
     }
 
-    #[Route('/bookmark/delete/{id}', name: 'app_user_clothing_list_delete', methods: ['DELETE'])]
-    public function delete(ClothingList $clothingList): Response
+    #[Route('/bookmarks/delete', name: 'app_user_clothing_list_delete', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function delete(Request $request): Response
     {
-        dd($clothingList);
-        $this->clothingListRepository->delete($clothingList);
+        $data = $request->toArray();
+        if (!isset($data['bookmarkId'])) {
+            throw new BadRequestHttpException('Missing required parameters');
+        }
+        $this->clothingListRepository->delete($data['bookmarkId']);
         return new Response();
     }
 

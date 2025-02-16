@@ -3,7 +3,6 @@
     import type {IClothing} from "../types/Clothing";
     import ClothingCollection from "../components/ClothingCollection.svelte";
     import {createMutation} from "../utils/query";
-    import {debounce} from "lodash-es";
 
     const props: {
         clothingList: IClothingList;
@@ -14,10 +13,14 @@
     const clothingCollection = props.clothingCollection;
 
 
-    const bookmarkMutation = createMutation(`/bookmark/delete/${bookmark.id}`, "DELETE");
+    console.log(bookmark.id);
+    const bookmarkMutation = createMutation<unknown, {
+        bookmarkId: number;
+    }> (`/bookmarks/delete`);
     function onDelete() {
-        console.log("delete");
-        debounce($bookmarkMutation.mutate);
+        $bookmarkMutation.mutate({
+            bookmarkId: bookmark.id
+        });
     }
 </script>
 

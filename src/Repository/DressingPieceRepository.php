@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DressingPiece;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,12 @@ class DressingPieceRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function createDressingPiece(array $data, User $getUser)
+    {
+        $dressingPiece = new DressingPiece();
+        $dressingPiece->setClothing($data['clothing']);
+        $this->_em->persist($dressingPiece);
+        $this->_em->flush();
+        return $dressingPiece;
+    }
 }
