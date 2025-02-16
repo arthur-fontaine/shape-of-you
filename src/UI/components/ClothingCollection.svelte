@@ -11,7 +11,7 @@
 
     const clothing = props.clothing;
     const idBookmark = props.idBookmark;
-    
+
 
 </script>
 

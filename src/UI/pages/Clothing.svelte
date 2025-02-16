@@ -38,6 +38,16 @@
       </div>
     </div>
 
+    <!-- Btn options -->
+      <div>
+          <a
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  href="/bookmark/add/{props.clothing.id}"
+          >
+              Ajouter une collection
+          </a>
+      </div>
+
     <section class="mt-6">
         <h2 class="text-sm font-medium text-gray-500 mb-3">Mesures</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">

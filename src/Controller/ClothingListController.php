@@ -55,4 +55,14 @@ final class ClothingListController extends AbstractController
 
         return $this->redirectToRoute('app_user_clothing_list', ['id' => $clothingList->getId()]);
     }
+
+    #[Route('/bookmark/add/{id}', name: 'app_user_clothing_list_delete', methods: ['GET'])]
+    public function addElement(Clothing $clothing): Response
+    {
+        $clothingList = $this->getUser()->getClothingLists()->toArray();
+        return $this->render('clothing_list/modal.html.twig', [
+            'clothingList' => $clothingList,
+            'clothingId' => $clothing->getId()
+        ]);
+    }
 }

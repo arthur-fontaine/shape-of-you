@@ -43,7 +43,6 @@ final class ClothingController extends AbstractController
                 ] : null
             ];
         }, $clothing->getLinks()->toArray());
-
         return $this->render('clothing/index.html.twig', [
             'clothing' => $clothingData,
             'links' => $links
