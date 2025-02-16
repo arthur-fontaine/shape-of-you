@@ -1,0 +1,53 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup_servers:
+    name: Setup Servers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: alex-oleshkevich/setup-ansible@v1.0.1
+        with:
+          version: '11.2.0'
+
+      - name: Setup Servers
+        run: ansible-playbook -i infrastructure/inventory.ini infrastructure/playbooks/setup.yml
+
+  deploy:
+    name: Deploy
+
+    runs-on: ubuntu-latest
+
+    needs:
+      - setup_servers
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: alex-oleshkevich/setup-ansible@v1.0.1
+        with:
+          version: '11.2.0'
+
+      - name: Deploy
+        run: ansible-playbook -i infrastructure/inventory.ini infrastructure/playbooks/deploy.yml
+
+  start:
+    name: Start
+
+    runs-on: ubuntu-latest
+
+    needs:
+      - deploy
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: alex-oleshkevich/setup-ansible@v1.0.1
+        with:
+          version: '11.2.0'
+
+      - name: Start
+        run: ansible-playbook -i infrastructure/inventory.ini infrastructure/playbooks/start.yml
