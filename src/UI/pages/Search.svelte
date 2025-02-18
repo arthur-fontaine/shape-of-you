@@ -9,10 +9,10 @@
 
   function onSubmit(e: SubmitEvent) {
     const formData = new FormData(e.target as HTMLFormElement);
-    if (!formData.get("search") && formData.get("image")) {
-      formData.delete("search");
+    if (!formData.get("q") && formData.get("image")) {
+      formData.delete("q");
     }
-    if (!formData.get("image") && formData.get("search")) {
+    if (!formData.get("image") && formData.get("q")) {
       formData.delete("image");
     }
     $search.mutate(formData);
@@ -26,7 +26,7 @@
 
 <form on:submit|preventDefault={onSubmit}>
   <div class="flex">
-    <input type="text" name="search" placeholder="Search" class="flex-1" />
+    <input type="text" name="q" placeholder="Search" class="flex-1" />
     <button type="submit"> Search </button>
     <label>
       <input
