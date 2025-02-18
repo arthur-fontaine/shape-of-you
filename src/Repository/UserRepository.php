@@ -31,13 +31,37 @@ class UserRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function searchByText(string $query): array
+    {
+        try {
+            $words = array_filter(explode(' ', trim($query)));
+            
+            $qb = $this->createQueryBuilder('u')
+                ->select('u.id', 'u.name', 'u.email');
+            
+            if (!empty($words)) {
+                $conditions = [];
+                foreach ($words as $index => $word) {
+                    $nameParam = 'name_' . $index;
+                    $emailParam = 'email_' . $index;
+                    
+                    $conditions[] = $qb->expr()->orX(
+                        $qb->expr()->like('LOWER(u.name)', ':' . $nameParam),
+                        $qb->expr()->like('LOWER(u.email)', ':' . $emailParam)
+                    );
+                    
+                    $qb->setParameter($nameParam, '%' . strtolower($word) . '%')
+                    ->setParameter($emailParam, '%' . strtolower($word) . '%');
+                }
+                
+                $qb->where($qb->expr()->andX(...$conditions))
+                ->andWhere('u.isFake = false')
+                ->andWhere('u.isEnabled = true');
+            }
+            
+            return $qb->getQuery()->getResult();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

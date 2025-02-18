@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use App\Entity\Clothing;
 use App\Enum\ClothingType;
 use App\Enum\Color;
@@ -29,8 +30,50 @@ final class SearchController extends AbstractController
         return $this->render('search/index.html.twig');
     }
 
+    #[Route('/api/clothing/search', name: 'api_clothing_search', methods: ['GET'])]
+    public function search(Request $request,): JsonResponse
+    {
+        try {
+            $query = $request->query->get('q');
+            
+            if (empty($query) || strlen($query) < 2) {
+                return $this->json([]);
+            }
+            
+            $results = $this->clothingRepository->searchByText($query);
+            
+            return $this->json($results);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'An error occurred while searching',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    #[Route('/api/users/search', name: 'api_users_search', methods: ['GET'])]
+    public function searchUsers(Request $request, UserRepository $userRepository): JsonResponse
+    {
+        try {
+            $query = $request->query->get('q');
+            
+            if (empty($query) || strlen($query) < 2) {
+                return $this->json([]);
+            }
+            
+            $results = $userRepository->searchByText($query);
+            
+            return $this->json($results);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'An error occurred while searching',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     #[Route('/search', name: 'api_search', methods: ['POST'], requirements: ['_format' => 'json'])]
-    public function search(Request $request): JsonResponse
+    public function imageSearch(Request $request): JsonResponse
     {
         $image = $request->files->get('image');
         if ($image === null) {
