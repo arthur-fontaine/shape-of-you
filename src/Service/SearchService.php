@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Repository;
+namespace App\Service;
 
 use App\Enum\ClothingType;
 use App\Enum\Color;
-use App\Service\OllamaApi;
-use App\Service\OllamaMessage;
-use App\Service\OllamaRole;
+use App\Service\OpenAiApi;
+use App\Service\OpenAiMessage;
+use App\Service\OpenAiRole;
 use App\Entity\Clothing;
 use App\Entity\User;
+use App\Repository\ClothingRepository;
+use App\Repository\UserRepository;
 
 class SearchService
 {
   public function __construct(
-    private OllamaApi $ollama,
+    private OpenAiApi $openAi,
     private ClothingRepository $clothingRepository,
     private UserRepository $userRepository
   ) {}
@@ -29,9 +31,9 @@ class SearchService
 
     $colors = implode(' - ', array_map(fn(Color $color) => $color->value, Color::cases()));
     $types = implode(' - ', array_map(fn(ClothingType $type) => $type->value, ClothingType::cases()));
-    $clothingInfos = $this->ollama->chat(
+    $clothingInfos = $this->openAi->chat(
       [
-        new OllamaMessage(
+        new OpenAiMessage(
           '
                     Describe all clothing items you can see.
 
@@ -41,20 +43,35 @@ class SearchService
                     The possible types are:
                     ' . $types . '
                     ',
-          OllamaRole::USER,
-          ['images' => [$base64Image]]
+          OpenAiRole::USER,
+          [
+            [
+              'type' => 'image_url',
+              'image_url' => [
+                'url' => 'data:image/jpeg;base64,' . $base64Image,
+              ],
+            ]
+          ]
         )
       ],
-      'llama3.2-vision',
+      $_ENV['VISION_MODEL'],
       [
-        'type' => 'array',
-        'items' => [
-          'type' => 'object',
-          'properties' => [
-            'color' => ['type' => 'string'],
-            'type' => ['type' => 'string'],
+        'type' => 'json_schema',
+        'json_schema' => [
+          'name' => 'clothings',
+          'strict' => true,
+          'schema' => [
+            'type' => 'array',
+            'items' => [
+              'type' => 'object',
+              'properties' => [
+                'color' => ['type' => 'string'],
+                'type' => ['type' => 'string'],
+              ],
+              'required' => ['color', 'type'],
+              'additionalProperties' => false,
+            ],
           ],
-          'required' => ['color', 'type'],
         ],
       ]
     );

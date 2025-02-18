@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\ClothingRepository;
-use App\Repository\SearchService;
-use App\Service\OllamaApi;
+use App\Service\SearchService;
+use App\Service\OpenAiApi;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SearchController extends AbstractController
 {
     public function __construct(
-        private OllamaApi $ollama,
+        private OpenAiApi $openAi,
         private ClothingRepository $clothingRepository,
         private SearchService $searchService
     ) {}
@@ -31,7 +31,7 @@ final class SearchController extends AbstractController
     {
         $image = $request->files->get('image');
         if ($image === null) {
-            $query = $request->query->get('q');
+            $query = $request->request->get('q');
 
             if ($query === null) {
                 throw new BadRequestHttpException('Missing query or image');

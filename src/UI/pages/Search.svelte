@@ -2,25 +2,31 @@
   import { createMutation } from "../utils/query";
   const search = createMutation<
     {
+      id: number;
       name: string;
+      imageUrl: string;
+      type: string;
     }[],
     FormData
   >();
 
   function onSubmit(e: SubmitEvent) {
     const formData = new FormData(e.target as HTMLFormElement);
-    if (!formData.get("q") && formData.get("image")) {
-      formData.delete("q");
-    }
-    if (!formData.get("image") && formData.get("q")) {
+    const q = formData.get("q");
+    const image = formData.get("image");
+    if (q && (image instanceof File && image.size === 0)) {
       formData.delete("image");
     }
-    $search.mutate(formData);
+    if (image instanceof File && image.size > 0) {
+      formData.delete("q");
+    }
+    $search.mutate(formData); // uncomment this line to trigger the mutation
   }
 
   function onImageSelected(e: Event) {
     const form = (e.target as HTMLInputElement).closest("form");
-    form?.submit();
+    const submitButton = form?.querySelector("button[type=submit]") as HTMLButtonElement | null;
+    submitButton?.click();
   }
 </script>
 
@@ -36,7 +42,7 @@
         hidden
         on:change={onImageSelected}
       />
-      <button type="button"> Image </button>
+      <span> Image </span>
     </label>
   </div>
 </form>
