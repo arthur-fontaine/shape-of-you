@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IClothing, IClothingLink } from '../types/clothing';
+  import type { IClothing, IClothingLink } from '../types/Clothing';
 
   const props: {
     clothing: IClothing;
@@ -37,6 +37,22 @@
         {/each}
       </div>
     </div>
+
+    <!-- Btn options -->
+      <div>
+          <a
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  href="/bookmark/add/{props.clothing.id}"
+          >
+              Ajouter une collection
+          </a>
+          <a
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  href="/dressing/new/{props.clothing.id}"
+          >
+              Ajouter au dressing
+          </a>
+      </div>
 
     <section class="mt-6">
         <h2 class="text-sm font-medium text-gray-500 mb-3">Mesures</h2>
