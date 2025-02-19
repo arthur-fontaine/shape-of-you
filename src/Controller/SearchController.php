@@ -2,65 +2,48 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ClothingRepository;
-use App\Repository\UserRepository;
+use App\Service\SearchService;
+use App\Service\OpenAiApi;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class SearchController extends AbstractController
 {
-    public function __construct(private ClothingRepository $clothingRepository)
-    {
-    }
+    public function __construct(
+        private OpenAiApi $openAi,
+        private ClothingRepository $clothingRepository,
+        private SearchService $searchService
+    ) {}
 
-    #[Route('/search', name: 'app_search')]
+    #[Route('/search', name: 'app_search', methods: ['GET'], requirements: ['_format' => 'html'])]
     public function index(): Response
     {
         return $this->render('search/index.html.twig');
     }
 
-    #[Route('/api/clothing/search', name: 'api_clothing_search', methods: ['GET'])]
-    public function search(Request $request,): JsonResponse
+    #[Route('/search', name: 'api_search', methods: ['POST'], requirements: ['_format' => 'json'])]
+    public function search(Request $request): JsonResponse
     {
-        try {
-            $query = $request->query->get('q');
-            
-            if (empty($query) || strlen($query) < 2) {
-                return $this->json([]);
-            }
-            
-            $results = $this->clothingRepository->searchByText($query);
-            
-            return $this->json($results);
-        } catch (\Exception $e) {
-            return $this->json([
-                'error' => 'An error occurred while searching',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
+        $image = $request->files->get('image');
+        if ($image === null) {
+            $query = $request->request->get('q');
 
-    #[Route('/api/users/search', name: 'api_users_search', methods: ['GET'])]
-    public function searchUsers(Request $request, UserRepository $userRepository): JsonResponse
-    {
-        try {
-            $query = $request->query->get('q');
-            
-            if (empty($query) || strlen($query) < 2) {
-                return $this->json([]);
+            if ($query === null) {
+                throw new BadRequestHttpException('Missing query or image');
             }
-            
-            $results = $userRepository->searchByText($query);
-            
-            return $this->json($results);
-        } catch (\Exception $e) {
-            return $this->json([
-                'error' => 'An error occurred while searching',
-                'message' => $e->getMessage()
-            ], 500);
+
+            return $this->json($this->searchService->textSearch($query));
         }
+
+        if ($image->getMimeType() !== 'image/jpeg' && $image->getMimeType() !== 'image/png') {
+            throw new BadRequestHttpException('Invalid image type');
+        }
+
+        return $this->json($this->searchService->imageSearch(file_get_contents($image->getPathname())));
     }
 }

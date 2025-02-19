@@ -1,65 +1,70 @@
 <script lang="ts">
-    import type { IClothing } from '../types/Clothing';
+  import { createMutation } from "../utils/query";
+  const search = createMutation<
+    {
+      id: number;
+      name: string;
+      imageUrl: string;
+      type: string;
+    }[],
+    FormData
+  >();
+
+  function onSubmit(e: SubmitEvent) {
+    const formData = new FormData(e.target as HTMLFormElement);
+    const q = formData.get("q");
+    const image = formData.get("image");
+    if (q && (image instanceof File && image.size === 0)) {
+      formData.delete("image");
+    }
+    if (image instanceof File && image.size > 0) {
+      formData.delete("q");
+    }
+    $search.mutate(formData); // uncomment this line to trigger the mutation
+  }
+
+  function onImageSelected(e: Event) {
+    const form = (e.target as HTMLInputElement).closest("form");
+    const submitButton = form?.querySelector("button[type=submit]") as HTMLButtonElement | null;
+    submitButton?.click();
+  }
+</script>
+
+<form on:submit|preventDefault={onSubmit}>
+  <div class="flex">
+    <input type="text" name="q" placeholder="Search" class="flex-1" />
+    <button type="submit"> Search </button>
+    <label>
+      <input
+        type="file"
+        name="image"
+        accept="image/png, image/jpeg"
+        hidden
+        on:change={onImageSelected}
+      />
+      <span> Image </span>
+    </label>
+  </div>
+</form>
+
+{#if $search.isPending}
+  <p>Loading...</p>
+{:else if $search.isError}
+  <p>Error: {$search.error.message}</p>
+{:else if $search.data}
+  <ul>
+    {#each $search.data as item}
+      <li>{item.name}</li>
+    {/each}
+  </ul>
+{/if}
+
+<!-- import type { IClothing } from '../types/Clothing';
     import type { IUser } from '../types/User';
-
-    let searchQuery: string = '';
-    let clothingResults: IClothing[] = [];
-    let userResults: IUser[] = [];
-    let isLoading: boolean = false;
-    let error: string | null = null;
-
-    async function search(): Promise<void> {
-        if (searchQuery.length < 1) {
-            clothingResults = [];
-            userResults = [];
-            return;
-        }
-
-        isLoading = true;
-        error = null;
-        
-        try {
-            const [clothingResponse, userResponse] = await Promise.all([
-                fetch(`/api/clothing/search?q=${encodeURIComponent(searchQuery)}`),
-                fetch(`/api/users/search?q=${encodeURIComponent(searchQuery)}`)
-            ]);
-
-            if (!clothingResponse.ok || !userResponse.ok) {
-                throw new Error(`Search failed`);
-            }
-
-            [clothingResults, userResults] = await Promise.all([
-                clothingResponse.json(),
-                userResponse.json()
-            ]);
-        } catch (err) {
-            console.error('Search error:', err);
-            error = err instanceof Error ? err.message : 'An unknown error occurred';
-            clothingResults = [];
-            userResults = [];
-        } finally {
-            isLoading = false;
-        }
-    }
-
-    function handleKeyPress(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            search();
-        }
-    }
-
-    function goToClothing(id: number): void {
-        window.location.href = `/clothing/${id}`;
-    }
-
-    function goToProfile(id: number): void {
-        window.location.href = `/profil/${id}`;
-    }
 </script>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="space-y-6">
-        <!-- Search Input with Button -->
         <div class="flex gap-2">
             <input
                 type="text"
@@ -102,7 +107,6 @@
                 </div>
             {/if}
 
-            <!-- Clothing Section -->
             {#if clothingResults.length > 0}
                 <div class="space-y-4">
                     <h2 class="text-xl font-semibold text-gray-900">Clothes</h2>
@@ -139,4 +143,4 @@
             {/if}
         {/if}
     </div>
-</div>
+</div> -->
