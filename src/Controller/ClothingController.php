@@ -59,5 +59,12 @@ final class ClothingController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/delete/clothings/{id}', name: 'app_admin_clothing_delete', methods: ['POST'])]
+    public function deleteClothing(Clothing $clothing): Response
+    {
+        $this->clothingRepository->delete($clothing);
+        return $this->redirectToRoute('app_admin_clothings');
+    }
+
 
 }
