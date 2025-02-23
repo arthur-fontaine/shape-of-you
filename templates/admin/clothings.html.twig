@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+    <h1>Clothing's</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cloth in clothings %}
+            <tr>
+                <td>{{ cloth.name }}</td>
+                <td>
+                    <img src="{{ cloth.imageUrl }}" alt="{{ cloth.name }}" style="width: 100px;">
+                </td>
+                <td>{{ cloth.type.name }}</td>
+                <td>
+                    <a href="">Edit</a>
+                    <a href="" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

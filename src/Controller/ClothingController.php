@@ -50,4 +50,14 @@ final class ClothingController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/clothings', name: 'app_admin_clothings', methods: ['GET'])]
+    public function adminClothings(): Response
+    {
+        $clothings = $this->clothingRepository->findAll();
+        return $this->render('admin/clothings.html.twig', [
+            'clothings' => $clothings
+        ]);
+    }
+
+
 }
