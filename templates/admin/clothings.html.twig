@@ -24,7 +24,7 @@
                 <td>{{ cloth.type.name }}</td>
                 <td>
                     <a href="">Edit</a>
-                    <a href="" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a href="{{ path('app_admin_clothing_delete', { 'id': cloth.id}) }}" onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
             </tr>
         {% endfor %}

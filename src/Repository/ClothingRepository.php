@@ -65,4 +65,10 @@ class ClothingRepository extends ServiceEntityRepository
             throw $e;
         }
     }
+
+    public function delete(Clothing $clothing): void
+    {
+        $this->getEntityManager()->remove($clothing);
+        $this->getEntityManager()->flush();
+    }
 }
