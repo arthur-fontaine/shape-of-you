@@ -87,4 +87,10 @@ class PostRepository extends ServiceEntityRepository
             return $post;
         }, $result->fetchAllAssociative());
     }
+
+    public function delete(Post $post): void
+    {
+        $this->entityManager->remove($post);
+        $this->entityManager->flush();
+    }
 }
