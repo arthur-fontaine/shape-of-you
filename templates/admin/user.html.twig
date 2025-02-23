@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+        <h1>User Details</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <td>{{ user.name }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Enabled</th>
+                <td>{{ user.isEnabled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Weight (kg)</th>
+                <td>{{ user.weightKg }}</td>
+            </tr>
+            <tr>
+                <th>Size (cm)</th>
+                <td>{{ user.sizeCm }}</td>
+            </tr>
+            <th>Hip Measurement (cm)</th>
+            <td>{{ user.hipMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Chest Measurement (cm)</th>
+                <td>{{ user.chestMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Waist Measurement (cm)</th>
+                <td>{{ user.waistMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Arm Measurement (cm)</th>
+                <td>{{ user.armMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Leg Measurement (cm)</th>
+                <td>{{ user.legMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Foot Measurement (cm)</th>
+                <td>{{ user.footMeasurementCm }}</td>
+            </tr>
+            <tr>
+                <th>Fake</th>
+                <td>{{ user.isFake ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Finished Onboarding</th>
+                <td>{{ user.hasFinishedOnboarding ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Verified</th>
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

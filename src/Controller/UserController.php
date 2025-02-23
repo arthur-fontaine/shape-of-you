@@ -45,4 +45,12 @@ final class UserController extends AbstractController
         $userRepository->delete($user);
         return $this->redirectToRoute('app_admin_users');
     }
+
+    #[Route('/admin/user/{id}', name: 'app_admin_user')]
+    public function adminUser(User $user): Response
+    {
+        return $this->render('admin/user.html.twig', [
+            'user' => $user
+        ]);
+    }
 }
