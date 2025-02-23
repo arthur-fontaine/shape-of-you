@@ -38,4 +38,11 @@ final class UserController extends AbstractController
             'users' => $users
         ]);
     }
+
+    #[Route('/admin/delete/users/{id}', name: 'app_admin_delete_users')]
+    public function deleteUser(User $user, UserRepository $userRepository): Response
+    {
+        $userRepository->delete($user);
+        return $this->redirectToRoute('app_admin_users');
+    }
 }
