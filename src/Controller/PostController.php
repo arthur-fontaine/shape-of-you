@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Repository\MediaRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,5 +70,13 @@ final class PostController extends AbstractController
         $post = $postRepository->find($id);
         $postRepository->delete($post);
         return $this->redirectToRoute('app_admin_posts');
+    }
+
+    #[Route('/admin/post/{id}', name: 'app_admin_post')]
+    public function adminPost(Post $post): Response
+    {
+        return $this->render('admin/post.html.twig', [
+            'post' => $post
+        ]);
     }
 }

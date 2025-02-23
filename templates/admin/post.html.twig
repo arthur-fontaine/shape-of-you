@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+        <h1>Post Details</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ post.author.name }}</td>
+            </tr>
+            <tr>
+                <th>Text</th>
+                <td>{{ post.text }}</td>
+            </tr>
+            <tr>
+                <th>Media URLs</th>
+                <td>
+                    {% for url in post.mediaUrls %}
+                        <img src="{{ url }}" alt="{{ post.text }}" style="width: 100px;">
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Posted At</th>
+                <td>{{ post.postedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Modified At</th>
+                <td>{{ post.modifiedAt ? post.modifiedAt|date('Y-m-d H:i:s') : 'N/A' }}</td>
+            </tr>
+            <tr>
+                <th>Featured Clothings</th>
+                <td>
+                    {% for clothing in post.featuredClothings %}
+                        {{ clothing.name }}<br>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Rates</th>
+                <td>
+                    {% for rate in post.rates %}
+                        {{ rate.rate10 }}<br>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
