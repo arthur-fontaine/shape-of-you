@@ -4,20 +4,20 @@
     {% include '/admin/components/navbar.html.twig' %}
 
     <div class="container">
-    <h1>Users</h1>
+    <h1>POSTS</h1>
     <table>
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
+            <th>Text</th>
+            <th>Author</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        {% for user in users %}
+        {% for post in posts %}
             <tr>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
+                <td>{{ post.text }}</td>
+                <td>{{ post.author.name }}</td>
                 <td>
                     <a href="">Edit</a>
                     <a href="" onclick="return confirm('Are you sure?')">Delete</a>

@@ -52,4 +52,14 @@ final class PostController extends AbstractController
 
         return new Response();
     }
+
+    #[Route('/admin/posts', name: 'app_admin_posts')]
+    public function adminPosts(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+        //dd($posts);
+        return $this->render('admin/posts.html.twig', [
+            'posts' => $posts
+        ]);
+    }
 }
