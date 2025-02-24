@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IClothing, IClothingLink } from '../types/clothing';
+  import type { IClothing, IClothingLink } from "../types/Clothing.d";
 
   const props: {
     clothing: IClothing;
@@ -7,15 +7,27 @@
   } = $props();
 
   function formatPrice(priceCts: number): string {
-    return (priceCts / 100).toLocaleString('fr-FR', {
-      style: 'currency',
-      currency: 'EUR'
+    return (priceCts / 100).toLocaleString("fr-FR", {
+      style: "currency",
+      currency: "EUR",
     });
   }
 </script>
 
-<div class="container mx-auto px-4 py-8">
-  <!-- Image du vêtement -->
+<div class="mt-20 mx-4">
+  
+  <h3 class="title-3">Nike Sportswear</h3>
+  <h1 class="title-1">{props.clothing.name}</h1>
+
+  <img 
+    src={props.clothing.imageUrl} 
+    alt={props.clothing.name}
+    class="w-full max-h-[75%] object-cover object-center rounded-2xl my-6"
+  />
+
+</div>
+
+<!-- <div class="container mx-auto px-4 py-8">
   <div class="relative h-96 w-full mb-6">
     <img 
       src={props.clothing.imageUrl} 
@@ -24,11 +36,9 @@
     />
   </div>
 
-  <!-- Informations du vêtement -->
   <div class="space-y-4">
     <h1 class="text-2xl font-bold">{props.clothing.name}</h1>
     
-    <!-- Type et couleurs -->
     <div class="flex gap-2 items-center">
       <span class="text-gray-600">{props.clothing.type}</span>
       <div class="flex gap-1">
@@ -68,7 +78,6 @@
         {/if}
     </section>
 
-    <!-- Notes -->
     <div class="flex gap-4">
       {#if props.clothing.ecologyRate5}
         <div class="flex items-center gap-1">
@@ -139,4 +148,4 @@
         </div>
     </section>
   </div>
-</div>
+</div> -->

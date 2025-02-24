@@ -32,24 +32,24 @@
 </script>
 
 <nav class="fixed bottom-0 left-0 w-full flex flex-col-reverse gap-6">
-  <ul
-    class="flex gap-4 justify-around bg-primary py-2 border-t-border border-t-1 mx-4"
-  >
-    {#each menus as menuItem}
-      <li
-        class={`flex-1 ${isActive(menuItem.link) ? "text-label" : "text-disabled"}`}
-      >
-        <a href={menuItem.link} onclick={() => (forceActive = menuItem.link)}>
-          <div class="w-8 h-12 flex items-center flex-col gap-1 mx-auto">
-            <span class={`${menuItem.icon} text-2xl`}></span>
-            <span class="text-xs">
-              {menuItem.name}
-            </span>
-          </div>
-        </a>
-      </li>
-    {/each}
-  </ul>
+  <div class="border-t-border border-t-1">
+    <ul class="flex gap-4 justify-around bg-primary py-2 mx-4">
+      {#each menus as menuItem}
+        <li
+          class={`flex-1 ${isActive(menuItem.link) ? "text-label" : "text-disabled"}`}
+        >
+          <a href={menuItem.link} onclick={() => (forceActive = menuItem.link)}>
+            <div class="w-8 h-12 flex items-center flex-col gap-1 mx-auto">
+              <span class={`${menuItem.icon} text-2xl`}></span>
+              <span class="text-xs">
+                {menuItem.name}
+              </span>
+            </div>
+          </a>
+        </li>
+      {/each}
+    </ul>
+  </div>
 
   <a
     href="/posts/new"

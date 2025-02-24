@@ -7,10 +7,23 @@
   --color-*: initial;
   --color-primary: #ffffff;
   --color-label: #000000;
+  --color-title: #000000;
   --color-disabled: #808080;
   --color-border: #f6f6f6;
   --color-ui-background: #000000;
   --color-ui-surface: #ffffff;
+}
+
+@utility title-1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: theme(colors.title);
+}
+
+@utility title-3 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: theme(colors.title);
 }
 
 @layer components {
