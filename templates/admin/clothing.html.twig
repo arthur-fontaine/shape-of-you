@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+        <h1>Edit Clothing</h1>
+        <form action="{{ path('app_admin_clothing_update', {id: clothing.id}) }}" method="post">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="{{ clothing.name }}">
+            </div>
+            <div>
+                <label for="type">Type</label>
+                <select id="type" name="type">
+                    {% for type in clothing_types %}
+                        <option value="{{ type.value }}" {% if type.value == clothing.type %}selected{% endif %}>{{ type.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="imageUrl">Image URL</label>
+                <input type="text" id="imageUrl" name="imageUrl" value="{{ clothing.imageUrl }}">
+            </div>
+            <div>
+                <label for="color">Color</label>
+                <select id="color" name="color">
+                    {% for color in colors %}
+                        <option value="{{ color.value }}" {% if color.value == clothing.color %}selected{% endif %}>{{ color.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="socialRate5">Social Rate (out of 5)</label>
+                <input type="number" id="socialRate5" name="socialRate5" value="{{ clothing.socialRate5 }}">
+            </div>
+            <div>
+                <label for="ecologyRate5">Ecology Rate (out of 5)</label>
+                <input type="number" id="ecologyRate5" name="ecologyRate5" value="{{ clothing.ecologyRate5 }}">
+            </div>
+            <div>
+                <label for="measurements">Measurements</label>
+                <input type="text" id="measurements" name="measurements" value="{{ clothing.measurements|json_encode }}">
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+{% endblock %}

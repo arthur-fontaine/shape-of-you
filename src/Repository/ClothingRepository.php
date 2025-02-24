@@ -71,4 +71,10 @@ class ClothingRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($clothing);
         $this->getEntityManager()->flush();
     }
+
+    public function save(Clothing $clothing): void
+    {
+        $this->getEntityManager()->persist($clothing);
+        $this->getEntityManager()->flush();
+    }
 }
