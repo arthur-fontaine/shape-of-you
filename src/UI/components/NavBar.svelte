@@ -31,7 +31,7 @@
   };
 </script>
 
-<nav class="fixed bottom-0 left-0 w-full">
+<nav class="fixed bottom-0 left-0 w-full flex flex-col-reverse gap-6">
   <ul
     class="flex gap-4 justify-around bg-primary py-2 border-t-border border-t-1 mx-4"
   >
@@ -50,4 +50,12 @@
       </li>
     {/each}
   </ul>
+
+  <a
+    href="/posts/new"
+    class="bg-ui-background text-ui-surface w-fit h-fit p-4 rounded-2xl flex self-end mx-6"
+    aria-label="Créer un post"
+  >
+    <span class="icon-[tabler--plus] text-2xl text-white"></span>
+  </a>
 </nav>

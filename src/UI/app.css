@@ -9,6 +9,8 @@
   --color-label: #000000;
   --color-disabled: #808080;
   --color-border: #f6f6f6;
+  --color-ui-background: #000000;
+  --color-ui-surface: #ffffff;
 }
 
 @layer components {
