@@ -120,5 +120,30 @@ final class ClothingController extends AbstractController
         return $this->redirectToRoute('app_admin_clothing', ['id' => $clothing->getId()]);
     }
 
+    #[Route('/admin/new/clothing', name: 'app_admin_clothing_new', methods: ['GET'])]
+    public function newClothing(): Response
+    {
+        return $this->render('admin/clothing_new.html.twig', [
+            'clothing_types' => ClothingType::cases(),
+            'colors' => Color::cases()
+        ]);
+    }
+
+    #[Route('/admin/new/clothing', name: 'app_admin_clothing_create', methods: ['POST'])]
+    public function createClothing(Request $request): Response
+    {
+        $color[] = Color::from($request->request->get('color'));
+        $clothing = new Clothing();
+        $clothing->setName($request->request->get('name'));
+        $clothing->setType(ClothingType::From($request->request->get('type')));
+        $clothing->setImageUrl($request->request->get('imageUrl'));
+        $clothing->setColor($color);
+        $clothing->setSocialRate5((int) $request->request->get('socialRate5'));
+        $clothing->setEcologyRate5((int) $request->request->get('ecologyRate5'));
+        $clothing->setMeasurements(json_decode($request->request->get('measurements'), true));
+        $this->clothingRepository->save($clothing);
+        return $this->redirectToRoute('app_admin_clothing', ['id' => $clothing->getId()]);
+    }
+
 
 }

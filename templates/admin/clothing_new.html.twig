@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+        <h1>New Clothing</h1>
+        <form action="" method="post">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div>
+                <label for="type">Type</label>
+                <select id="type" name="type">
+                    {% for type in clothing_types %}
+                        <option value="{{ type.value }}">{{ type.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="imageUrl">Image URL</label>
+                <input type="text" id="imageUrl" name="imageUrl">
+            </div>
+            <div>
+                <label for="color">Color</label>
+                <select id="color" name="color">
+                    {% for color in colors %}
+                        <option value="{{ color.value }}">{{ color.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="socialRate5">Social Rate (out of 5)</label>
+                <input type="number" id="socialRate5" name="socialRate5">
+            </div>
+            <div>
+                <label for="ecologyRate5">Ecology Rate (out of 5)</label>
+                <input type="number" id="ecologyRate5" name="ecologyRate5">
+            </div>
+            <div>
+                <label for="measurements">Measurements</label>
+                <input type="text" id="measurements" name="measurements" value='{"chest":0,"waist":0,"length":0}'>
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+{% endblock %}
