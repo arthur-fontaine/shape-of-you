@@ -1,6 +1,16 @@
 @import "tailwindcss";
 @source '../../templates/**/*.twig';
 
+@plugin './styles/iconify.mjs';
+
+@theme {
+  --color-*: initial;
+  --color-primary: #ffffff;
+  --color-label: #000000;
+  --color-disabled: #808080;
+  --color-border: #f6f6f6;
+}
+
 @layer components {
   .spinner {
     &::before {
