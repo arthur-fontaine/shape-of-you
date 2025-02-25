@@ -17,6 +17,8 @@
         <div class="mb-[65px]">
             {% block body %}{% endblock %}
         </div>
-        <div {{ svelte_component('components/NavBar') }} />
+        {% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}
+            <div {{ svelte_component('components/NavBar') }} />
+        {% endif %}
     </body>
 </html>
