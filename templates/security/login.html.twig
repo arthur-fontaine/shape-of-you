@@ -1,38 +1,49 @@
 {% set hide_nav_bar = true %}
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Log in!
+{% endblock %}
 
 {% block body %}
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <form method="post">
-                {% if error %}
-                    <div class="bg-red-100 text-red-700 p-2 rounded mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
+	<div class="min-h-screen flex items-center justify-center">
+		<div class="bg-background py-12 px-6 rounded w-full max-w-md">
+			<form method="post">
+				{% if error %}
+					<div class="bg-error text-red-700 p-2 rounded mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
 
-                {% if app.user %}
-                    <div class="mb-3 text-gray-700">
-                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" class="text-blue-500">Logout</a>
-                    </div>
-                {% endif %}
+				{% if app.user %}
+					<div class="mb-3 text-gray-700">
+						You are logged in as
+						{{ app.user.userIdentifier }},
+						<a href="{{ path('app_logout') }}" class="text-blue-500">Logout</a>
+					</div>
+				{% endif %}
 
-                <h1 class="text-2xl font-bold mb-6 text-center">Please sign in</h1>
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700">Email</label>
-                    <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-input mt-1 block w-full" autocomplete="email" required autofocus>
+				<h1 class="text-2xl font-bold mb-6 text-center">Se connecter</h1>
+				<label for="username" class="block text-gray-700">
+					E-mail
+					<div class="mb-4 mt-1 input bg-input-background">
+						<input type="email" value="{{ last_username }}" name="_username" id="username" class="form-input block w-full" autocomplete="email" required autofocus placeholder="Votre e-mail">
+					</div>
+				</label>
+                <label for="password" class="block text-gray-700">
+                    Mot de passe
+					<div class="mb-4 mt-1 input bg-input-background">
+						<input type="password" name="_password" id="password" class="form-input block w-full" autocomplete="current-password" required placeholder="Votre mot de passe">
+					</div>
+				</label>
+
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+				<button class="w-full button mt-2">
+					Se connecter
+				</button>
+
+                <div class="mt-4 text-center">
+                    <a href="{{ path('app_register') }}" class="underline font-light">Pas encore de compte ?</a>
                 </div>
-                <div class="mb-6">
-                    <label for="password" class="block text-gray-700">Password</label>
-                    <input type="password" name="_password" id="password" class="form-input mt-1 block w-full" autocomplete="current-password" required>
-                </div>
-
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-                    Sign in
-                </button>
-            </form>
-        </div>
-    </div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

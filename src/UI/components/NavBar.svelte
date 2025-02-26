@@ -53,7 +53,7 @@
 
   <a
     href="/posts/new"
-    class="bg-ui-background text-ui-surface w-fit h-fit p-4 rounded-button flex self-end mx-6"
+    class="ui w-fit h-fit p-4 rounded-button flex self-end mx-6"
     aria-label="Créer un post"
   >
     <span class="icon-[tabler--plus] text-2xl text-white"></span>
