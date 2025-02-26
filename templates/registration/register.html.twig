@@ -90,10 +90,15 @@
                 </div>
                 {{ form_errors(registrationForm.footMeasurementCm) }}
             </div>
-            {{ form_end(registrationForm) }}
-            <button type="submit" class="w-full button mt-8">
+            <div class="mb-4">
+                <label>
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                <span class="ml-2">J'accepte les termes et conditions</span>
+            </div>
+            <button type="submit" class="w-full button">
                 S'inscrire
             </button>
+            {{ form_end(registrationForm) }}
 
             <div class="mt-4 text-center">
                 <a href="{{ path('app_login') }}" class="underline font-light">Déjà un compte ?</a>
