@@ -31,8 +31,8 @@
   };
 </script>
 
-<nav class="fixed bottom-0 left-0 w-full flex flex-col-reverse gap-6">
-  <div class="border-t-border border-t-1">
+<nav class="fixed bottom-0 left-0 w-full flex flex-col-reverse gap-6 pointer-events-none">
+  <div class="border-t-border border-t-1 pointer-events-auto">
     <ul class="flex gap-4 justify-around bg-background py-2 px-4">
       {#each menus as menuItem}
         <li
@@ -53,7 +53,7 @@
 
   <a
     href="/posts/new"
-    class="ui w-fit h-fit p-4 rounded-button flex self-end mx-6"
+    class="ui w-fit h-fit p-4 rounded-button flex self-end mx-6 pointer-events-auto"
     aria-label="Créer un post"
   >
     <span class="icon-[tabler--plus] text-2xl text-white"></span>

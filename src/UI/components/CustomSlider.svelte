@@ -74,7 +74,7 @@
 
 <div
   bind:this={track}
-  class={`relative w-full h-[.5em] bg-gray-200 rounded-full ${props.trackClass ?? ''}`}
+  class={`relative w-3/5 h-[.5em] bg-fire/10 rounded-full ${props.trackClass ?? ''}`}
   role="slider"
   aria-valuemin={props.min}
   aria-valuemax={props.max}
@@ -85,7 +85,7 @@
 >
   <div
     bind:this={thumb}
-    class={`absolute left-[var(--value)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 select-none text-[2em] ${props.thumbClass ?? ''}`}
+    class={`absolute left-[var(--value)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 select-none text-[2em] ${props.thumbClass ?? ''} scale-[calc(75%+var(--value))]`}
     style={`--value: ${percent.toFixed(2)}%`}
   >
     {@render props.children?.()}
