@@ -15,6 +15,12 @@
     </head>
     <body>
         <div>
+            {% if (hide_header is not defined) or (hide_header is not same as(true)) %}
+                <header class="p-6 flex justify-center">
+                    <img src="/static/logo-wide.png" alt="Logo" class="h-10 w-auto" />
+                </header>
+            {% endif %}
+
             <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %}">
                 {% block body %}{% endblock %}
             </div>
