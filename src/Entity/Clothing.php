@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use JsonSerializable;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\ClothingRepository;
@@ -11,7 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClothingRepository::class)]
-class Clothing
+class Clothing implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -275,5 +276,19 @@ class Clothing
         $this->name = $name;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'type' => $this->type,
+            'color' => $this->color,
+            'measurements' => $this->measurements,
+            'socialRate5' => $this->socialRate5,
+            'ecologyRate5' => $this->ecologyRate5,
+            'imageUrl' => $this->imageUrl,
+            'name' => $this->name,
+        ];
     }
 }

@@ -16,28 +16,53 @@ class ClothingRepository extends ServiceEntityRepository
         parent::__construct($registry, Clothing::class);
     }
 
-    //    /**
-    //     * @return Clothing[] Returns an array of Clothing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Clothing[] Returns an array of Clothing objects
+     */
+    public function findByFields(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('c');
 
-    //    public function findOneBySomeField($value): ?Clothing
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        foreach ($criteria as $field => $value) {
+            $qb->andWhere("c.$field = :$field")
+                ->setParameter($field, $value);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function searchByText(string $query): array
+    {
+        try {
+            $words = array_filter(explode(' ', trim($query)));
+            
+            $qb = $this->createQueryBuilder('c')
+                ->select('c.id', 'c.name', 'c.type', 'c.imageUrl');
+            
+            if (!empty($words)) {
+                $conditions = [];
+                foreach ($words as $index => $word) {
+                    $nameParam = 'name_' . $index;
+                    $typeParam = 'type_' . $index;
+                    $colorParam = 'color_' . $index;
+                    
+                    $conditions[] = $qb->expr()->orX(
+                        $qb->expr()->like('LOWER(c.name)', ':' . $nameParam),
+                        $qb->expr()->like('LOWER(c.type)', ':' . $typeParam),
+                        $qb->expr()->like('LOWER(c.color)', ':' . $colorParam)
+                    );
+                    
+                    $qb->setParameter($nameParam, '%' . strtolower($word) . '%')
+                    ->setParameter($typeParam, '%' . strtolower($word) . '%')
+                    ->setParameter($colorParam, '%' . strtolower($word) . '%');
+                }
+                
+                $qb->where($qb->expr()->andX(...$conditions));
+            }
+            
+            return $qb->getQuery()->getResult();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }
