@@ -82,6 +82,17 @@
 }
 
 @layer base {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body > div {
+    position: absolute;
+    inset: 0;
+    overflow: auto;
+  }
+
   div:has(> #registration_form_agreeTerms) {
     display: flex;
     align-items: center;

@@ -14,11 +14,13 @@
         {% endblock %}
     </head>
     <body>
-        <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %}">
-            {% block body %}{% endblock %}
+        <div>
+            <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %}">
+                {% block body %}{% endblock %}
+            </div>
+            {% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}
+                <div {{ svelte_component('components/NavBar') }} />
+            {% endif %}
         </div>
-        {% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}
-            <div {{ svelte_component('components/NavBar') }} />
-        {% endif %}
     </body>
 </html>

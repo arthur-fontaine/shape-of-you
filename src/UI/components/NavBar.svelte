@@ -33,7 +33,7 @@
 
 <nav class="fixed bottom-0 left-0 w-full flex flex-col-reverse gap-6">
   <div class="border-t-border border-t-1">
-    <ul class="flex gap-4 justify-around bg-background py-2 mx-4">
+    <ul class="flex gap-4 justify-around bg-background py-2 px-4">
       {#each menus as menuItem}
         <li
           class={`flex-1 ${isActive(menuItem.link) ? "text-label" : "text-disabled"}`}
