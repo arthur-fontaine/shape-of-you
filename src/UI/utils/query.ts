@@ -27,9 +27,17 @@ export const createQuery = <T>(url: string = location.href) => {
 }
 
 export const createMutation = <T = unknown, U = void>(
-  url: string = location.href,
-  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST',
+  _url: string | undefined = undefined,
+  _method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | undefined = undefined,
+  { onSuccess, onMutate, onError }: {
+    onSuccess?: (data: T, params: U) => void,
+    onMutate?: (params: U) => void,
+    onError?: (error: any, params: U) => void,
+  } = {}
 ) => {
+  const url = _url ?? location.href;
+  const method = _method ?? 'POST';
+
   initQueryClient();
   return createMutation_({
     mutationKey: [url],
@@ -43,5 +51,8 @@ export const createMutation = <T = unknown, U = void>(
       })
       return res.json() as Promise<T>
     },
+    onSuccess,
+    onMutate,
+    onError,
   })
 }

@@ -72,4 +72,26 @@ final class DressingController extends AbstractController
         $this->dressingPieceRepository->upsertDressingPiece($data, $this->getUser());
         return new JsonResponse();
     }
+
+    #[Route('/clothing/{clothingId}/add-to-dressing', name: 'api_dressing_piece_add', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function addDressingPiece(Request $request, string $clothingId): Response
+    {
+        $data = ['clothingId' => $clothingId];
+        if (!empty($request->getContent())) {
+            $data = array_merge($request->toArray(), $data);
+        }
+        $this->dressingPieceRepository->upsertDressingPiece($data, $this->getUser());
+        return new JsonResponse();
+    }
+
+    #[Route('/clothing/{clothingId}/remove-from-dressing', name: 'api_dressing_piece_remove', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function removeDressingPieceByClothingId(Request $request, string $clothingId): Response
+    {
+        $data = ['clothingId' => $clothingId];
+        if (!empty($request->getContent())) {
+            $data = array_merge($request->toArray(), $data);
+        }
+        $this->dressingPieceRepository->removeDressingPiece($data['clothingId'], $this->getUser());
+        return new JsonResponse();
+    }
 }
