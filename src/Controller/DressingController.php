@@ -44,6 +44,7 @@ final class DressingController extends AbstractController
         ];
         return $this->render('dressing/index.html.twig', [
             'dressing' => json_decode($serializer->serialize($this->getUser()->getDressing()->toArray(), 'json', $context)),
+            'user' => $this->getUser(),
         ]);
     }
 
