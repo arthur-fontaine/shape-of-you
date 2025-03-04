@@ -92,6 +92,10 @@
     #registration_form_agreeTerms {
     }
   }
+
+  [data-controller="symfony--ux-svelte--svelte"] {
+    display: contents;
+  }
 }
 
 @keyframes spinner {

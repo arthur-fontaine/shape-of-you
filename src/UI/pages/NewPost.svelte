@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import Camera from "../components/Camera.svelte";
   import { createMutation } from "../utils/query";
   const post = createMutation();
@@ -18,8 +18,7 @@
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
-  <!-- MENU -->
+<form on:submit|preventDefault={onSubmit} class="flex flex-col gap-4 h-full">
   <input
     id="take-photo"
     class="peer/take-photo"
@@ -42,22 +41,66 @@
   <label for="upload-photo" class="peer-checked/upload-photo:text-sky-500">
     Upload photo
   </label>
-  <!-- /MENU -->
 
-  <div class="hidden peer-checked/take-photo:block">
+  <div class="hidden peer-checked/take-photo:block flex-1">
     <Camera enableCapture enableModeSwitch onCapture={console.log} captureAsInput="take-photo-image" />
   </div>
 
-  <div class="hidden peer-checked/upload-photo:block">
+  <div class="hidden peer-checked/upload-photo:block flex-1">
     <input type="file" name="upload-photo-image" accept="image/*" />
   </div>
 
-  <input type="text" name="text" placeholder="Description" />
+   <textarea name="text" placeholder="Description" class="h-32 p-2 border border-gray-300 rounded-md"></textarea>
 
-  <button type="submit" disabled={$post.isPending}>
+  <button type="submit" disabled={$post.isPending} class="button">
     {#if $post.isPending}
       <div class="spinner"></div>
     {/if}
     Post
   </button>
-</form>
+</form> -->
+
+<script lang="ts">
+  import Camera from "../components/Camera.svelte";
+
+  let image = $state<string>();
+</script>
+
+<div class="h-full">
+  <button
+    onclick={() => navigation.back()}
+    class="absolute top-0 left-0 p-4 text-3xl z-10"
+  >
+    <span class="icon-[tabler--arrow-narrow-left] text-ui-surface"></span>
+  </button>
+
+  <Camera
+    enableCapture
+    enableModeSwitch
+    onCapture={(img) => (image = img)}
+    captureAsInput="take-photo-image"
+    width={1080}
+    height={1350}
+    capturedImage={image}
+  >
+    <label>
+      <span class="icon-[tabler--library-photo] text-ui-surface flex"></span>
+      <input
+        type="file"
+        name="upload-photo-image"
+        accept="image/*"
+        class="hidden"
+        onchange={async (e) => {
+          const file = (e.target as HTMLInputElement).files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              image = event.target?.result as string;
+            };
+            reader.readAsDataURL(file);
+          }
+        }}
+      />
+    </label>
+  </Camera>
+</div>

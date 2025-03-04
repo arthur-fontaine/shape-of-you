@@ -14,7 +14,7 @@
         {% endblock %}
     </head>
     <body>
-        <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %}">
+        <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %} h-dvh">
             {% block body %}{% endblock %}
         </div>
         {% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}
