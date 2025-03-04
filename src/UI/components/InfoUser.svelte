@@ -25,8 +25,9 @@
             </div>
         </div>
         <div class="mt-4 flex space-x-4">
-            <a href="/profil" class="bg-blue-500 text-white px-4 py-2 rounded">Publication</a>
-            <a href="/bookmark" class="bg-gray-500 text-white px-4 py-2 rounded">Bookmark</a>
+            <a href="/profile" class="bg-blue-500 text-white px-4 py-2 rounded">Publication</a>
+            <a href="/profile/bookmarks" class="bg-gray-500 text-white px-4 py-2 rounded">Bookmark</a>
+            <a href="/profile/dressing" class="bg-gray-500 text-white px-4 py-2 rounded">Dressing</a>
         </div>
     </div>
 </div>
