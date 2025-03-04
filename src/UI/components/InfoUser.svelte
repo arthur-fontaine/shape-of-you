@@ -10,7 +10,7 @@
     } = $props();
 </script>
 
-<div class="bg-white shadow-md">
+<div class="shadow-md mb-4">
     <div class="max-w-5xl mx-auto p-4 pb-0">
         <div class="flex items-center space-x-4">
             <Avatar

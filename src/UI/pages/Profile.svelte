@@ -8,11 +8,9 @@
     } = $props();
 </script>
 
-<div class="min-h-screen bg-gray-100">
-    <InfoUser {user} />
-    <div class="max-w-5xl mx-auto mt-6 grid grid-cols-1 gap-4 px-4">
-        {#each user.posts as post (post.id)}
-            <Post {post} hideRateSlider />
-        {/each}
-    </div>
+<InfoUser {user} />
+<div class="max-w-5xl mx-auto mt-6 grid grid-cols-1 gap-4 px-4">
+    {#each user.posts as post (post.id)}
+        <Post {post} hideRateSlider />
+    {/each}
 </div>
