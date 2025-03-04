@@ -2,7 +2,7 @@
 
     import {createMutation} from "../utils/query.js";
 
-    const bookmark = createMutation<{ bookmarkListUrl: string }>();
+    const bookmark = createMutation<{ bookmarkListUrl: string }, FormData>();
 
     function onSubmit(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
@@ -10,7 +10,10 @@
         sentFormData.append("name", formData.get("name") as string);
         sentFormData.append("isBookmark", formData.get("isBookmark") as string);
         $bookmark.mutate(sentFormData, {
-            onSuccess: ({ bookmarkListUrl }) => location.href = bookmarkListUrl
+            onSuccess: ({ bookmarkListUrl }) => {
+                history.replaceState({}, "", bookmarkListUrl)
+                location.reload();
+            },
         });
 
     }

@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import type {IClothing} from "../types/Clothing";
     import {createMutation} from "../utils/query";
 
@@ -20,8 +19,8 @@
             clothingId: clothing.id
         });
     }
-
 </script>
+
 <div class="mb-3 bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-4">
         <h3 class="text-lg font-semibold">{clothing.name}</h3>
