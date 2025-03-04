@@ -15,7 +15,7 @@
 
     const dressingMutation = createMutation<unknown, {
         clothingId: number;
-    }> (`/dressing/remove`);
+    }> (`/profile/dressing/remove-item`);
     function onDelete() {
         $dressingMutation.mutate({
             clothingId: clothing.id

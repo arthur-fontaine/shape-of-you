@@ -9,6 +9,7 @@ use App\Entity\DressingPiece;
 use App\Repository\DressingPieceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,7 +27,7 @@ final class DressingController extends AbstractController
     {
         $this->dressingPieceRepository = $dressingPieceRepository;
     }
-    #[Route('/dressing', name: 'app_dressing')]
+    #[Route('/profile/dressing', name: 'app_dressing')]
     public function index(SerializerInterface $serializer): Response
     {
         if (!$this->getUser()) {
@@ -46,7 +47,7 @@ final class DressingController extends AbstractController
         ]);
     }
 
-    #[Route('/dressing/remove', name: 'app_dressing_piece_remove', requirements: ['_format' => 'json'], methods: ['POST'])]
+    #[Route('/profile/dressing/remove-item', name: 'app_dressing_piece_remove', requirements: ['_format' => 'json'], methods: ['POST'])]
     public function removeDressingPiece(Request $request): Response
     {
         $data = $request->toArray();
@@ -61,35 +62,14 @@ final class DressingController extends AbstractController
         return new Response();
     }
 
-    #[Route('/dressing/new/{id}', name: 'app_dressing_piece_new_render', requirements: ['_format' => 'html'], methods: ['GET'])]
-    public function newDressingPieceRender(Clothing $clothing, SerializerInterface $serializer): Response
+    #[Route('/clothing/{clothingId}/upsert-to-dressing', name: 'api_dressing_piece_upsert', requirements: ['_format' => 'json'], methods: ['POST'])]
+    public function upsertDressingPiece(Request $request, string $clothingId): Response
     {
-        $context = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, ?string $format, array $context): string {
-                if (!$object instanceof Clothing && !$object instanceof ClothingLink && !$object instanceof ClothingList && !$object instanceof DressingPiece) {
-                    throw new CircularReferenceException('A circular reference has been detected when serializing the object of class "'.get_debug_type($object).'".');
-                }
-
-                return '';
-            },
-        ];
-        return $this->render('dressing/new.html.twig',
-            [
-                'clothing' => json_decode($serializer->serialize($clothing, 'json', $context)),
-            ]);
-    }
-
-    #[Route('/dressing/new', name: 'app_dressing_piece_new', requirements: ['_format' => 'json'], methods: ['POST'])]
-    public function newDressingPiece(Request $request): Response
-    {
-        $data = $request->request->all();
-
-        if (!isset($data['clothingId'])) {
-            throw new BadRequestHttpException('clothingId is required');
+        $data = ['clothingId' => $clothingId];
+        if (!empty($request->getContent())) {
+            $data = array_merge($request->toArray(), $data);
         }
-
-        $dressing =  $this->dressingPieceRepository->createDressingPiece($data, $this->getUser());
-
-        return new Response();
+        $this->dressingPieceRepository->upsertDressingPiece($data, $this->getUser());
+        return new JsonResponse();
     }
 }

@@ -12,14 +12,12 @@
     const bookmark = props.clothingList;
     const clothingCollection = props.clothingCollection;
 
-
-    console.log(bookmark.id);
     const bookmarkMutation = createMutation<unknown, {
         bookmarkId: number;
-    }> (`/bookmarks/delete`);
+    }> (`/profile/bookmarks/delete`);
     function onDelete() {
-        $bookmarkMutation.mutate({
-            bookmarkId: bookmark.id
+        $bookmarkMutation.mutate({ bookmarkId: bookmark.id }, {
+            onSuccess: () => location.pathname = "/profile/bookmarks"
         });
     }
 </script>

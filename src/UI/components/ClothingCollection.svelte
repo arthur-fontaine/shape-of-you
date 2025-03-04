@@ -3,8 +3,6 @@
     import type {IClothing} from "../types/Clothing";
     import {createMutation} from "../utils/query";
 
-
-
     const props: {
         clothing: IClothing;
         idBookmark: number;
@@ -14,13 +12,11 @@
     const idBookmark = props.idBookmark;
 
     const bookmarkMutation = createMutation<unknown, {
-        bookmarkId: number;
         clothingId: number;
-    }> (`/bookmarks/remove`);
+    }> (`/profile/bookmarks/${idBookmark}/remove-item`);
 
     function onDelete() {
         $bookmarkMutation.mutate({
-            bookmarkId: idBookmark,
             clothingId: clothing.id
         });
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Clothing;
 use App\Repository\ClothingRepository;
+use App\Repository\DressingPieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,8 +17,9 @@ final class ClothingController extends AbstractController
     }
 
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
-    public function show(Clothing $clothing): Response
+    public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository): Response
     {
+        $dressingData = $dressingPieceRepository->findOneBy(['clothing' => $clothing, 'owner' => $this->getUser()]);
         $clothingData = [
             'id' => $clothing->getId(),
             'name' => $clothing->getName(),
@@ -26,7 +28,10 @@ final class ClothingController extends AbstractController
             'color' => $clothing->getColor(),
             'socialRate5' => $clothing->getSocialRate5(),
             'ecologyRate5' => $clothing->getEcologyRate5(),
-            'measurements' => $clothing->getMeasurements() 
+            'measurements' => $clothing->getMeasurements() ,
+            'isInDressing' => $dressingData !== null,
+            'rate' => $dressingData?->getRate10(),
+            'comment' => $dressingData?->getComment(),
         ];
 
         $links = array_map(function($link) {

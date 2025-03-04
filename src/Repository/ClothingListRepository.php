@@ -66,9 +66,12 @@ class ClothingListRepository extends ServiceEntityRepository
 
     public function delete(int $bookmarkId): void
     {
-        $bookmark = $this->find($bookmarkId);
-        $this->getEntityManager()->remove($bookmark);
-        $this->getEntityManager()->flush();
+        $this->createQueryBuilder('c')
+            ->delete()
+            ->where('c.id = :id')
+            ->setParameter('id', $bookmarkId)
+            ->getQuery()
+            ->execute();
     }
 
     public function addClothing(int $clothingId, int $bookmarkId)

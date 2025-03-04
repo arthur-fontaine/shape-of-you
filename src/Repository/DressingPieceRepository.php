@@ -42,14 +42,23 @@ class DressingPieceRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-    public function createDressingPiece(array $data, User $user): DressingPiece
+    public function upsertDressingPiece(array $data, User $user): DressingPiece
     {
         $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($data['clothingId']);
-        $dressingPiece = new DressingPiece();
-        $dressingPiece->setClothing($clothing);
-        $dressingPiece->setOwner($user);
-        $dressingPiece->setComment($data['comment']);
-        $dressingPiece->setRate10($data['rate']);
+        $dressingPiece = $this->findOneBy(['clothing' => $clothing, 'owner' => $user]);
+
+        if (!$dressingPiece) {
+            $dressingPiece = new DressingPiece();
+            $dressingPiece->setClothing($clothing);
+            $dressingPiece->setOwner($user);
+        }
+
+        if (isset($data['comment'])) {
+            $dressingPiece->setComment($data['comment']);
+        }
+        if (isset($data['rate'])) {
+            $dressingPiece->setRate10($data['rate']);
+        }
         $this->getEntityManager()->persist($dressingPiece);
         $this->getEntityManager()->flush();
         return $dressingPiece;

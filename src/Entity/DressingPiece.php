@@ -18,7 +18,7 @@ class DressingPiece
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $rate10 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
