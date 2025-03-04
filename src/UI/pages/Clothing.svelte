@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="mt-20 mx-4">
+<div class="mx-4">
   
   <h3 class="title-3">Nike Sportswear</h3>
   <h1 class="title-1">{props.clothing.name}</h1>

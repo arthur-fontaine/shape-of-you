@@ -109,11 +109,13 @@
     <ul class="flex flex-col gap-3">
       {#each $search.data as item}
         <li>
-          <SearchResultSkeleton>
-            <img slot="image" src={item.imageUrl} alt={item.name} />
-            <span slot="name">{item.name}</span>
-            <span slot="description">{item.description ?? ""}</span>
-          </SearchResultSkeleton>
+          <a href={`/clothing/${item.id}`}>
+            <SearchResultSkeleton>
+              <img slot="image" src={item.imageUrl} alt={item.name} />
+              <span slot="name">{item.name}</span>
+              <span slot="description">{item.description ?? ""}</span>
+            </SearchResultSkeleton>
+          </a>
         </li>
       {/each}
     </ul>

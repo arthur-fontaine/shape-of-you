@@ -15,9 +15,15 @@
     </head>
     <body>
         <div>
-            {% if (hide_header is not defined) or (hide_header is not same as(true)) %}
-                <header class="p-6 flex justify-center">
-                    <img src="/static/logo-wide.png" alt="Logo" class="h-10 w-auto" />
+            {% if (show_header is defined) and (show_header is same as(true)) %}
+                <header class="px-4 py-6 flex justify-center">
+                    {% if (header_is_back is defined) and (header_is_back is same as(true)) %}
+                        <a href="#" onclick="window.history.back(); return false;" class="flex text-2xl mr-auto">
+                            <span class="icon-[tabler--arrow-left]"></span>
+                        </a>
+                    {% else %}
+                        <img src="/static/logo-wide.png" alt="Logo" class="h-10 w-auto" />
+                    {% endif %}
                 </header>
             {% endif %}
 
