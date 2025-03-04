@@ -4,14 +4,20 @@
   import { createMutation } from "../utils/query";
   import { debounce } from "lodash-es";
 
-  const { post }: { post: IPost } = $props();
+  const { post, hideRateSlider }: { post: IPost; hideRateSlider?: boolean } =
+    $props();
 
   let hasRated = $state<boolean>(
     post.myRate !== undefined && post.myRate !== null,
   );
   let rate10 = $state<number>(post.myRate ?? 5);
 
-  const rateMutation = createMutation(`/posts/${post.postId}/rate`, 'PATCH');
+  const rateMutation = createMutation<
+    void,
+    {
+      rate: number;
+    }
+  >(`/posts/${post.postId}/rate`, "PATCH");
   const rateMutate = debounce($rateMutation.mutate, 500);
 
   $effect(() => {
@@ -27,19 +33,20 @@
     <p class="text-sm text-gray-500">{post.text}</p>
   </header>
   <img src={post.mediaUrls[0]} alt="Post" class="w-full h-auto rounded-card" />
-  <div class="p-4 flex items-center justify-between">
-    <CustomSlider
-      min={0}
-      max={10}
-      step={0.01}
-      bind:value={rate10}
-      onUserChange={() => (hasRated = true)}
-    >
-      <span class="relative">
-        <span
-          class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white px-1 text-sm w-min whitespace-nowrap"
-        >
-          <!-- {#if hasRated}
+  {#if !hideRateSlider}
+    <div class="p-4 flex items-center justify-between">
+      <CustomSlider
+        min={0}
+        max={10}
+        step={0.01}
+        bind:value={rate10}
+        onUserChange={() => (hasRated = true)}
+      >
+        <span class="relative">
+          <span
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white px-1 text-sm w-min whitespace-nowrap"
+          >
+            <!-- {#if hasRated}
             {#if rate10 < 5}
               Bof...
             {:else if rate10 < 7}
@@ -52,9 +59,10 @@
           {:else}
             Notez ce post
           {/if} -->
+          </span>
+          🔥
         </span>
-        🔥
-      </span>
-    </CustomSlider>
-  </div>
+      </CustomSlider>
+    </div>
+  {/if}
 </div>
