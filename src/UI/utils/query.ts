@@ -26,7 +26,7 @@ export const createQuery = <T>(url: string = location.href) => {
   })
 }
 
-export const createMutation = <T, U>(
+export const createMutation = <T = unknown, U = void>(
   url: string = location.href,
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST',
 ) => {

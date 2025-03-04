@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Clothing;
 use App\Entity\ClothingList;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @extends ServiceEntityRepository<ClothingList>
@@ -40,4 +43,44 @@ class ClothingListRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function removeClothing(int $clothinId, int $bookmarkId): void
+    {
+        $bookmark = $this->find($bookmarkId);
+        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothinId)->first();
+        $bookmark->removeClothing($clothing);
+        $this->getEntityManager()->flush();
+    }
+
+    public function create(User $user, string $name, bool $isBookmark): ClothingList
+    {
+        $clothingList = new ClothingList();
+        $clothingList->setCreator($user);
+        $clothingList->setName($name);
+        $clothingList->setBookmarkList($isBookmark);
+
+        $this->getEntityManager()->persist($clothingList);
+        $this->getEntityManager()->flush();
+
+        return $clothingList;
+    }
+
+    public function delete(int $bookmarkId): void
+    {
+        $this->createQueryBuilder('c')
+            ->delete()
+            ->where('c.id = :id')
+            ->setParameter('id', $bookmarkId)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function addClothing(int $clothingId, int $bookmarkId)
+    {
+        $bookmark = $this->find($bookmarkId);
+        $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($clothingId);
+        $bookmark->addClothing($clothing);
+        $this->getEntityManager()->flush();
+
+        return $bookmark;
+    }
 }
