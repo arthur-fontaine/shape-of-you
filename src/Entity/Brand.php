@@ -24,9 +24,16 @@ class Brand
     #[ORM\OneToMany(targetEntity: Clothing::class, mappedBy: 'brand')]
     private Collection $clothing;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'brand')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->clothing = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +77,36 @@ class Brand
             // set the owning side to null (unless already changed)
             if ($clothing->getBrand() === $this) {
                 $clothing->setBrand(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setBrand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getBrand() === $this) {
+                $user->setBrand(null);
             }
         }
 

@@ -109,6 +109,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Brand $brand = null;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
@@ -471,5 +474,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'posts' => $this->getPosts()->toArray(),
             'clothingLists' => $this->getClothingLists()->toArray(),
         ];
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
     }
 }
