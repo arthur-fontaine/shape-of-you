@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { IUser } from "../types/User";
     import InfoUser from "../components/InfoUser.svelte";
+    import * as Sheet from "../components/sheet";
 
     const {
         user,
@@ -11,10 +12,26 @@
 
 <InfoUser {user} />
 <div class="flex flex-col p-4">
-    <a href="/profile/bookmarks/new" class="button w-full flex items-center justify-center gap-2">
+    <!-- <a href="/profile/bookmarks/new" class="button w-full flex items-center justify-center gap-2">
         <span class="icon-[tabler--bookmark-plus]"></span>
         Créer une nouvelle collection
-    </a>
+    </a> -->
+    <Sheet.Root>
+        <Sheet.Trigger>
+            <button class="button w-full flex items-center justify-center gap-2">
+                <span class="icon-[tabler--bookmark-plus]"></span>
+                Créer une nouvelle collection
+            </button>
+        </Sheet.Trigger>
+        <Sheet.Content side="bottom">
+          <iframe
+            src="/profile/bookmarks/new"
+            title="Create a new collection"
+            class="w-full h-96"
+          >
+          </iframe>
+        </Sheet.Content>
+      </Sheet.Root>
     <div class="grid grid-cols-2 gap-4 mt-8">
         {#each user.clothingLists as clothingList (clothingList.id)}
             <div>

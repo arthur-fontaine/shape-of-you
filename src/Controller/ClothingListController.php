@@ -48,8 +48,7 @@ final class ClothingListController extends AbstractController
             throw new BadRequestHttpException('Missing required parameters');
         }
 
-        $isBookmark = ($data['isBookmark'] != 'null') ? $data['isBookmark'] : false;
-        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], $isBookmark);
+        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], true);
 
         $this->getUser()->addClothingList($clothingList);
 
