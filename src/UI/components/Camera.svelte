@@ -42,7 +42,10 @@
     canvas.height = video.videoHeight;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Unable to get 2d context");
+    context.translate(canvas.width, 0);
+    context.scale(-1, 1);
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    context.setTransform(1, 0, 0, 1, 0, 0);
     props.onCapture?.(canvas.toDataURL("image/jpeg"));
     if (props.captureAsInput) {
       const file = new File([canvas.toDataURL("image/jpeg")], "image.jpg", {
@@ -64,12 +67,12 @@
   <img
     src={props.capturedImage}
     alt="Captured"
-    class="w-full h-full object-cover"
+    class="w-full h-dvh object-cover"
   />
 {:else}
   <video
     id="camera"
-    class="w-full h-full object-cover"
+    class="w-full h-dvh object-cover -scale-x-100"
     autoplay
     bind:this={video}
   >
