@@ -45,11 +45,11 @@ final class SearchController extends AbstractController
             $colorFilters = $request->request->all('colors');
             $typeFilters = $request->request->all('types');
             $excludeUsers = $request->request->has('exclude_users');
-            
+
             // Get price filter parameters
             $priceMin = $request->request->get('price_min');
             $priceMax = $request->request->get('price_max');
-            
+
             // Validate price parameters
             $priceMin = is_numeric($priceMin) ? (int)$priceMin : null;
             $priceMax = is_numeric($priceMax) ? (int)$priceMax : null;
@@ -57,16 +57,16 @@ final class SearchController extends AbstractController
             // If exclude_users flag is present, only return clothing items
             if ($excludeUsers) {
                 return $this->json($this->clothingRepository->searchByText(
-                    $query, 
-                    $colorFilters, 
+                    $query,
+                    $colorFilters,
                     $typeFilters,
                     $priceMin,
                     $priceMax
                 ));
             } else {
                 return $this->json($this->searchService->textSearch(
-                    $query, 
-                    $colorFilters, 
+                    $query,
+                    $colorFilters,
                     $typeFilters,
                     $priceMin,
                     $priceMax
@@ -109,4 +109,5 @@ final class SearchController extends AbstractController
         // You can customize this further or use translations
         $formatted = str_replace('_', ' ', $typeValue);
         return ucfirst($formatted);
+    }
 }

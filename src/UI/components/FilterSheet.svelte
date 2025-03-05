@@ -23,16 +23,14 @@
       <slot />
     </div>
     
-    {#if hasFilters}
-      <Sheet.Footer>
-        <button 
-          type="button" 
-          class="text-sm text-primary underline"
-          onclick={onClear}
-        >
-          Effacer les filtres
-        </button>
-      </Sheet.Footer>
-    {/if}
+    <Sheet.Footer>
+      <button 
+        type="button" 
+        class="text-sm text-primary underline {hasFilters ? 'visible' : 'invisible'}"
+        onclick={onClear}
+      >
+        Effacer les filtres
+      </button>
+    </Sheet.Footer>
   </Sheet.Content>
 </Sheet.Root>

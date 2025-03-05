@@ -44,7 +44,7 @@
 }
 
 @utility text-trim-both {
-  text-box-trim: trim-both;
+  text-box: trim-both cap alphabetic;
 }
 
 @layer components {

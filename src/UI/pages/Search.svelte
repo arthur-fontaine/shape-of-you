@@ -5,7 +5,7 @@
   import FilterButton from "../components/FilterButton.svelte";
   import FilterSheet from "../components/FilterSheet.svelte";
   import PriceRangeSlider from "../components/PriceRangeSlider.svelte";
-  
+
   let {
     maxClothingPrice,
   }: {
@@ -27,81 +27,89 @@
     value: string;
     label: string;
   }
-  
+
   interface FilterResponse {
     colors: FilterOption[];
     types: FilterOption[];
   }
-  
+
   let colorOptions = $state<FilterOption[]>([]);
   let typeOptions = $state<FilterOption[]>([]);
-  
+
   let selectedColors = $state<string[]>([]);
   let selectedTypes = $state<string[]>([]);
-  
+
   let forceIsLoading = $state(false);
   const isLoading = $derived($search.isPending || forceIsLoading);
-  let searchQuery = $state('');
+  let searchQuery = $state("");
 
   async function fetchFilterOptions() {
-    const response = await fetch('/api/search/filters');
-    
+    const response = await fetch("/api/search/filters");
+
     const data: FilterResponse = await response.json();
-    
+
     colorOptions = data.colors;
     typeOptions = data.types;
   }
-  
+
   fetchFilterOptions();
 
   function searchText(text: string) {
     const formData = new FormData();
     formData.append("q", text);
-    
-    selectedColors.forEach(color => {
+
+    selectedColors.forEach((color) => {
       formData.append("colors[]", color);
     });
-    
-    selectedTypes.forEach(type => {
+
+    selectedTypes.forEach((type) => {
       formData.append("types[]", type);
     });
-    
+
     if (hasPriceFilter) {
       formData.append("price_min", minPrice.toString());
       formData.append("price_max", maxPrice.toString());
     }
-    
-    if (selectedColors.length > 0 || selectedTypes.length > 0 || hasPriceFilter) {
+
+    if (
+      selectedColors.length > 0 ||
+      selectedTypes.length > 0 ||
+      hasPriceFilter
+    ) {
       formData.append("exclude_users", "1");
     }
-    
+
     $search.mutate(formData);
   }
 
   function searchImage(image: File) {
     const formData = new FormData();
     formData.append("image", image);
-    
-    selectedColors.forEach(color => {
+
+    selectedColors.forEach((color) => {
       formData.append("colors[]", color);
     });
-    
-    selectedTypes.forEach(type => {
+
+    selectedTypes.forEach((type) => {
       formData.append("types[]", type);
     });
-    
+
     if (hasPriceFilter) {
       formData.append("price_min", minPrice.toString());
       formData.append("price_max", maxPrice.toString());
     }
-    
-    if (selectedColors.length > 0 || selectedTypes.length > 0 || hasPriceFilter) {
+
+    if (
+      selectedColors.length > 0 ||
+      selectedTypes.length > 0 ||
+      hasPriceFilter
+    ) {
       formData.append("exclude_users", "1");
     }
-    
+
     $search.mutate(formData);
   }
-  
+
   const _debouncedSearchText = debounce(function (text: string) {
     searchText(text);
     forceIsLoading = false;
@@ -124,94 +132,94 @@
       searchImage(input.files[0]);
     }
   }
-  
+
   let colorSheetOpen = $state(false);
   let typeSheetOpen = $state(false);
   let priceSheetOpen = $state(false);
-  
+
   let minPrice = $state(0);
   let maxPrice = $state(maxClothingPrice);
   console.log(maxClothingPrice);
   let priceRange = $state([0, maxClothingPrice]);
   let hasPriceFilter = $state(false);
-  
+
   function toggleColorFilter() {
     colorSheetOpen = !colorSheetOpen;
     typeSheetOpen = false;
     priceSheetOpen = false;
   }
-  
+
   function toggleTypeFilter() {
     typeSheetOpen = !typeSheetOpen;
     colorSheetOpen = false;
     priceSheetOpen = false;
   }
-  
+
   function togglePriceFilter() {
     priceSheetOpen = !priceSheetOpen;
     colorSheetOpen = false;
     typeSheetOpen = false;
   }
-  
+
   function onColorSheetClose() {
     colorSheetOpen = false;
   }
-  
+
   function onTypeSheetClose() {
     typeSheetOpen = false;
   }
-  
+
   function onPriceSheetClose() {
     priceSheetOpen = false;
   }
-  
+
   function applyPriceFilter() {
     minPrice = priceRange[0];
     maxPrice = priceRange[1];
     hasPriceFilter = minPrice > 0 || maxPrice < 1000;
-    
+
     triggerSearchWithCurrentState();
-    
+
     priceSheetOpen = false;
   }
-  
+
   function resetPriceFilter() {
-  priceRange = [0, maxClothingPrice];
-  minPrice = 0;
-  maxPrice = maxClothingPrice;
-  hasPriceFilter = false;
-  
-  triggerSearchWithCurrentState();
-}
-  
+    priceRange = [0, maxClothingPrice];
+    minPrice = 0;
+    maxPrice = maxClothingPrice;
+    hasPriceFilter = false;
+
+    triggerSearchWithCurrentState();
+  }
+
   function toggleColorSelection(color: string) {
     if (selectedColors.includes(color)) {
-      selectedColors = selectedColors.filter(c => c !== color);
+      selectedColors = selectedColors.filter((c) => c !== color);
     } else {
       selectedColors = [...selectedColors, color];
     }
-    
+
     triggerSearchWithCurrentState();
   }
-  
+
   function toggleTypeSelection(type: string) {
     if (selectedTypes.includes(type)) {
-      selectedTypes = selectedTypes.filter(t => t !== type);
+      selectedTypes = selectedTypes.filter((t) => t !== type);
     } else {
       selectedTypes = [...selectedTypes, type];
     }
-    
+
     triggerSearchWithCurrentState();
   }
-  
+
   function clearFilters() {
     selectedColors = [];
     selectedTypes = [];
     resetPriceFilter();
-    
+
     triggerSearchWithCurrentState();
   }
-  
+
   function triggerSearchWithCurrentState() {
     if (searchQuery) {
       debouncedSearchText(searchQuery);
@@ -221,9 +229,9 @@
   }
 </script>
 
-<div class="mt-18 px-4">
-  <form>
-    <div class="flex items-center input mb-6">
+<div class="mt-18 px-4 mb-22">
+  <form class="mb-6">
+    <div class="flex items-center input mb-3">
       <input
         type="text"
         name="q"
@@ -240,32 +248,33 @@
           hidden
           onchange={onImageSelected}
         />
-        <span class="icon-[tabler--camera] text-2xl text-input-placeholder"></span>
+        <span class="icon-[tabler--camera] text-2xl text-input-placeholder"
+        ></span>
       </label>
     </div>
-    
-    <div class="flex gap-2 mb-4 overflow-x-auto">
-      <FilterButton 
+
+    <div class="flex gap-2 mb-4 overflow-x-auto w-max">
+      <FilterButton
         label="Couleur"
         active={colorSheetOpen}
         onClick={toggleColorFilter}
       />
-      
-      <FilterButton 
+
+      <FilterButton
         label="Type"
         active={typeSheetOpen}
         onClick={toggleTypeFilter}
       />
-      
-      <FilterButton 
+
+      <FilterButton
         label="Prix"
         active={priceSheetOpen}
         onClick={togglePriceFilter}
       />
-      
+
       {#if selectedColors.length > 0 || selectedTypes.length > 0 || hasPriceFilter}
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="ml-auto text-sm text-primary underline"
           onclick={clearFilters}
         >
@@ -273,8 +282,8 @@
         </button>
       {/if}
     </div>
-    
-    <FilterSheet 
+
+    <FilterSheet
       bind:open={colorSheetOpen}
       title="Couleurs"
       onClose={onColorSheetClose}
@@ -286,20 +295,21 @@
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              class="rounded-sm border-border checked:bg-primary"
+              class="rounded-sm border-border checked:bg-primary hidden peer"
               checked={selectedColors.includes(color.value)}
               onchange={() => toggleColorSelection(color.value)}
             />
-            <span class="flex items-center gap-1">
-              <span class="size-3 rounded-full" style="background-color: {color.value};"></span>
-              {color.label}
-            </span>
+            <span
+              class="size-3 rounded-full peer-checked:ring-label peer-checked:ring-2 ring-offset-1"
+              style="background-color: {color.value};"
+            ></span>
+            {color.label}
           </label>
         {/each}
       </div>
     </FilterSheet>
-    
-    <FilterSheet 
+
+    <FilterSheet
       bind:open={typeSheetOpen}
       title="Types de vêtements"
       onClose={onTypeSheetClose}
@@ -311,17 +321,20 @@
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              class="rounded-sm border-border checked:bg-primary"
+              class="hidden peer"
               checked={selectedTypes.includes(type.value)}
               onchange={() => toggleTypeSelection(type.value)}
             />
+            <span class="group relative flex items-center peer-checked:bg-ui-background rounded-xs border border-ui-background/20 peer-checked:border-ui-background">
+              <span class="group-peer-checked:visible invisible icon-[tabler--check] text-ui-surface"></span>
+            </span>
             {type.label}
           </label>
         {/each}
       </div>
     </FilterSheet>
 
-    <FilterSheet 
+    <FilterSheet
       bind:open={priceSheetOpen}
       title="Fourchette de prix"
       onClose={onPriceSheetClose}
@@ -329,44 +342,42 @@
       hasFilters={hasPriceFilter}
     >
       <div class="p-4">
-        <PriceRangeSlider 
-          min={0} 
-          max={maxClothingPrice} 
+        <PriceRangeSlider
+          min={0}
+          max={maxClothingPrice}
           bind:values={priceRange}
         />
-        
+
         <div class="flex flex-col sm:flex-row gap-4 mt-6">
           <div class="flex items-center gap-2">
-            <label for="min-price" class="text-sm whitespace-nowrap">Min:</label>
-            <input 
+            <label for="min-price" class="text-sm whitespace-nowrap">Min:</label
+            >
+            <input
               id="min-price"
-              type="number" 
-              min="0" 
+              type="number"
+              min="0"
               max={priceRange[1] - 1}
               class="input text-sm w-full"
               bind:value={priceRange[0]}
             />
           </div>
-          
+
           <div class="flex items-center gap-2">
-            <label for="max-price" class="text-sm whitespace-nowrap">Max:</label>
-            <input 
+            <label for="max-price" class="text-sm whitespace-nowrap">Max:</label
+            >
+            <input
               id="max-price"
-              type="number" 
-              min={priceRange[0] + 1} 
+              type="number"
+              min={priceRange[0] + 1}
               max={maxClothingPrice}
               class="input text-sm w-full"
               bind:value={priceRange[1]}
             />
           </div>
         </div>
-        
+
         <div class="mt-8 flex justify-end">
-          <button
-            type="button"
-            class="button px-6"
-            onclick={applyPriceFilter}
-          >
+          <button type="button" class="button px-6" onclick={applyPriceFilter}>
             Appliquer
           </button>
         </div>
@@ -400,9 +411,7 @@
       {/each}
     </ul>
   {:else if $search.isError || $search.data?.length === 0}
-    <div class="text-center py-8 text-disabled">
-      Aucun résultat trouvé
-    </div>
+    <div class="text-center py-8 text-disabled">Aucun résultat trouvé</div>
   {:else if $search.data}
     <ul class="flex flex-col gap-3">
       {#each $search.data as item}
