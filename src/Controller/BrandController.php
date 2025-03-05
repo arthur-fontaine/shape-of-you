@@ -41,4 +41,19 @@ final class BrandController extends AbstractController
         $this->brandRepository->save($brand);
         return $this->redirectToRoute('app_admin_brand', ['id' => $brand->getId()]);
     }
+
+    #[Route('/admin/new/brand', name: 'app_admin_brand_new', methods: ['GET'])]
+    public function new(): Response
+    {
+        return $this->render('admin/brand_new.html.twig');
+    }
+
+    #[Route('/admin/new/brand', name: 'app_admin_brand_create', methods: ['POST'])]
+    public function create(Request $request): Response
+    {
+        $brand = new Brand();
+        $brand->setName($request->request->get('name'));
+        $this->brandRepository->save($brand);
+        return $this->redirectToRoute('app_admin_brand', ['id' => $brand->getId()]);
+    }
 }
