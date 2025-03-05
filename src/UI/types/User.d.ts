@@ -18,7 +18,7 @@ export interface IUser {
     hasFinishedOnboarding: boolean;
     role: string;
     isVerified: boolean;
-    friends: IUser[];
+    friendsCount: number;
     posts: IPost[];
     clothingLists: IClothingList[];
 }

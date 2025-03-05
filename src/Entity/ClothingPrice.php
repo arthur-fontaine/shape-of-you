@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ClothingPriceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: ClothingPriceRepository::class)]
-class ClothingPrice
+class ClothingPrice implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -79,5 +80,15 @@ class ClothingPrice
         $this->registeredAt = $registeredAt;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'priceCts' => $this->priceCts,
+            'isOnSale' => $this->isOnSale,
+            'registeredAt' => $this->registeredAt,
+        ];
     }
 }

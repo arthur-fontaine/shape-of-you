@@ -43,7 +43,7 @@
                                 alt={clothing.name}
                             />
                         {/each}
-                        {#each Array(4 - clothingList.clothingCollection.length) as _}
+                        {#each Array(Math.max(4 - clothingList.clothingCollection.length, 0)) as _}
                             <div class="bg-input-placeholder/15 min-w-1/2 aspect-square"></div>
                         {/each}
                     </div>

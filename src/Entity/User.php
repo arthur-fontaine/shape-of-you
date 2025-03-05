@@ -590,7 +590,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         return [
             'name' => $this->getName(),
             'email' => $this->getEmail(),
-            'friends' => $this->getFriends()->toArray(),
+            'friendsCount' => $this->getFriends()->count(),
             'posts' => $this->getPosts()->toArray(),
             'clothingLists' => $this->getClothingLists()->toArray(),
         ];

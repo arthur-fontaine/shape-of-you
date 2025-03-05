@@ -300,6 +300,7 @@ class Clothing implements JsonSerializable
             'ecologyRate5' => $this->ecologyRate5,
             'imageUrl' => $this->imageUrl,
             'name' => $this->name,
+            'links' => array_map(fn(ClothingLink $link) => $link->jsonSerialize(), $this->links->toArray()),
         ];
     }
 
