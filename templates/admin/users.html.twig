@@ -10,6 +10,7 @@
         <tr>
             <th>Name</th>
             <th>Email</th>
+            <th>Brand</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -18,6 +19,13 @@
             <tr>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
+                <td>
+                    {% if user.brand %}
+                        {{ user.brand.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ path('app_admin_user', { 'id': user.id }) }}">View</a>
                     <a href="{{ path('app_admin_delete_users', { 'id': user.id }) }}" onclick="return confirm('Are you sure?')">Delete</a>
