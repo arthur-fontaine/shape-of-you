@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\MediaRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -53,6 +54,6 @@ final class PostController extends AbstractController
 
         $this->postRepository->create($this->getUser(), $data['text'], [$filename]);
 
-        return new Response();
+        return new JsonResponse();
     }
 }

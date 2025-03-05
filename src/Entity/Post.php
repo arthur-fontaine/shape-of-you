@@ -179,6 +179,7 @@ class Post implements \JsonSerializable
             'id' => $this->id,
             'text' => $this->text,
             'mediaUrls' => $this->mediaUrls,
+            'createdAt' => $this->postedAt->format(\DateTime::ATOM),
         ];
     }
 }

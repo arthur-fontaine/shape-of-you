@@ -67,7 +67,9 @@
   let image = $state<string>();
   let description = $state<string>("");
 
-  const post = createMutation<void, FormData>();
+  const post = createMutation<void, FormData>(undefined, undefined, {
+    onSuccess: () => window.history.back(),
+  });
 
   function createPost() {
     if (!image) return;
