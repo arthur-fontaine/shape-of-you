@@ -45,4 +45,10 @@ class BrandRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($brand);
         $this->getEntityManager()->flush();
     }
+
+    public function delete(Brand $brand): void
+    {
+        $this->getEntityManager()->remove($brand);
+        $this->getEntityManager()->flush();
+    }
 }

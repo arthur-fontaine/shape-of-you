@@ -56,4 +56,11 @@ final class BrandController extends AbstractController
         $this->brandRepository->save($brand);
         return $this->redirectToRoute('app_admin_brand', ['id' => $brand->getId()]);
     }
+
+    #[Route('/admin/delete/brand/{id}', name: 'app_admin_brand_delete')]
+    public function delete(Brand $brand): Response
+    {
+        $this->brandRepository->delete($brand);
+        return $this->redirectToRoute('app_admin_brands');
+    }
 }
