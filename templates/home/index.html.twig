@@ -1,5 +1,9 @@
+{% set show_header = true %}
+
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div {{ svelte_component('pages/Home') }}></div>
+    <div {{ svelte_component('pages/Home', {
+        posts: posts,
+    }) }}></div>
 {% endblock %}

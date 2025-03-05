@@ -43,5 +43,5 @@
     <label for="password">Password</label>
     <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
     <input type="hidden" name="_csrf_token" bind:value={csrfToken}>
-    <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-background" type="submit">Sign in</button>
 </form>

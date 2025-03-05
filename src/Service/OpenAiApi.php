@@ -4,46 +4,48 @@ namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class OllamaApi
+class OpenAiApi
 {
   public function __construct(
     private string $apiUrl,
+    private string|null $apiKey,
     private HttpClientInterface $client,
   ) {}
 
   /**
-   * @param OllamaMessage[] $messages
+   * @param OpenAiMessage[] $messages
    */
   public function chat(array $messages, string $model, array|null $format = null): string
   {
     $response = $this->client->request(
       "POST",
-      $this->apiUrl . "chat",
+      $this->apiUrl . "v1/chat/completions",
       [
         "headers" => [
           "Content-Type" => "application/json",
+          "Authorization" => "Bearer $this->apiKey",
         ],
         "json" => [
           "model" => $model,
           "messages" => array_map(
-            fn (OllamaMessage $message) => $message->toArray(),
+            fn(OpenAiMessage $message) => $message->toArray(),
             $messages
           ),
           "stream" => false,
-          "format" => $format,
+          "response_format" => $format,
         ],
       ]
     );
 
-    return $response->toArray()["message"]["content"];
+    return $response->toArray()["choices"][0]["message"]["content"];
   }
 }
 
-class OllamaMessage
+class OpenAiMessage
 {
   public function __construct(
     private string $message,
-    private OllamaRole $role,
+    private OpenAiRole $role,
     private array $additionalData = [],
   ) {}
 
@@ -52,7 +54,7 @@ class OllamaMessage
     return $this->message;
   }
 
-  public function getRole(): OllamaRole
+  public function getRole(): OpenAiRole
   {
     return $this->role;
   }
@@ -64,17 +66,17 @@ class OllamaMessage
 
   public function toArray(): array
   {
-    return array_merge(
-      [
-        "content" => $this->message,
-        "role" => $this->role,
-      ],
-      $this->additionalData
-    );
+    return [
+      "content" => [[
+        "type" => "text",
+        "text" => $this->message,
+      ], ...$this->additionalData],
+      "role" => $this->role,
+    ];
   }
 }
 
-enum OllamaRole: string
+enum OpenAiRole: string
 {
   case USER = "user";
   case ASSISTANT = "assistant";

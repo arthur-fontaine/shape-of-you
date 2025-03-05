@@ -1,0 +1,7 @@
+{% set hide_nav_bar = true %}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div {{ svelte_component('pages/NewBookmark') }}></div>
+{% endblock %}

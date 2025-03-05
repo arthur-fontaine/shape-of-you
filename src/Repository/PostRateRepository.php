@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Post;
 use App\Entity\PostRate;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,33 +14,31 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostRateRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         parent::__construct($registry, PostRate::class);
     }
 
-    //    /**
-    //     * @return PostRate[] Returns an array of PostRate objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function ratePost(Post $post, User $user, int $rate): void
+    {
+        if ($rate < 0 || $rate > 10) {
+            throw new \InvalidArgumentException('Rate must be between 0 and 10');
+        }
 
-    //    public function findOneBySomeField($value): ?PostRate
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $postRate = $this->findOneBy(['post' => $post, 'rater' => $user]);
+
+        if ($postRate === null) {
+            $postRate = new PostRate();
+            $postRate->setPost($post);
+            $postRate->setRater($user);
+        }
+
+        $postRate->setRate10($rate);
+
+        $this->entityManager->persist($postRate);
+        $this->entityManager->flush();
+    }
 }

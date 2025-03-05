@@ -1,0 +1,12 @@
+{% set show_header = true %}
+{% set header_is_back = true %}
+{% set hide_nav_bar = true %}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div {{ svelte_component('pages/Clothing', {
+        clothing: clothing,
+        links: links
+    }) }}></div>
+{% endblock %}

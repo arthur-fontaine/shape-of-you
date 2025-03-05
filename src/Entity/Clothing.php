@@ -72,6 +72,9 @@ class Clothing implements JsonSerializable
     #[ORM\Column(enumType: ClothingFit::class)]
     private ?ClothingFit $fit = null;
 
+    #[ORM\Column(length: 1000, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
@@ -323,6 +326,18 @@ class Clothing implements JsonSerializable
     public function setFit(ClothingFit $fit): static
     {
         $this->fit = $fit;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
