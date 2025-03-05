@@ -62,34 +62,49 @@
 
 <script lang="ts">
   import Camera from "../components/Camera.svelte";
+  import { createMutation } from "../utils/query";
 
   let image = $state<string>();
+  let description = $state<string>("");
+
+  const post = createMutation<void, FormData>();
+
+  function createPost() {
+    if (!image) return;
+    const sentFormData = new FormData();
+    sentFormData.append("text", description);
+    sentFormData.append("image", image);
+    $post.mutate(sentFormData);
+  }
 </script>
 
 <div class="h-full">
   <button
-    onclick={() => 
-      image
-        ? (image = "")
-        : history.back()
-    }
+    onclick={() => (image ? (image = "") : history.back())}
     aria-label="Retour"
     class="absolute top-0 left-0 p-4 text-3xl z-20"
   >
     <span class="icon-[tabler--arrow-narrow-left] text-ui-surface"></span>
   </button>
 
-  <div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-ui-background/50 to-transparent z-10"></div>
+  <div
+    class="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-ui-background/50 to-transparent z-10"
+  ></div>
 
   {#if image}
     <img src={image} alt="captured image" class="object-cover h-dvh w-full" />
-    <div class="absolute bottom-0 left-0 w-full flex flex-col p-4 after:content-[''] after:block after:bg-gradient-to-b after:from-transparent after:to-ui-background/70 after:absolute after:w-full after:h-full after:z-1 after:top-0 after:left-0">
+    <div
+      class="absolute bottom-0 left-0 w-full flex flex-col p-4 after:content-[''] after:block after:bg-gradient-to-b after:from-transparent after:to-ui-background/70 after:absolute after:w-full after:h-full after:z-1 after:top-0 after:left-0"
+    >
       <textarea
         rows="4"
         placeholder="Description"
         class="input z-10 outline-none placeholder:text-ui-surface/70 bg-ui-background/60 text-ui-surface"
+        bind:value={description}
       ></textarea>
-      <button class="button secondary mt-4 z-10">Poster</button>
+      <button class="button secondary mt-4 z-10" onclick={createPost}>
+        Poster
+      </button>
     </div>
   {:else}
     <Camera

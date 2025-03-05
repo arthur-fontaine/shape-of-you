@@ -39,8 +39,11 @@ final class PostController extends AbstractController
         $image = is_array($data['image'])
             ? $data['image'][0]
             : $data['image'];
-        if (strpos($image->getContent(), 'data:image/') === 0) {
-            $filename = $this->mediaRepository->uploadBase64($image->getContent());
+        $imageContent = is_string($image)
+            ? $image
+            : $image->getContent();
+        if (strpos($imageContent, 'data:image/') === 0) {
+            $filename = $this->mediaRepository->uploadBase64($imageContent);
         } else {
             if (strpos($image->getMimeType(), 'image/') !== 0) {
                 throw new BadRequestHttpException('Invalid image type');
