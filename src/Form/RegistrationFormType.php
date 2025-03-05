@@ -23,15 +23,16 @@ class RegistrationFormType extends AbstractType
                 'label' => 'name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a name',
+                        'message' => 'Veuillez entrer un nom',
                     ]),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'label'=> 'Accepter les conditions générales',
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions générales',
                     ]),
                 ],
             ])
@@ -40,7 +41,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,

@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport"  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
@@ -13,7 +14,25 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        <div {{ svelte_component('components/NavButton') }}></div>
+        <div>
+            {% if (show_header is defined) and (show_header is same as(true)) %}
+                <header class="px-4 py-6 flex justify-center">
+                    {% if (header_is_back is defined) and (header_is_back is same as(true)) %}
+                        <a href="#" onclick="window.history.back(); return false;" class="flex text-2xl mr-auto">
+                            <span class="icon-[tabler--arrow-left]"></span>
+                        </a>
+                    {% else %}
+                        <img src="/static/logo-wide.png" alt="Logo" class="h-10 w-auto" />
+                    {% endif %}
+                </header>
+            {% endif %}
+
+            <div class="{% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}mb-[65px]{% endif %}">
+                {% block body %}{% endblock %}
+            </div>
+            {% if (hide_nav_bar is not defined) or (hide_nav_bar is not same as(true)) %}
+                <div {{ svelte_component('components/NavBar') }} />
+            {% endif %}
+        </div>
     </body>
 </html>

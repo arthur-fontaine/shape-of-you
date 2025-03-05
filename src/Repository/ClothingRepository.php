@@ -37,7 +37,7 @@ class ClothingRepository extends ServiceEntityRepository
             $words = array_filter(explode(' ', trim($query)));
             
             $qb = $this->createQueryBuilder('c')
-                ->select('c.id', 'c.name', 'c.type', 'c.imageUrl');
+                ->select('c.id', 'c.name', 'c.type', 'c.imageUrl', 'c.description');
             
             if (!empty($words)) {
                 $conditions = [];

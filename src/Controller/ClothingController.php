@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Clothing;
+use App\Entity\User;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\ClothingRepository;
+use App\Repository\DressingPieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +21,11 @@ final class ClothingController extends AbstractController
     }
 
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
-    public function show(Clothing $clothing): Response
+    public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $dressingData = $dressingPieceRepository->findOneBy(['clothing' => $clothing, 'owner' => $this->getUser()]);
         $clothingData = [
             'id' => $clothing->getId(),
             'name' => $clothing->getName(),
@@ -29,7 +34,12 @@ final class ClothingController extends AbstractController
             'color' => $clothing->getColor(),
             'socialRate5' => $clothing->getSocialRate5(),
             'ecologyRate5' => $clothing->getEcologyRate5(),
-            'measurements' => $clothing->getMeasurements() 
+            'measurements' => $clothing->getMeasurements(),
+            'dressing' => $dressingData ? [
+                'rate' => $dressingData->getRate10(),
+                'comment' => $dressingData->getComment()
+            ] : null,
+            'bookmarked' => $user->getClothingLists()->exists(fn($key, $clothingList) => $clothingList->getClothings()->contains($clothing))
         ];
 
         $links = array_map(function($link) {
@@ -46,7 +56,6 @@ final class ClothingController extends AbstractController
                 ] : null
             ];
         }, $clothing->getLinks()->toArray());
-
         return $this->render('clothing/index.html.twig', [
             'clothing' => $clothingData,
             'links' => $links
