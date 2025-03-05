@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Enum\ClothingType;
+use App\Enum\Color;
 use App\Repository\ClothingRepository;
 use App\Service\SearchService;
 use App\Service\OpenAiApi;
@@ -23,7 +25,10 @@ final class SearchController extends AbstractController
     #[Route('/search', name: 'app_search', methods: ['GET'], requirements: ['_format' => 'html'])]
     public function index(): Response
     {
-        return $this->render('search/index.html.twig');
+        $maxPrice = $this->clothingRepository->findMaxPrice();
+        return $this->render('search/index.html.twig', [
+            'maxPrice' => $maxPrice
+        ]);
     }
 
     #[Route('/search', name: 'api_search', methods: ['POST'], requirements: ['_format' => 'json'])]
@@ -37,7 +42,36 @@ final class SearchController extends AbstractController
                 throw new BadRequestHttpException('Missing query or image');
             }
 
-            return $this->json($this->searchService->textSearch($query));
+            $colorFilters = $request->request->all('colors');
+            $typeFilters = $request->request->all('types');
+            $excludeUsers = $request->request->has('exclude_users');
+            
+            // Get price filter parameters
+            $priceMin = $request->request->get('price_min');
+            $priceMax = $request->request->get('price_max');
+            
+            // Validate price parameters
+            $priceMin = is_numeric($priceMin) ? (int)$priceMin : null;
+            $priceMax = is_numeric($priceMax) ? (int)$priceMax : null;
+
+            // If exclude_users flag is present, only return clothing items
+            if ($excludeUsers) {
+                return $this->json($this->clothingRepository->searchByText(
+                    $query, 
+                    $colorFilters, 
+                    $typeFilters,
+                    $priceMin,
+                    $priceMax
+                ));
+            } else {
+                return $this->json($this->searchService->textSearch(
+                    $query, 
+                    $colorFilters, 
+                    $typeFilters,
+                    $priceMin,
+                    $priceMax
+                ));
+            }
         }
 
         if ($image->getMimeType() !== 'image/jpeg' && $image->getMimeType() !== 'image/png') {

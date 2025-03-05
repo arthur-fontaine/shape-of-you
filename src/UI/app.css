@@ -28,6 +28,7 @@
 
   --radius-button: 1rem;
   --radius-card: 1rem;
+  --radius-chip: 0.25rem;
 }
 
 @utility title-1 {
@@ -40,6 +41,10 @@
   font-size: 1rem;
   font-weight: 400;
   color: theme(colors.title);
+}
+
+@utility text-trim-both {
+  text-box-trim: trim-both;
 }
 
 @layer components {

@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Clothing;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\ClothingLink;
+use App\Entity\ClothingPrice;
 
 /**
  * @extends ServiceEntityRepository<Clothing>
@@ -31,38 +33,111 @@ class ClothingRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function searchByText(string $query): array
+    public function findByPriceRange(int $minPriceCts, int $maxPriceCts): array
+    {
+        return $this->createQueryBuilder('cp')
+            ->andWhere('cp.priceCts >= :minPrice')
+            ->andWhere('cp.priceCts <= :maxPrice')
+            ->setParameter('minPrice', $minPriceCts)
+            ->setParameter('maxPrice', $maxPriceCts)
+            ->orderBy('cp.priceCts', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function searchByText(string $query, ?array $colorFilters = null, ?array $typeFilters = null, ?int $priceMin = null, ?int $priceMax = null): array
     {
         try {
             $words = array_filter(explode(' ', trim($query)));
             
             $qb = $this->createQueryBuilder('c')
-                ->select('c.id', 'c.name', 'c.type', 'c.imageUrl', 'c.description');
+                ->select('c');
             
             if (!empty($words)) {
                 $conditions = [];
                 foreach ($words as $index => $word) {
                     $nameParam = 'name_' . $index;
-                    $typeParam = 'type_' . $index;
-                    $colorParam = 'color_' . $index;
+                    $descParam = 'desc_' . $index;
                     
                     $conditions[] = $qb->expr()->orX(
                         $qb->expr()->like('LOWER(c.name)', ':' . $nameParam),
-                        $qb->expr()->like('LOWER(c.type)', ':' . $typeParam),
-                        $qb->expr()->like('LOWER(c.color)', ':' . $colorParam)
+                        $qb->expr()->like('LOWER(c.description)', ':' . $descParam)
                     );
                     
                     $qb->setParameter($nameParam, '%' . strtolower($word) . '%')
-                    ->setParameter($typeParam, '%' . strtolower($word) . '%')
-                    ->setParameter($colorParam, '%' . strtolower($word) . '%');
+                        ->setParameter($descParam, '%' . strtolower($word) . '%');
                 }
                 
-                $qb->where($qb->expr()->andX(...$conditions));
+                $qb->andWhere($qb->expr()->orX(...$conditions));
             }
             
-            return $qb->getQuery()->getResult();
+            // Apply color filter
+            if (!empty($colorFilters)) {
+                $colorConditions = [];
+                foreach ($colorFilters as $index => $color) {
+                    $paramName = 'color_' . $index;
+                    // This might need adjustment based on how colors are stored
+                    $colorConditions[] = $qb->expr()->like('c.color', ':' . $paramName);
+                    $qb->setParameter($paramName, '%' . $color . '%');
+                }
+                
+                if (!empty($colorConditions)) {
+                    $qb->andWhere($qb->expr()->orX(...$colorConditions));
+                }
+            }
+            
+            if (!empty($typeFilters)) {
+                $qb->andWhere('c.type IN (:types)')
+                    ->setParameter('types', $typeFilters);
+            }
+            
+            $results = $qb->getQuery()->getResult();
+            
+            if ($priceMin !== null || $priceMax !== null) {
+                $results = array_filter($results, function (Clothing $clothing) use ($priceMin, $priceMax) {
+                    $links = $clothing->getLinks();
+                    if ($links->isEmpty()) {
+                        return false;
+                    }
+                    
+                    foreach ($links as $link) {
+                        $prices = $link->getPrices();
+                        if ($prices->isEmpty()) {
+                            continue;
+                        }
+                        
+                        $latestPrice = $prices->last();
+                        $priceCts = $latestPrice->getPriceCts();
+                        $priceEuros = $priceCts / 100;
+                        
+                        $minOk = $priceMin === null || $priceEuros >= $priceMin;
+                        $maxOk = $priceMax === null || $priceEuros <= $priceMax;
+                        
+                        if ($minOk && $maxOk) {
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                });
+            }
+            
+            return $results;
         } catch (\Exception $e) {
+            error_log('Error in searchByText: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function findMaxPrice(): int
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('MAX(cp.priceCts)')
+            ->join('c.links', 'cl')
+            ->join('cl.prices', 'cp')
+            ->getQuery()
+            ->getSingleScalarResult();
+            
+        return (int) (($result ?? 0) / 100 + 1); 
     }
 }
