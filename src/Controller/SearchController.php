@@ -80,4 +80,33 @@ final class SearchController extends AbstractController
 
         return $this->json($this->searchService->imageSearch(file_get_contents($image->getPathname())));
     }
+    #[Route('/api/search/filters', name: 'api_search_filters', methods: ['GET'])]
+    public function getFilters(): JsonResponse
+    {
+        $colors = array_map(function (Color $color) {
+            return [
+                'value' => $color->value,
+                'label' => ucfirst($color->value) // Simple label conversion, adjust if needed
+            ];
+        }, Color::cases());
+
+        $types = array_map(function (ClothingType $type) {
+            return [
+                'value' => $type->value,
+                'label' => $this->formatTypeLabel($type->value) // We'll define this helper method
+            ];
+        }, ClothingType::cases());
+
+        return $this->json([
+            'colors' => $colors,
+            'types' => $types
+        ]);
+    }
+
+    private function formatTypeLabel(string $typeValue): string
+    {
+        // Convert snake_case to readable labels
+        // You can customize this further or use translations
+        $formatted = str_replace('_', ' ', $typeValue);
+        return ucfirst($formatted);
 }
