@@ -12,6 +12,7 @@
             <th>Name</th>
             <th>Image</th>
             <th>Type</th>
+            <th>Brand</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -23,6 +24,13 @@
                     <img src="{{ cloth.imageUrl }}" alt="{{ cloth.name }}" style="width: 100px;">
                 </td>
                 <td>{{ cloth.type.name }}</td>
+                <td>
+                    {% if cloth.brand %}
+                        {{ cloth.brand.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ path('app_admin_clothing', { 'id': cloth.id }) }}">Edit</a>
                     <a href="{{ path('app_admin_clothing_delete', { 'id': cloth.id}) }}" onclick="return confirm('Are you sure?')">Delete</a>
