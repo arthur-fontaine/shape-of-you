@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+    <h1>Brands</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for brand in brands %}
+            <tr>
+                <td>{{ brand.name }}</td>
+                <td>
+                    <a href="">Edit</a>
+                    <a href="" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
