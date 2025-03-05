@@ -66,5 +66,18 @@
                 <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
             </tr>
         </table>
+        <form action="{{ path('app_admin_user_update', {id: user.id}) }}" method="post">
+            <div>
+                <label>
+                    <select name="brand">
+                        <option value="" {% if user.brand is null %}selected{% endif %}>No Brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}" {% if user.brand and brand.id == user.brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <button type="submit">Save</button>
+        </form>
     </div>
 {% endblock %}
