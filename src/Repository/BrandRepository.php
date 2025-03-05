@@ -40,4 +40,9 @@ class BrandRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function save(Brand $brand): void
+    {
+        $this->getEntityManager()->persist($brand);
+        $this->getEntityManager()->flush();
+    }
 }
