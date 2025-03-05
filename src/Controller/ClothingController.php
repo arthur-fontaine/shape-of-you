@@ -6,8 +6,10 @@ use App\Entity\Clothing;
 use App\Entity\User;
 use App\Enum\ClothingType;
 use App\Enum\Color;
+use App\Repository\BrandRepository;
 use App\Repository\ClothingRepository;
 use App\Repository\DressingPieceRepository;
+use Container8JAxYPd\getTwig_MimeBodyRendererService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,7 +81,7 @@ final class ClothingController extends AbstractController
     }
 
     #[Route('/admin/clothing/{id}', name: 'app_admin_clothing', methods: ['GET'])]
-    public function adminClothing(Clothing $clothing): Response
+    public function adminClothing(Clothing $clothing, BrandRepository $brandRepository): Response
     {
         $clothingData = [
             'id' => $clothing->getId(),
@@ -89,7 +91,11 @@ final class ClothingController extends AbstractController
             'color' => $clothing->getColor(),
             'socialRate5' => $clothing->getSocialRate5(),
             'ecologyRate5' => $clothing->getEcologyRate5(),
-            'measurements' => $clothing->getMeasurements()
+            'measurements' => $clothing->getMeasurements(),
+            'brand' => [
+                'id' => $clothing->getBrand()?->getId(),
+                'name' => $clothing->getBrand()?->getName()
+            ]
         ];
 
         $links = array_map(function($link) {
@@ -106,16 +112,18 @@ final class ClothingController extends AbstractController
                 ] : null
             ];
         }, $clothing->getLinks()->toArray());
+        $brands = $brandRepository->findAll();
         return $this->render('admin/clothing.html.twig', [
             'clothing' => $clothingData,
             'links' => $links,
             'clothing_types' => ClothingType::cases(),
-            'colors' => Color::cases()
+            'colors' => Color::cases(),
+            'brands' => $brands
         ]);
     }
 
     #[Route('/admin/clothing/{id}', name: 'app_admin_clothing_update', methods: ['POST'])]
-    public function updateClothing(Request $request, Clothing $clothing): Response
+    public function updateClothing(Request $request, Clothing $clothing, BrandRepository $brandRepository): Response
     {
         $color[] = Color::from($request->request->get('color'));
         $clothing->setName($request->request->get('name'));
@@ -125,6 +133,12 @@ final class ClothingController extends AbstractController
         $clothing->setSocialRate5((int) $request->request->get('socialRate5'));
         $clothing->setEcologyRate5((int) $request->request->get('ecologyRate5'));
         $clothing->setMeasurements(json_decode($request->request->get('measurements'), true));
+        if ($request->request->get('brand')) {
+            $clothing->setBrand($brandRepository->find($request->request->get('brand')));
+        }
+        else {
+            $clothing->setBrand(null);
+        }
         $this->clothingRepository->save($clothing);
         return $this->redirectToRoute('app_admin_clothing', ['id' => $clothing->getId()]);
     }

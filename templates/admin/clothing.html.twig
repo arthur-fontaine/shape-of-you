@@ -42,6 +42,15 @@
                 <label for="measurements">Measurements</label>
                 <input type="text" id="measurements" name="measurements" value="{{ clothing.measurements|json_encode }}">
             </div>
+            <div>
+                <label for="brand">Brand</label>
+                <select id="brand" name="brand">
+                    {% for brand in brands %}
+                        <option value="{{ brand.id }}" {% if brand.id == clothing.brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                    {% endfor %}
+                    <option value="" {% if clothing.brand.id is null %}selected{% endif %}>No Brand</option>
+                </select>
+            </div>
             <button type="submit">Save</button>
         </form>
     </div>
