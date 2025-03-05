@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Brand;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\AdminNotification;
@@ -33,6 +34,7 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
         $this->loadPosts($manager);
         $this->loadPostRates($manager);
         $this->loadUserFriends($manager);
+        $this->loadBrand($manager);
 
         $manager->flush();
 
@@ -224,6 +226,15 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
                 }
             }
             $manager->persist($user);
+        }
+    }
+
+    private function loadBrand(ObjectManager $manager)
+    {
+        for ($i = 1; $i <= 10; $i++) {
+            $brand = new Brand();
+            $brand->setName('Brand ' . $i);
+            $manager->persist($brand);
         }
     }
 
