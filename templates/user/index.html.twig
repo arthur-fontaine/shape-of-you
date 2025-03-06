@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div {{ svelte_component('pages/Profile', {
-        user : user
-    }) }}></div>
+	<div {{ svelte_component('pages/Profile', { user, userRelationship } ) }}></div>
 {% endblock %}
