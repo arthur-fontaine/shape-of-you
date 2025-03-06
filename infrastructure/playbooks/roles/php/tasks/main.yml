@@ -44,3 +44,4 @@
     state: stopped
     enabled: no
   when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+  ignore_errors: true
