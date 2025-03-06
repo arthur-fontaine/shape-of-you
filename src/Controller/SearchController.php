@@ -99,6 +99,9 @@ final class SearchController extends AbstractController
         $fits = implode(' - ', array_map(fn(ClothingFit $fit) => $fit->value, ClothingFit::cases()));
         $materials = implode(' - ', array_map(fn(ClothingMaterial $material) => $material->value, ClothingMaterial::cases()));
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         $clothingInfos = $openAi->chat(
             [
                 new OpenAiMessage(
@@ -118,6 +121,22 @@ final class SearchController extends AbstractController
 
                     The possible types are:
                     ' . $types . '
+
+                    Some client information:
+                    - The client is ' . $user->getBirthday()->diff(new \DateTime())->y . ' years old.
+                    - The client is ' . $user->getWeightKg() . ' kg.
+                    - The client is ' . $user->getGender()->value . '.
+                    - The client is ' . $user->getSizeCm() . ' cm tall.
+                    - The client arm measurement is: ' . $user->getArmMeasurementCm() . ' cm.
+                    - The client hip measurement is: ' . $user->getHipMeasurementCm() . ' cm.
+                    - The client waist measurement is: ' . $user->getWaistMeasurementCm() . ' cm.
+                    - The client chest measurement is: ' . $user->getChestMeasurementCm() . ' cm.
+                    - The client leg measurement is: ' . $user->getLegMeasurementCm() . ' cm.
+                    - The client mood is: ' . $user->getMoodPrompt()?->getPrompt() . '.
+
+                    Based on this information and the request that the client will make, suggest clothing items that would fit the client.
+
+                    If you think some fields can be omitted, you can do so.
                     ',
                     OpenAiRole::SYSTEM
                 ),
