@@ -4,6 +4,7 @@ export interface IPost {
   authorName: string;
   mediaUrls: string[];
   myRate: number | null | undefined;
+  createdAt: string;
   postId: number;
   text: string;
 }

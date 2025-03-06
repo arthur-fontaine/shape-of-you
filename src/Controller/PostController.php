@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Repository\MediaRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -40,8 +41,11 @@ final class PostController extends AbstractController
         $image = is_array($data['image'])
             ? $data['image'][0]
             : $data['image'];
-        if (strpos($image->getContent(), 'data:image/') === 0) {
-            $filename = $this->mediaRepository->uploadBase64($image->getContent());
+        $imageContent = is_string($image)
+            ? $image
+            : $image->getContent();
+        if (strpos($imageContent, 'data:image/') === 0) {
+            $filename = $this->mediaRepository->uploadBase64($imageContent);
         } else {
             if (strpos($image->getMimeType(), 'image/') !== 0) {
                 throw new BadRequestHttpException('Invalid image type');
@@ -51,7 +55,7 @@ final class PostController extends AbstractController
 
         $this->postRepository->create($this->getUser(), $data['text'], [$filename]);
 
-        return new Response();
+        return new JsonResponse();
     }
 
     #[Route('/admin/posts', name: 'app_admin_posts')]

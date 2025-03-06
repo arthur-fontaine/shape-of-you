@@ -99,14 +99,22 @@ class SearchService
 
   /**
    * Search for users or clothing items
-   * @param string $query
-   * @return Clothing[]|User[]
-   */
-  public function textSearch(string $query): array
+  * @param string $query
+  * @param array|null $colorFilters
+  * @param array|null $typeFilters
+  * @param int|null $priceMin
+  * @param int|null $priceMax
+  * @return Clothing[]|User[]
+  */
+  public function textSearch(string $query, ?array $colorFilters = null, ?array $typeFilters = null, ?int $priceMin = null, ?int $priceMax = null): array
   {
-    return array_merge(
-      $this->userRepository->searchByText($query),
-      $this->clothingRepository->searchByText($query)
-    );
+      if (!empty($colorFilters) || !empty($typeFilters) || $priceMin !== null || $priceMax !== null) {
+          return $this->clothingRepository->searchByText($query, $colorFilters, $typeFilters, $priceMin, $priceMax);
+      }
+      
+      return array_merge(
+          $this->userRepository->searchByText($query),
+          $this->clothingRepository->searchByText($query, $colorFilters, $typeFilters, $priceMin, $priceMax)
+      );
   }
 }
