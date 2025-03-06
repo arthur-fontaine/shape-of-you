@@ -32,11 +32,13 @@
     <h3 class="text-sm font-semibold">{post.authorName}</h3>
     <p class="text-sm text-gray-500">{post.text}</p>
   </header>
-  <img src={
-    post.mediaUrls[0].startsWith("http")
+  <img
+    src={post.mediaUrls[0] !== undefined && post.mediaUrls[0].startsWith("http")
       ? post.mediaUrls[0]
-      : `/data/${post.mediaUrls[0]}`
-  } alt="Post" class="w-full h-auto rounded-card" />
+      : `/data/${post.mediaUrls[0]}`}
+    alt="Post"
+    class="w-full h-auto rounded-card"
+  />
   {#if !hideRateSlider}
     <div class="p-4 flex items-center justify-between">
       <CustomSlider
