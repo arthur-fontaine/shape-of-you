@@ -48,8 +48,7 @@ final class ClothingListController extends AbstractController
             throw new BadRequestHttpException('Missing required parameters');
         }
 
-        $isBookmark = ($data['isBookmark'] != 'null') ? $data['isBookmark'] : false;
-        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], $isBookmark);
+        $clothingList= $this->clothingListRepository->create($this->getUser(), $data['name'], true);
 
         $this->getUser()->addClothingList($clothingList);
 
@@ -113,7 +112,8 @@ final class ClothingListController extends AbstractController
     #[Route('/clothing/{clothingId}/add-to-bookmarks', name: 'api_add_clothing_to_clothing_list', methods: ['POST'])]
     public function addElement(Request $request, string $clothingId): Response
     {
-        $collection = $request->request->get('collection');
+        $data = json_decode($request->getContent(), true);
+        $collection = $data['collection'] ?? null;
         if (!$collection) {
             throw new BadRequestHttpException('Missing required parameters');
         }

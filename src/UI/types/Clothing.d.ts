@@ -7,9 +7,11 @@ export interface IClothing {
   socialRate5: number;
   ecologyRate5: number;
   measurements: IClothingMeasurements;
-  isInDressing?: boolean;
-  comment?: string | null;
-  rate?: number | null;
+  dressing?: {
+    comment?: string | null;
+    rate?: number | null;
+  } | null;
+  bookmarked: boolean;
 }
 
 export interface IClothingLink {

@@ -1,36 +1,33 @@
 <script lang="ts">
+    import { createMutation } from "../utils/query.js";
 
-    import {createMutation} from "../utils/query.js";
-
-    const bookmark = createMutation<{ bookmarkListUrl: string }>();
+    const bookmark = createMutation<{ bookmarkListUrl: string }, FormData>();
 
     function onSubmit(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
         const sentFormData = new FormData();
         sentFormData.append("name", formData.get("name") as string);
-        sentFormData.append("isBookmark", formData.get("isBookmark") as string);
         $bookmark.mutate(sentFormData, {
-            onSuccess: ({ bookmarkListUrl }) => location.href = bookmarkListUrl
+            onSuccess: ({ bookmarkListUrl }) => {
+                window.parent.location.href = bookmarkListUrl;
+            },
         });
-
     }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
-    <!-- MENU -->
-    <input
-        id="name"
-        type="text"
-        name="name"
-        placeholder="Name"
-    />
-    <input
-        id="isBookmark"
-        type="checkbox"
-        name="isBookmark"
-        value="isBookmark"
-    />
-    <button type="submit">
-        Create
-    </button>
-</form>
+<div class="px-4 pt-10">
+    <form on:submit|preventDefault={onSubmit}>
+        <div class="flex items-center input">
+            <input
+                type="text"
+                name="name"
+                placeholder="Nom de la liste"
+                class="flex-1"
+            />
+        </div>
+
+        <button type="submit" class="button w-full mt-4">
+            Créer
+        </button>
+    </form>
+</div>

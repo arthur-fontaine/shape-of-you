@@ -64,6 +64,9 @@ class Clothing implements JsonSerializable
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 1000, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
@@ -290,5 +293,17 @@ class Clothing implements JsonSerializable
             'imageUrl' => $this->imageUrl,
             'name' => $this->name,
         ];
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

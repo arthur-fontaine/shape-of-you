@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Clothing;
+use App\Entity\User;
 use App\Repository\ClothingRepository;
 use App\Repository\DressingPieceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,8 @@ final class ClothingController extends AbstractController
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
     public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $dressingData = $dressingPieceRepository->findOneBy(['clothing' => $clothing, 'owner' => $this->getUser()]);
         $clothingData = [
             'id' => $clothing->getId(),
@@ -28,10 +31,12 @@ final class ClothingController extends AbstractController
             'color' => $clothing->getColor(),
             'socialRate5' => $clothing->getSocialRate5(),
             'ecologyRate5' => $clothing->getEcologyRate5(),
-            'measurements' => $clothing->getMeasurements() ,
-            'isInDressing' => $dressingData !== null,
-            'rate' => $dressingData?->getRate10(),
-            'comment' => $dressingData?->getComment(),
+            'measurements' => $clothing->getMeasurements(),
+            'dressing' => $dressingData ? [
+                'rate' => $dressingData->getRate10(),
+                'comment' => $dressingData->getComment()
+            ] : null,
+            'bookmarked' => $user->getClothingLists()->exists(fn($key, $clothingList) => $clothingList->getClothings()->contains($clothing))
         ];
 
         $links = array_map(function($link) {
