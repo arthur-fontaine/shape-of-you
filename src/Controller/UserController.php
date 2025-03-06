@@ -75,4 +75,12 @@ final class UserController extends AbstractController
         $this->userRepository->save($user);
         return $this->redirectToRoute('app_admin_user', ['id' => $user->getId()]);
     }
+
+    #[Route('/admin/dashboard', name: 'app_admin_dashboard', methods: ['GET'])]
+    public function newUser(BrandRepository $brandRepository): Response
+    {
+
+        return $this->render('admin/user_new.html.twig', [
+        ]);
+    }
 }
