@@ -23,6 +23,17 @@
     FormData
   >();
 
+  const searchAi = createMutation<
+    {
+      id: number;
+      name: string;
+      imageUrl: string;
+      type: string;
+      description: string | null;
+    }[],
+    FormData
+  >('/search-by-ai');
+
   interface FilterOption {
     value: string;
     label: string;
@@ -40,7 +51,6 @@
   let selectedTypes = $state<string[]>([]);
 
   let forceIsLoading = $state(false);
-  const isLoading = $derived($search.isPending || forceIsLoading);
   let searchQuery = $state("");
 
   async function fetchFilterOptions() {
@@ -54,7 +64,9 @@
 
   fetchFilterOptions();
 
-  function searchText(text: string) {
+  async function searchText(text: string) {
+    $searchAi.reset();
+
     const formData = new FormData();
     formData.append("q", text);
 
@@ -79,7 +91,11 @@
       formData.append("exclude_users", "1");
     }
 
-    $search.mutate(formData);
+    const data = await $search.mutateAsync(formData);
+
+    if (data.length === 0) {
+      $searchAi.mutate(formData);
+    }
   }
 
   function searchImage(image: File) {
@@ -227,6 +243,10 @@
       debouncedSearchText(" ");
     }
   }
+
+  const results = $derived((($search.data?.length ?? 0) > 0 ? $search.data : $searchAi.data) ?? []);
+  const isError = $derived(results.length === 0 ? ($search.isError || $searchAi.isError) : false);
+  const isLoading = $derived($search.isPending || $searchAi.isPending || forceIsLoading);
 </script>
 
 <div class="mt-18 px-4 mb-22">
@@ -410,11 +430,11 @@
         </li>
       {/each}
     </ul>
-  {:else if $search.isError || $search.data?.length === 0}
+  {:else if isError || results.length === 0}
     <div class="text-center py-8 text-disabled">Aucun résultat trouvé</div>
-  {:else if $search.data}
+  {:else if results}
     <ul class="flex flex-col gap-3">
-      {#each $search.data as item}
+      {#each results as item}
         <li>
           <a href={`/clothing/${item.id}`}>
             <SearchResultSkeleton>

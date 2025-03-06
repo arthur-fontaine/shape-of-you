@@ -2,11 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Clothing;
+use App\Enum\ClothingFit;
+use App\Enum\ClothingMaterial;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\ClothingRepository;
 use App\Service\SearchService;
 use App\Service\OpenAiApi;
+use App\Service\OpenAiMessage;
+use App\Service\OpenAiRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,6 +85,98 @@ final class SearchController extends AbstractController
 
         return $this->json($this->searchService->imageSearch(file_get_contents($image->getPathname())));
     }
+
+    #[Route('/search-by-ai', name: 'api_search_by_ai', methods: ['POST'], requirements: ['_format' => 'json'])]
+    public function searchByAi(Request $request, OpenAiApi $openAi): JsonResponse
+    {
+        $query = $request->request->get('q');
+        if ($query === null) {
+            throw new BadRequestHttpException('Missing query');
+        }
+
+        $colors = implode(' - ', array_map(fn(Color $color) => $color->value, Color::cases()));
+        $types = implode(' - ', array_map(fn(ClothingType $type) => $type->value, ClothingType::cases()));
+        $fits = implode(' - ', array_map(fn(ClothingFit $fit) => $fit->value, ClothingFit::cases()));
+        $materials = implode(' - ', array_map(fn(ClothingMaterial $material) => $material->value, ClothingMaterial::cases()));
+
+        $clothingInfos = $openAi->chat(
+            [
+                new OpenAiMessage(
+                    '
+                    You are a fashion expert.
+                    
+                    You will be asked to suggest clothing items based on the client\'s request. Take into account the client\'s preferences, its budget, its style, and its body shape.
+                    
+                    The possible fits are:
+                    ' . $fits . '
+
+                    The possible materials are:
+                    ' . $materials . '
+
+                    The possible colors are:
+                    ' . $colors . '
+
+                    The possible types are:
+                    ' . $types . '
+                    ',
+                    OpenAiRole::SYSTEM
+                ),
+                new OpenAiMessage(
+                    $query,
+                    OpenAiRole::USER
+                )
+            ],
+            $_ENV['TEXT_MODEL'],
+            [
+                'type' => 'json_schema',
+                'json_schema' => [
+                    'name' => 'clothings',
+                    'strict' => true,
+                    'schema' => [
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'color' => ['type' => 'string'],
+                                'type' => ['type' => 'string'],
+                                'fit' => ['type' => 'string'],
+                                'materials' => ['type' => 'string'],
+                            ],
+                            'required' => ['color', 'type'],
+                            'additionalProperties' => false,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $clothingInfos = json_decode($clothingInfos, true);
+        if ($clothingInfos === null) {
+            return new JsonResponse();
+        }
+
+        /** @var Clothing[] $clothings */
+        $clothings = [];
+
+        if (empty($clothingInfos)) {
+            return $this->json($clothings);
+        }
+
+        foreach ($clothingInfos as $clothingInfo) {
+            $clothings = array_merge(
+                $clothings,
+                $this->clothingRepository->findByFields(array_filter([
+                    'color' => isset($clothingInfo['color']) ? Color::from($clothingInfo['color']) : null,
+                    'type' => isset($clothingInfo['type']) ? ClothingType::from($clothingInfo['type']) : null,
+                    'fit' => isset($clothingInfo['fit']) ? ClothingFit::from($clothingInfo['fit']) : null,
+                    'materials' => isset($clothingInfo['materials']) ? ClothingMaterial::from($clothingInfo['materials']) : null,
+                ])) ?? []
+            );
+        }
+
+        return $this->json($clothings);
+    }
+
     #[Route('/api/search/filters', name: 'api_search_filters', methods: ['GET'])]
     public function getFilters(): JsonResponse
     {
