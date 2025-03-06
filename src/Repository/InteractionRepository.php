@@ -62,4 +62,10 @@ class InteractionRepository extends ServiceEntityRepository
             return $row;
         }, $result->fetchAllAssociative());
     }
+
+    public function save(Interaction $interaction): void
+    {
+        $this->getEntityManager()->persist($interaction);
+        $this->getEntityManager()->flush();
+    }
 }

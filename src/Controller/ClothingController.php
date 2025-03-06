@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Clothing;
+use App\Entity\Interaction;
 use App\Entity\User;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\BrandRepository;
 use App\Repository\ClothingRepository;
 use App\Repository\DressingPieceRepository;
+use App\Repository\InteractionRepository;
 use Container8JAxYPd\getTwig_MimeBodyRendererService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +25,7 @@ final class ClothingController extends AbstractController
     }
 
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
-    public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository): Response
+    public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository, InteractionRepository $interactionRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -58,6 +60,16 @@ final class ClothingController extends AbstractController
                 ] : null
             ];
         }, $clothing->getLinks()->toArray());
+        $interaction = new Interaction();
+        $interaction->setOriginUser($user);
+        $interaction->setInteraction(
+            [
+                'type' => 'pageView',
+                'brand' => $clothing->getBrand()->getName(),
+                'datetime' => new \DateTime()
+            ]
+        );
+        $interactionRepository->save($interaction);
         return $this->render('clothing/index.html.twig', [
             'clothing' => $clothingData,
             'links' => $links
