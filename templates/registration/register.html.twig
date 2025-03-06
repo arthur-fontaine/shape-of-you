@@ -35,6 +35,27 @@
                 {{ form_errors(registrationForm.plainPassword) }}
             </div>
             <div class="mb-4">
+                {{ form_label(registrationForm.gender, 'Genre', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.gender, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre genre'}}) }}
+                </div>
+                {{ form_errors(registrationForm.gender) }}
+            </div>
+            <div class="mb-4">
+                {{ form_label(registrationForm.birthday, 'Date de naissance', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.birthday, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre date de naissance'}}) }}
+                </div>
+                {{ form_errors(registrationForm.birthday) }}
+            </div>
+            <div class="mb-4">
+                {{ form_label(registrationForm.country_iso2, 'Pays', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.country_iso2, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre pays'}}) }}
+                </div>
+                {{ form_errors(registrationForm.country_iso2) }}
+            </div>
+            <div class="mb-4">
                 {{ form_label(registrationForm.weightKg, 'Poids (Kg)', {'label_attr': {'class': 'block text-gray-700'}}) }}
                 <div class="mt-1 input bg-input-background">
                     {{ form_widget(registrationForm.weightKg, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre poids (kg)'}}) }}
