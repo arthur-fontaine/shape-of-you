@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\BrandRepository;
 use App\Repository\ClothingListRepository;
+use App\Repository\InteractionRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,10 +78,22 @@ final class UserController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'app_admin_dashboard', methods: ['GET'])]
-    public function newUser(BrandRepository $brandRepository): Response
+    public function newUser(InteractionRepository $interactionRepository): Response
     {
-
-        return $this->render('admin/user_new.html.twig', [
+        $user = $this->getUser();
+        $brand = $user->getBrand();
+        if ($brand)
+        {
+            $interactions = $interactionRepository->findPageViewByBrand($brand);
+        }
+        else
+        {
+            $interactions = [
+                'interactionnb' => 0,
+            ];
+        }
+        return $this->render('admin/dashboard.html.twig', [
+            'interactions' => $interactions
         ]);
     }
 }

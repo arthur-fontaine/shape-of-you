@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '/admin/components/navbar.html.twig' %}
+
+    <div class="container">
+        <h1>Dashboard</h1>
+        {% for interaction in interactions %}
+        <div>
+            {{ interaction.interactionnb }}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
