@@ -1,29 +1,53 @@
-<nav class="fixed h-full w-64 bg-gray-800 text-white p-6 overflow-y-auto">
-    <div class="mb-8">
-        <h2 class="text-xl font-bold">Admin Dashboard</h2>
+<nav class="fixed h-full w-64 bg-gray-900 text-white p-6 overflow-y-auto border-r border-gray-700 shadow-lg">
+    <div class="mb-8 border-b border-gray-700 pb-4">
+        <h2 class="text-xl font-bold">Dashboard</h2>
     </div>
-    <ul class="space-y-4">
+    <ul class="space-y-2">
         <li>
-            <a href="{{ path('app_admin_users') }}" class="flex items-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-                <i class="iconify mr-3" data-icon="heroicons:users"></i>
+            <a href="{{ path('app_admin_users') }}" 
+               class="flex items-center py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors group
+                     {% if app.request.get('_route') starts with 'app_admin_user' %} 
+                         bg-gray-700 border-l-4 border-blue-500 pl-3
+                     {% endif %}"
+            >
+                <i class="iconify mr-3 text-lg {% if app.request.get('_route') starts with 'app_admin_user' %}text-blue-400{% else %}text-gray-400 group-hover:text-white{% endif %}" 
+                   data-icon="heroicons:users"></i>
                 <span>Users</span>
             </a>
         </li>
         <li>
-            <a href="{{ path('app_admin_clothings') }}" class="flex items-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-                <i class="iconify mr-3" data-icon="heroicons:shopping-bag"></i>
+            <a href="{{ path('app_admin_clothings') }}" 
+               class="flex items-center py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors group
+                     {% if app.request.get('_route') starts with 'app_admin_clothing' %} 
+                         bg-gray-700 border-l-4 border-blue-500 pl-3
+                     {% endif %}"
+            >
+                <i class="iconify mr-3 text-lg {% if app.request.get('_route') starts with 'app_admin_clothing' %}text-blue-400{% else %}text-gray-400 group-hover:text-white{% endif %}" 
+                   data-icon="heroicons:shopping-bag"></i>
                 <span>Clothes</span>
             </a>
         </li>
         <li>
-            <a href="{{ path('app_admin_posts') }}" class="flex items-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-                <i class="iconify mr-3" data-icon="heroicons:document-text"></i>
+            <a href="{{ path('app_admin_posts') }}" 
+               class="flex items-center py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors group
+                     {% if app.request.get('_route') starts with 'app_admin_post' %} 
+                         bg-gray-700 border-l-4 border-blue-500 pl-3
+                     {% endif %}"
+            >
+                <i class="iconify mr-3 text-lg {% if app.request.get('_route') starts with 'app_admin_post' %}text-blue-400{% else %}text-gray-400 group-hover:text-white{% endif %}" 
+                   data-icon="heroicons:document-text"></i>
                 <span>Posts</span>
             </a>
         </li>
         <li>
-            <a href="{{ path('app_admin_brands') }}" class="flex items-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-                <i class="iconify mr-3" data-icon="heroicons:tag"></i>
+            <a href="{{ path('app_admin_brands') }}" 
+               class="flex items-center py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors group
+                     {% if app.request.get('_route') starts with 'app_admin_brand' %} 
+                         bg-gray-700 border-l-4 border-blue-500 pl-3
+                     {% endif %}"
+            >
+                <i class="iconify mr-3 text-lg {% if app.request.get('_route') starts with 'app_admin_brand' %}text-blue-400{% else %}text-gray-400 group-hover:text-white{% endif %}" 
+                   data-icon="heroicons:tag"></i>
                 <span>Brands</span>
             </a>
         </li>
