@@ -24,9 +24,10 @@ services:
         arguments:
             $path: './data'
 
-    App\Service\OllamaApi:
+    App\Service\OpenAiApi:
         arguments:
-            $apiUrl: '%env(OLLAMA_API_URL)%'
+            $apiUrl: '%env(OPENAI_APIURL)%'
+            $apiKey: '%env(OPENAI_APIKEY)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

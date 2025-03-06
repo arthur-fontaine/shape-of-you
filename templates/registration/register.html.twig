@@ -1,76 +1,108 @@
+{% set hide_nav_bar = true %}
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div class="min-h-screen flex items-center justify-center my-16">
+        <div class="py-12 px-6 w-full max-w-md">
             {% for flash_error in app.flashes('verify_email_error') %}
-                <div class="bg-red-100 text-red-700 p-2 rounded mb-4" role="alert">{{ flash_error }}</div>
+                <div class="bg-error text-red-700 p-2 rounded mb-4" role="alert">{{ flash_error }}</div>
             {% endfor %}
 
-            <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+            <h1 class="text-2xl font-bold mb-6 text-center">S'inscrire</h1>
 
             {{ form_start(registrationForm) }}
             <div class="mb-4">
-                {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.email, 'E-mail', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.email, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre e-mail'}}) }}
+                </div>
                 {{ form_errors(registrationForm.email) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.name, 'Name', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.name, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.name, 'Nom', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.name, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre nom'}}) }}
+                </div>
                 {{ form_errors(registrationForm.name) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre mot de passe'}}) }}
+                </div>
                 {{ form_errors(registrationForm.plainPassword) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.weightKg, 'Weight (Kg)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.weightKg, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.weightKg, 'Poids (Kg)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.weightKg, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre poids (kg)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.weightKg) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.sizeCm, 'Size (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.sizeCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.sizeCm, 'Taille (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.sizeCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre taille (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.sizeCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.hipMeasurementCm, 'Hip (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.hipMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.hipMeasurementCm, 'Hanche (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.hipMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre hanche (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.hipMeasurementCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.chestMeasurementCm, 'Chest (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.chestMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.chestMeasurementCm, 'Poitrine (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.chestMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre poitrine (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.chestMeasurementCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.waistMeasurementCm, 'Waist (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.waistMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.waistMeasurementCm, 'Tour de taille (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.waistMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre tour de taille (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.waistMeasurementCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.armMeasurementCm, 'Arm (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.armMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.armMeasurementCm, 'Bras (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.armMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre bras (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.armMeasurementCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.legMeasurementCm, 'Leg (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.legMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.legMeasurementCm, 'Jambe (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.legMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre jambe (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.legMeasurementCm) }}
             </div>
             <div class="mb-4">
-                {{ form_label(registrationForm.footMeasurementCm, 'Foot (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
-                {{ form_widget(registrationForm.footMeasurementCm, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                {{ form_label(registrationForm.footMeasurementCm, 'Pied (cm)', {'label_attr': {'class': 'block text-gray-700'}}) }}
+                <div class="mt-1 input bg-input-background">
+                    {{ form_widget(registrationForm.footMeasurementCm, {'attr': {'class': 'form-input block w-full', 'placeholder': 'Votre pied (cm)'}}) }}
+                </div>
                 {{ form_errors(registrationForm.footMeasurementCm) }}
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-                Register
+            <div class="mb-4">
+                <label>
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                <span class="ml-2">J'accepte les termes et conditions</span>
+            </div>
+            <button type="submit" class="w-full button">
+                S'inscrire
             </button>
             {{ form_end(registrationForm) }}
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_login') }}" class="underline font-light">Déjà un compte ?</a>
+            </div>
         </div>
     </div>
 {% endblock %}

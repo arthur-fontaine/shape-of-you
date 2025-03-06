@@ -109,6 +109,7 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
         for ($i = 1; $i <= 100; $i++) {
             $clothing = new Clothing();
             $clothing->setName('Clothing ' . $i);
+            $clothing->setDescription('This is the description of clothing ' . $i);
             $clothing->setType($clothingTypes[array_rand($clothingTypes)]);
             $clothing->setColor([$colors[array_rand($colors)]]);
             $clothing->setMeasurements([

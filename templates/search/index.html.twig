@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div {{ svelte_component('pages/Search') }}></div>
+    <div 
+    {{ svelte_component('pages/Search',
+        {
+            maxClothingPrice: maxPrice,
+        })
+    }}></div>
 {% endblock %}

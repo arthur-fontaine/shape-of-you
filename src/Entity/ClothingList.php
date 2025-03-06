@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClothingListRepository::class)]
-class ClothingList
+class ClothingList implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -99,5 +99,16 @@ class ClothingList
         $this->isBookmarkList = $isBookmarkList;
 
         return $this;
+    }
+
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'isBookmarkList' => $this->isBookmarkList,
+            'clothingCollection' => $this->getClothings()->toArray(),
+        ];
     }
 }
