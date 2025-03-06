@@ -4,7 +4,7 @@
     - ../vars/config.yml
   tasks:
     - name: Stop the application if it is running
-      shell: pkill -f "frankenphp php-server -r /srv/current/public --domain {{ domain }}"
+      shell: kill -9 $(ps aux | grep 'frankenphp php-server -r /srv/current/public --domain {{ domain }}' | awk '{print $2}')
       args:
         chdir: /srv/current
       ignore_errors: yes
