@@ -44,7 +44,7 @@ class Post implements \JsonSerializable
     /**
      * @var Collection<int, PostRate>
      */
-    #[ORM\OneToMany(targetEntity: PostRate::class, mappedBy: 'post', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PostRate::class, mappedBy: 'post', orphanRemoval: true, cascade: ['persist'])]
     private Collection $rates;
 
     public function __construct()
@@ -173,13 +173,15 @@ class Post implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(?User $currentUser = null): array
     {
         return [
             'id' => $this->id,
             'text' => $this->text,
             'mediaUrls' => $this->mediaUrls,
             'createdAt' => $this->postedAt->format(\DateTime::ATOM),
+            'authorId' => $this->author?->getId(),
+            'isMyPost' => $currentUser !== null && $this->author !== null && $this->author->getId() === $currentUser->getId()
         ];
     }
 }

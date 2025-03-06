@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
+use App\Entity\User;
 use App\Repository\MediaRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,6 +56,27 @@ final class PostController extends AbstractController
 
         $this->postRepository->create($this->getUser(), $data['text'], [$filename]);
 
+        return new JsonResponse();
+    }
+
+    #[Route('/posts/{id}/delete', name: 'app_user_delete_post', methods: ['POST'])]
+    public function deleteUserPost(Post $post, Request $request): Response
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        
+        if ($post->getAuthor() !== $currentUser) {
+            throw $this->createAccessDeniedException('You do not have permission to delete this post');
+        }
+        
+        $this->postRepository->delete($post->getId(), $currentUser->getId());
+        
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['success' => true]);
+        }
+        
+        $this->addFlash('success', 'Your post was successfully deleted');
+        
         return new JsonResponse();
     }
 }
