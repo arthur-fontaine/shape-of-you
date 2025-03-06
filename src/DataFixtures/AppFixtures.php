@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\UserMoodPrompt;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\AdminNotification;
@@ -14,8 +15,11 @@ use App\Entity\Interaction;
 use App\Entity\Post;
 use App\Entity\PostRate;
 use App\Entity\User;
+use App\Enum\ClothingFit;
+use App\Enum\ClothingMaterial;
 use App\Enum\ClothingType;
 use App\Enum\Color;
+use App\Enum\Gender;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -24,6 +28,7 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
+        $this->loadUserMoodPrompts($manager);
         $this->loadClothing($manager);
         $this->loadClothingLinks($manager);
         $this->loadClothingLists($manager);
@@ -44,6 +49,8 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
 
     private function loadUsers(ObjectManager $manager)
     {
+        $genders = Gender::cases();
+
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
             $user->setName('User ' . $i);
@@ -61,8 +68,22 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
             $user->setPassword($this->hashPassword($user, 'password'));
             $user->setRoles(['ROLE_USER']);
             $user->setIsVerified(true);
+            $user->setGender($genders[array_rand($genders)]);
+            $user->setBirthday(new \DateTimeImmutable('-' . rand(18, 60) . ' years'));
+            $user->setCountryIso2('FR');
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
+        }
+    }
+
+
+    private function loadUserMoodPrompts(ObjectManager $manager)
+    {
+        for ($i = 1; $i <= 10; $i++) {
+            $userMoodPrompts = new UserMoodPrompt();
+            $userMoodPrompts->setPrompt("Je veux m'habiller chic.");
+            $userMoodPrompts->setOwner($this->getReference('user_' . $i, User::class));
+            $manager->persist($userMoodPrompts);
         }
     }
 
@@ -82,6 +103,8 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
     {
         $clothingTypes = ClothingType::cases();
         $colors = Color::cases();
+        $clothingMaterials = ClothingMaterial::cases();
+        $clothingFit = ClothingFit::cases();
 
         for ($i = 1; $i <= 100; $i++) {
             $clothing = new Clothing();
@@ -97,6 +120,8 @@ class AppFixtures extends Fixture implements UserPasswordHasherInterface
             $clothing->setSocialRate5(rand(1, 5));
             $clothing->setEcologyRate5(rand(1, 5));
             $clothing->setImageUrl('https://picsum.photos/id/' . $i . '/150');
+            $clothing->setMaterials([$clothingMaterials[array_rand($clothingMaterials)]]);
+            $clothing->setFit($clothingFit[array_rand($clothingFit)]);
             $manager->persist($clothing);
             $this->addReference('clothing_' . $i, $clothing);
         }

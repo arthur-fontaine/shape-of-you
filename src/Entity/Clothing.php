@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\ClothingFit;
+use App\Enum\ClothingMaterial;
 use JsonSerializable;
 use App\Enum\ClothingType;
 use App\Enum\Color;
@@ -63,6 +65,12 @@ class Clothing implements JsonSerializable
 
     #[ORM\Column(length: 100)]
     private ?string $name = null;
+
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, enumType: ClothingMaterial::class)]
+    private array $materials = [];
+
+    #[ORM\Column(enumType: ClothingFit::class)]
+    private ?ClothingFit $fit = null;
 
     #[ORM\Column(length: 1000, nullable: true)]
     private ?string $description = null;
@@ -292,7 +300,35 @@ class Clothing implements JsonSerializable
             'ecologyRate5' => $this->ecologyRate5,
             'imageUrl' => $this->imageUrl,
             'name' => $this->name,
+            'links' => array_map(fn(ClothingLink $link) => $link->jsonSerialize(), $this->links->toArray()),
         ];
+    }
+
+    /**
+     * @return ClothingMaterial[]
+     */
+    public function getMaterials(): array
+    {
+        return $this->materials;
+    }
+
+    public function setMaterials(array $materials): static
+    {
+        $this->materials = $materials;
+
+        return $this;
+    }
+
+    public function getFit(): ?ClothingFit
+    {
+        return $this->fit;
+    }
+
+    public function setFit(ClothingFit $fit): static
+    {
+        $this->fit = $fit;
+
+        return $this;
     }
 
     public function getDescription(): ?string
