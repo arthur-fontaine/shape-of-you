@@ -3,8 +3,12 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Enum\Gender;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,6 +54,19 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+            ])
+            ->add('gender', EnumType::class, [
+                'class' => Gender::class,
+                'label' => 'Gender',
+            ])
+            ->add('birthday', DateType::class, [
+                'label' => 'birthday',
+            ])
+            ->add('country_iso2', ChoiceType::class, [
+                'choices' => [
+                    'France' => 'FR',
+                ],
+                'label' => 'country',
             ])
             ->add('weightKg', TextType::class, [
                 'label' => 'weight (Kg)',
