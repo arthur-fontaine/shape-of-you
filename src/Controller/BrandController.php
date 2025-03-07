@@ -17,7 +17,7 @@ final class BrandController extends AbstractController
     )
     {
     }
-    #[Route('/brand', name: 'app_admin_brands')]
+    #[Route('/admin/brand', name: 'app_admin_brands')]
     public function index(BrandRepository $brandRepository): Response
     {
         $brands = $brandRepository->findAll();

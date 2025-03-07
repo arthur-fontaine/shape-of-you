@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Clothing;
+use App\Entity\ClothingLink;
 use App\Entity\Interaction;
 use App\Entity\User;
+use App\Enum\ClothingFit;
+use App\Enum\ClothingMaterial;
 use App\Enum\ClothingType;
 use App\Enum\Color;
 use App\Repository\BrandRepository;
+use App\Repository\ClothingLinkRepository;
 use App\Repository\ClothingRepository;
 use App\Repository\DressingPieceRepository;
 use App\Repository\InteractionRepository;
@@ -16,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ClothingController extends AbstractController
 {
@@ -23,6 +28,7 @@ final class ClothingController extends AbstractController
         private ClothingRepository $clothingRepository,
     ) {}
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
     public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository, InteractionRepository $interactionRepository): Response
     {
@@ -59,7 +65,7 @@ final class ClothingController extends AbstractController
         $interaction->setInteraction(
             [
                 'type' => 'pageView',
-                'brand' => $clothing->getBrand()->getName(),
+                'brand' => $clothing->getBrand()?->getName(),
                 'datetime' => new \DateTime()
             ]
         );
@@ -98,6 +104,9 @@ final class ClothingController extends AbstractController
             'socialRate5' => $clothing->getSocialRate5(),
             'ecologyRate5' => $clothing->getEcologyRate5(),
             'measurements' => $clothing->getMeasurements(),
+            'materials' => $clothing->getMaterials(),
+            'fit' => $clothing->getFit()->value,
+            'link' => $clothing->getLinks()->first()?->getUrl(),
             'brand' => [
                 'id' => $clothing->getBrand()?->getId(),
                 'name' => $clothing->getBrand()?->getName()
@@ -124,7 +133,9 @@ final class ClothingController extends AbstractController
             'links' => $links,
             'clothing_types' => ClothingType::cases(),
             'colors' => Color::cases(),
-            'brands' => $brands
+            'brands' => $brands,
+            'materials' => ClothingMaterial::cases(),
+            'fits' => ClothingFit::cases()
         ]);
     }
 
@@ -132,6 +143,7 @@ final class ClothingController extends AbstractController
     public function updateClothing(Request $request, Clothing $clothing, BrandRepository $brandRepository): Response
     {
         $color[] = Color::from($request->request->get('color'));
+        $materials[] = ClothingMaterial::from($request->request->get('materials'));
         $clothing->setName($request->request->get('name'));
         $clothing->setType(ClothingType::From($request->request->get('type')));
         $clothing->setImageUrl($request->request->get('imageUrl'));
@@ -139,6 +151,9 @@ final class ClothingController extends AbstractController
         $clothing->setSocialRate5((int) $request->request->get('socialRate5'));
         $clothing->setEcologyRate5((int) $request->request->get('ecologyRate5'));
         $clothing->setMeasurements(json_decode($request->request->get('measurements'), true));
+        $clothing->setFit(ClothingFit::From($request->request->get('fit')));
+        $clothing->setMaterials($materials);
+        $clothing->getLinks()->first()?->setUrl($request->request->get('link'));
         if ($request->request->get('brand')) {
             $clothing->setBrand($brandRepository->find($request->request->get('brand')));
         }
@@ -156,28 +171,37 @@ final class ClothingController extends AbstractController
         return $this->render('admin/clothing_new.html.twig', [
             'clothing_types' => ClothingType::cases(),
             'colors' => Color::cases(),
-            'brands' => $brands
+            'brands' => $brands,
+            'materials' => ClothingMaterial::cases(),
+            'fits' => ClothingFit::cases()
         ]);
     }
 
     #[Route('/admin/new/clothing', name: 'app_admin_clothing_create', methods: ['POST'])]
-    public function createClothing(Request $request, BrandRepository $brandRepository): Response
+    public function createClothing(Request $request, BrandRepository $brandRepository, ClothingLinkRepository $clothingLinkRepository): Response
     {
         $color[] = Color::from($request->request->get('color'));
+        $materials[] = ClothingMaterial::from($request->request->get('materials'));
         $clothing = new Clothing();
         $clothing->setName($request->request->get('name'));
         $clothing->setType(ClothingType::From($request->request->get('type')));
+        $clothing->setMaterials($materials);
         $clothing->setImageUrl($request->request->get('imageUrl'));
         $clothing->setColor($color);
         $clothing->setSocialRate5((int) $request->request->get('socialRate5'));
         $clothing->setEcologyRate5((int) $request->request->get('ecologyRate5'));
         $clothing->setMeasurements(json_decode($request->request->get('measurements'), true));
+        $clothing->setFit(ClothingFit::From($request->request->get('fit')));
+        $clothingLink = new ClothingLink();
+        $clothingLink->setUrl($request->request->get('link'));
+        $clothing->addLink($clothingLink);
         if ($request->request->get('brand')) {
             $clothing->setBrand($brandRepository->find($request->request->get('brand')));
         }
         else {
             $clothing->setBrand(null);
         }
+
         $this->clothingRepository->save($clothing);
         return $this->redirectToRoute('app_admin_clothing', ['id' => $clothing->getId()]);
     }

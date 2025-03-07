@@ -11,12 +11,12 @@ use App\Repository\ClothingListRepository;
 use App\Repository\InteractionRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserMoodPromptRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class UserController extends AbstractController
 {
@@ -25,6 +25,7 @@ final class UserController extends AbstractController
     ) {
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/profile', name: 'app_my_user')]
     public function index(): Response
     {
@@ -35,6 +36,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/users/{id}', name: 'app_user')]
     public function show(User $user): Response
     {
@@ -48,8 +50,10 @@ final class UserController extends AbstractController
                     ? 'friend'
                     : 'none'
             )
+        ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/edit-mood-prompt', name: 'app_edit_mood_prompt', methods: ['POST'])]
     public function editMoodPrompt(Request $request, UserMoodPromptRepository $userMoodPromptRepository, EntityManagerInterface $entityManager): Response
     {
@@ -69,6 +73,8 @@ final class UserController extends AbstractController
         
         $entityManager->persist($userMoodPrompt);
         $entityManager->flush();
+        return new JsonResponse();
+    }
 
     #[Route('/admin/users', name: 'app_admin_users')]
     public function adminUsers(UserRepository $userRepository): Response
@@ -115,6 +121,7 @@ final class UserController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_admin_dashboard', methods: ['GET'])]
     public function newUser(InteractionRepository $interactionRepository): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
         $brand = $user->getBrand();
         if ($brand)
@@ -130,9 +137,8 @@ final class UserController extends AbstractController
             'brand' => $brand
         ]);
     }
-        return $this->redirectToRoute('app_user');
-    }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/profile/ai', name: 'app_user_ai')]
     public function ai(): Response
     {
@@ -142,6 +148,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/users/{id}/add-friend', name: 'app_user_add_friend')]
     public function addFriend(User $user, EntityManagerInterface $entityManager): Response
     {
@@ -155,6 +162,7 @@ final class UserController extends AbstractController
         return new JsonResponse();
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/users/{id}/remove-friend', name: 'app_user_remove_friend')]
     public function removeFriend(User $user, EntityManagerInterface $entityManager): Response
     {

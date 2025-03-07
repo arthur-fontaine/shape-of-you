@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class PostController extends AbstractController
 {
@@ -24,12 +25,14 @@ final class PostController extends AbstractController
         $this->postRepository = $postRepository;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/posts/new', name: 'app_post_new', methods: ['GET'], requirements: ['_format' => 'html'])]
     public function renderNewPostPage(Request $request): Response
     {
         return $this->render('posts/new.html.twig');
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/posts/new', name: 'api_post_new', methods: ['POST'], requirements: ['_format' => 'json'])]
     public function createNewPost(Request $request): Response
     {
@@ -59,6 +62,7 @@ final class PostController extends AbstractController
         return new JsonResponse();
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/posts/{id}/delete', name: 'app_user_delete_post', methods: ['POST'])]
     public function deleteUserPost(Post $post, Request $request): Response
     {
@@ -94,7 +98,7 @@ final class PostController extends AbstractController
     public function deletePost(int $id, PostRepository $postRepository): Response
     {
         $post = $postRepository->find($id);
-        $postRepository->delete($post);
+        $postRepository->deleteWithoutUser($post);
         return $this->redirectToRoute('app_admin_posts');
     }
 

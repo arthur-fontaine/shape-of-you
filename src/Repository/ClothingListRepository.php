@@ -43,12 +43,16 @@ class ClothingListRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    public function removeClothing(int $clothinId, int $bookmarkId): void
+    public function removeClothing(int $clothingId, int $bookmarkId, int $userId): void
     {
         $bookmark = $this->find($bookmarkId);
-        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothinId)->first();
-        $bookmark->removeClothing($clothing);
-        $this->getEntityManager()->flush();
+        if ($bookmark->getCreator()->getId() !== $userId) {
+            return;
+        }
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'DELETE FROM clothing_list_clothing WHERE clothing_list_id = :bookmarkId AND clothing_id = :clothingId';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery(['bookmarkId' => $bookmarkId, 'clothingId' => $clothingId]);
     }
 
     public function create(User $user, string $name, bool $isBookmark): ClothingList
@@ -64,19 +68,24 @@ class ClothingListRepository extends ServiceEntityRepository
         return $clothingList;
     }
 
-    public function delete(int $bookmarkId): void
+    public function delete(int $bookmarkId, int $userId): void
     {
         $this->createQueryBuilder('c')
             ->delete()
             ->where('c.id = :id')
+            ->andWhere('c.creator = :creator')
             ->setParameter('id', $bookmarkId)
+            ->setParameter('creator', $userId)
             ->getQuery()
             ->execute();
     }
 
-    public function addClothing(int $clothingId, int $bookmarkId)
+    public function addClothing(int $clothingId, int $bookmarkId, int $userId)
     {
         $bookmark = $this->find($bookmarkId);
+        if ($bookmark->getCreator()->getId() !== $userId) {
+            return;
+        }
         $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($clothingId);
         $bookmark->addClothing($clothing);
         $this->getEntityManager()->flush();
