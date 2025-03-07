@@ -43,7 +43,7 @@ class InteractionRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    public function findPageViewByBrand(Brand $brand)
+    public function findPageViewByBrand(Brand $brand): array
     {
         $conn = $this->getEntityManager()->getConnection();
 

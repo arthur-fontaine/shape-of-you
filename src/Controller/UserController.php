@@ -93,7 +93,8 @@ final class UserController extends AbstractController
             ];
         }
         return $this->render('admin/dashboard.html.twig', [
-            'interactions' => $interactions
+            'interactions' => $interactions,
+            'brand' => $brand
         ]);
     }
 }
