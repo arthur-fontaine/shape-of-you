@@ -25,7 +25,7 @@
                     ><span class="font-bold">{user.posts.length}</span> posts</span
                 >
                 <span
-                    ><span class="font-bold">{user.friends.length}</span> followers</span
+                    ><span class="font-bold">{user.friendsCount}</span> followers</span
                 >
             </div>
         </div>

@@ -21,8 +21,7 @@ final class ClothingController extends AbstractController
 {
     public function __construct(
         private ClothingRepository $clothingRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/clothing/{id}', name: 'app_clothing_show', methods: ['GET'])]
     public function show(Clothing $clothing, DressingPieceRepository $dressingPieceRepository, InteractionRepository $interactionRepository): Response
@@ -30,26 +29,21 @@ final class ClothingController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $dressingData = $dressingPieceRepository->findOneBy(['clothing' => $clothing, 'owner' => $this->getUser()]);
-        $clothingData = [
-            'id' => $clothing->getId(),
-            'name' => $clothing->getName(),
-            'type' => $clothing->getType()->value,
-            'imageUrl' => $clothing->getImageUrl(),
-            'color' => $clothing->getColor(),
-            'socialRate5' => $clothing->getSocialRate5(),
-            'ecologyRate5' => $clothing->getEcologyRate5(),
-            'measurements' => $clothing->getMeasurements(),
-            'dressing' => $dressingData ? [
-                'rate' => $dressingData->getRate10(),
-                'comment' => $dressingData->getComment()
-            ] : null,
-            'bookmarked' => $user->getClothingLists()->exists(fn($key, $clothingList) => $clothingList->getClothings()->contains($clothing))
-        ];
+        $clothingData = array_merge(
+            $clothing->jsonSerialize(),
+            [
+                'dressing' => $dressingData ? [
+                    'rate' => $dressingData->getRate10(),
+                    'comment' => $dressingData->getComment()
+                ] : null,
+                'bookmarked' => $user->getClothingLists()->exists(fn($key, $clothingList) => $clothingList->getClothings()->contains($clothing))
+            ]
+        );
 
-        $links = array_map(function($link) {
+        $links = array_map(function ($link) {
             $prices = $link->getPrices();
             $latestPrice = $prices->isEmpty() ? null : $prices->last();
-            
+
             return [
                 'id' => $link->getId(),
                 'url' => $link->getUrl(),

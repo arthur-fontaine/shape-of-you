@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use \App\Enum\Gender;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -112,6 +113,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?Brand $brand = null;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?UserVector $vector = null;
+
+    #[ORM\Column(enumType: Gender::class)]
+    private ?Gender $gender = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $birthday = null;
+
+    #[ORM\Column(length: 2)]
+    private ?string $countryIso2 = null;
+
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?UserMoodPrompt $moodPrompt = null;
+
+    /**
+     * @var Collection<int, UserClothingRecommendation>
+     */
+    #[ORM\OneToMany(targetEntity: UserClothingRecommendation::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $clothingRecommendations;
+
     public function __construct()
     {
         $this->clothingLists = new ArrayCollection();
@@ -119,6 +141,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         $this->posts = new ArrayCollection();
         $this->postRates = new ArrayCollection();
         $this->friends = new ArrayCollection();
+        $this->clothingRecommendations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -465,12 +488,112 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         return $this;
     }
 
+    public function getvector(): ?UserVector
+    {
+        return $this->vector;
+    }
+
+    public function setvector(UserVector $vector): static
+    {
+        // set the owning side of the relation if necessary
+        if ($vector->getOwner() !== $this) {
+            $vector->setOwner($this);
+        }
+
+        $this->vector = $vector;
+
+        return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
+    }
+
+    public function setGender(Gender $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getBirthday(): ?\DateTimeImmutable
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(\DateTimeImmutable $birthday): static
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    public function getCountryIso2(): ?string
+    {
+        return $this->countryIso2;
+    }
+
+    public function setCountryIso2(string $countryIso2): static
+    {
+        $this->countryIso2 = $countryIso2;
+
+        return $this;
+    }
+
+    public function getMoodPrompt(): ?UserMoodPrompt
+    {
+        return $this->moodPrompt;
+    }
+
+    public function setMoodPrompt(UserMoodPrompt $moodPrompt): static
+    {
+        // set the owning side of the relation if necessary
+        if ($moodPrompt->getOwner() !== $this) {
+            $moodPrompt->setOwner($this);
+        }
+
+        $this->moodPrompt = $moodPrompt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserClothingRecommendation>
+     */
+    public function getClothingRecommendations(): Collection
+    {
+        return $this->clothingRecommendations;
+    }
+
+    public function addClothingRecommendation(UserClothingRecommendation $clothingRecommendation): static
+    {
+        if (!$this->clothingRecommendations->contains($clothingRecommendation)) {
+            $this->clothingRecommendations->add($clothingRecommendation);
+            $clothingRecommendation->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClothingRecommendation(UserClothingRecommendation $clothingRecommendation): static
+    {
+        if ($this->clothingRecommendations->removeElement($clothingRecommendation)) {
+            // set the owning side to null (unless already changed)
+            if ($clothingRecommendation->getOwner() === $this) {
+                $clothingRecommendation->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
             'name' => $this->getName(),
             'email' => $this->getEmail(),
-            'friends' => $this->getFriends()->toArray(),
+            'friendsCount' => $this->getFriends()->count(),
             'posts' => $this->getPosts()->toArray(),
             'clothingLists' => $this->getClothingLists()->toArray(),
         ];

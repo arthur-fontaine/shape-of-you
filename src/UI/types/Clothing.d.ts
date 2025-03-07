@@ -12,12 +12,12 @@ export interface IClothing {
     rate?: number | null;
   } | null;
   bookmarked: boolean;
+  links: IClothingLink[];
 }
 
 export interface IClothingLink {
-  id: number;
   url: string;
-  currentPrice?: IClothingPrice;
+  prices: IClothingPrice[];
 }
 
 export interface IClothingPrice {
