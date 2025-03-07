@@ -2,21 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Clothing;
-use App\Entity\User;
 use App\Repository\UserClothingRecommendationRepository;
-use Doctrine\Common\DataFixtures\Exception\CircularReferenceException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Component\Serializer\Encoder\EncoderInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ShoppingController extends AbstractController
 {
+    #[IsGranted('ROLE_USER')]
     #[Route('/buy', name: 'app_shopping')]
     public function index(UserClothingRecommendationRepository $userClothingRecommendationRepository, NormalizerInterface $serializer): Response
     {

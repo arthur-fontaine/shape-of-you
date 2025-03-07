@@ -104,7 +104,7 @@ class PostRepository extends ServiceEntityRepository
         }, $result->fetchAllAssociative());
     }
 
-    public function delete(Post $post): void
+    public function deleteWithoutUser(Post $post): void
     {
         $this->entityManager->remove($post);
         $this->entityManager->flush();

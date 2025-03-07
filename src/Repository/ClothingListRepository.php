@@ -43,10 +43,13 @@ class ClothingListRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    public function removeClothing(int $clothinId, int $bookmarkId): void
+    public function removeClothing(int $clothingId, int $bookmarkId, int $userId): void
     {
         $bookmark = $this->find($bookmarkId);
-        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothinId)->first();
+        if ($bookmark->getCreator()->getId() !== $userId) {
+            return;
+        }
+        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothingId)->first();
         $bookmark->removeClothing($clothing);
         $this->getEntityManager()->flush();
     }
@@ -64,19 +67,24 @@ class ClothingListRepository extends ServiceEntityRepository
         return $clothingList;
     }
 
-    public function delete(int $bookmarkId): void
+    public function delete(int $bookmarkId, int $userId): void
     {
         $this->createQueryBuilder('c')
             ->delete()
             ->where('c.id = :id')
+            ->andWhere('c.creator = :creator')
             ->setParameter('id', $bookmarkId)
+            ->setParameter('creator', $userId)
             ->getQuery()
             ->execute();
     }
 
-    public function addClothing(int $clothingId, int $bookmarkId)
+    public function addClothing(int $clothingId, int $bookmarkId, int $userId)
     {
         $bookmark = $this->find($bookmarkId);
+        if ($bookmark->getCreator()->getId() !== $userId) {
+            return;
+        }
         $clothing = $this->getEntityManager()->getRepository(Clothing::class)->find($clothingId);
         $bookmark->addClothing($clothing);
         $this->getEntityManager()->flush();

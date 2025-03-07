@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SearchController extends AbstractController
 {
@@ -27,6 +28,7 @@ final class SearchController extends AbstractController
         private SearchService $searchService
     ) {}
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/search', name: 'app_search', methods: ['GET'], requirements: ['_format' => 'html'])]
     public function index(): Response
     {
@@ -36,6 +38,7 @@ final class SearchController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/search', name: 'api_search', methods: ['POST'], requirements: ['_format' => 'json'])]
     public function search(Request $request): JsonResponse
     {
@@ -86,6 +89,7 @@ final class SearchController extends AbstractController
         return $this->json($this->searchService->imageSearch(file_get_contents($image->getPathname())));
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/search-by-ai', name: 'api_search_by_ai', methods: ['POST'], requirements: ['_format' => 'json'])]
     public function searchByAi(Request $request, OpenAiApi $openAi): JsonResponse
     {
@@ -196,6 +200,7 @@ final class SearchController extends AbstractController
         return $this->json($clothings);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/api/search/filters', name: 'api_search_filters', methods: ['GET'])]
     public function getFilters(): JsonResponse
     {
