@@ -79,4 +79,30 @@ final class PostController extends AbstractController
         
         return new JsonResponse();
     }
+
+    #[Route('/admin/posts', name: 'app_admin_posts')]
+    public function adminPosts(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+        //dd($posts);
+        return $this->render('admin/posts.html.twig', [
+            'posts' => $posts
+        ]);
+    }
+
+    #[Route('/admin/delete/posts/{id}', name: 'app_admin_delete_posts')]
+    public function deletePost(int $id, PostRepository $postRepository): Response
+    {
+        $post = $postRepository->find($id);
+        $postRepository->delete($post);
+        return $this->redirectToRoute('app_admin_posts');
+    }
+
+    #[Route('/admin/post/{id}', name: 'app_admin_post')]
+    public function adminPost(Post $post): Response
+    {
+        return $this->render('admin/post.html.twig', [
+            'post' => $post
+        ]);
+    }
 }

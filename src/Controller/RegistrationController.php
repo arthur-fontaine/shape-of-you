@@ -58,7 +58,11 @@ class RegistrationController extends AbstractController
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             $user->setEnabled(true);
             $user->setFake(false);
-            $user->setRoles(['ROLE_USER']);
+            $users = $entityManager->getRepository(User::class)->findAll();
+            if (count($users) > 0)
+                $user->setRoles(['ROLE_USER']);
+            else
+                $user->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
             $user->setIsVerified(true);
 
 

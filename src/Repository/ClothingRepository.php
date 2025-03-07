@@ -129,6 +129,18 @@ class ClothingRepository extends ServiceEntityRepository
         }
     }
 
+    public function delete(Clothing $clothing): void
+    {
+        $this->getEntityManager()->remove($clothing);
+        $this->getEntityManager()->flush();
+    }
+
+    public function save(Clothing $clothing): void
+    {
+        $this->getEntityManager()->persist($clothing);
+        $this->getEntityManager()->flush();
+    }
+
     public function findMaxPrice(): int
     {
         $result = $this->createQueryBuilder('c')
