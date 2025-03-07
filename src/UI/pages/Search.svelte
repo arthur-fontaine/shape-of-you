@@ -102,27 +102,6 @@
     const formData = new FormData();
     formData.append("image", image);
 
-    selectedColors.forEach((color) => {
-      formData.append("colors[]", color);
-    });
-
-    selectedTypes.forEach((type) => {
-      formData.append("types[]", type);
-    });
-
-    if (hasPriceFilter) {
-      formData.append("price_min", minPrice.toString());
-      formData.append("price_max", maxPrice.toString());
-    }
-
-    if (
-      selectedColors.length > 0 ||
-      selectedTypes.length > 0 ||
-      hasPriceFilter
-    ) {
-      formData.append("exclude_users", "1");
-    }
-
     $search.mutate(formData);
   }
 
