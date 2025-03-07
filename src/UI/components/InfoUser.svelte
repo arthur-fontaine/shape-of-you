@@ -93,6 +93,15 @@
             >
                 <span class="icon-[tabler--hanger]"></span>
             </a>
+            <a
+                href="/profile/ai"
+                aria-label="Intelligence Artificielle"
+                class={location.pathname === "/profile/ai"
+                    ? "border-b-2 border-b-label"
+                    : "text-disabled"}
+            >
+                <span class="icon-[tabler--sparkles]"></span>
+            </a>
         </div>
     </div>
 </div>
