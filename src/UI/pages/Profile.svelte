@@ -1,14 +1,18 @@
 <script lang="ts">
-    import type { IUser} from "../types/User";
+    import type { IUser } from "../types/User";
     import InfoUser from "../components/InfoUser.svelte";
     import Post from "../components/Post.svelte";
 
-    const {user}: {
+    const {
+        user,
+        userRelationship = "self",
+    }: {
         user: IUser;
+        userRelationship?: 'self' | 'friend' | 'none';
     } = $props();
 </script>
 
-<InfoUser {user} />
+<InfoUser {user} {userRelationship} />
 <div class="max-w-5xl mx-auto mt-6 grid grid-cols-1 gap-4 px-4">
     {#each user.posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) as post (post.id)}
         <Post {post} hideRateSlider />
