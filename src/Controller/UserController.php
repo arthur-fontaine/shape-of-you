@@ -88,9 +88,7 @@ final class UserController extends AbstractController
         }
         else
         {
-            $interactions = [
-                'interactionnb' => 0,
-            ];
+            return $this->redirectToRoute('app_admin_users');
         }
         return $this->render('admin/dashboard.html.twig', [
             'interactions' => $interactions,
