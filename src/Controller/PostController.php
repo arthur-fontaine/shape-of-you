@@ -57,7 +57,16 @@ final class PostController extends AbstractController
             $filename = $this->mediaRepository->upload($image);
         }
 
-        $this->postRepository->create($this->getUser(), $data['text'], [$filename]);
+        $clothingIds = $data['clothingIds'] ?? [];
+        $clothingIdRegex = '/#\d+ ?/';
+        $data['text'] = preg_replace_callback($clothingIdRegex, function ($matches) use (&$clothingIds) {
+            $clothingIds[] = (int)substr($matches[0], 1);
+            return '';
+        }, $data['text']);
+
+        $data['text'] = trim($data['text']);
+
+        $this->postRepository->create($this->getUser(), $data['text'], [$filename], $clothingIds);
 
         return new JsonResponse();
     }

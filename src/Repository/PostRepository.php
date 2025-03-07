@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Clothing;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -28,12 +29,17 @@ class PostRepository extends ServiceEntityRepository
      * @param array<string> $mediaUrls
      * @return Post
      */
-    public function create(User $user, string $text, array $mediaUrls): Post
+    public function create(User $user, string $text, array $mediaUrls, array $clothingIds): Post
     {
         $post = new Post();
         $post->setAuthor($user);
         $post->setText($text);
         $post->setMediaUrls($mediaUrls);
+        
+        $clothings = $this->entityManager->getRepository(Clothing::class)->findBy(['id' => $clothingIds]);
+        foreach ($clothings as $clothing) {
+            $post->addFeaturedClothing($clothing);
+        }
 
         $this->entityManager->persist($post);
         $this->entityManager->flush();
