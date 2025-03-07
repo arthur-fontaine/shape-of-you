@@ -68,7 +68,7 @@ class ClothingRepository extends ServiceEntityRepository
                         ->setParameter($descParam, '%' . strtolower($word) . '%');
                 }
                 
-                $qb->andWhere($qb->expr()->orX(...$conditions));
+                $qb->andWhere($qb->expr()->andX(...$conditions));
             }
             
             // Apply color filter
