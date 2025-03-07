@@ -41,6 +41,22 @@ class PostRepository extends ServiceEntityRepository
         return $post;
     }
 
+    public function delete(int $postId, int $userId): bool
+    {
+        $post = $this->findOneBy(['id' => $postId, 'author' => $userId]);
+
+        if ($post) {
+            foreach ($post->getRates() as $rate) {
+                $this->entityManager->remove($rate);
+            }
+            $this->entityManager->remove($post);
+            $this->entityManager->flush();
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Find all posts of my friends
      * @param User $user
