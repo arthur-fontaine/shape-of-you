@@ -69,6 +69,9 @@ final class UserController extends AbstractController
     {
         if ($request->request->get('brand')) {
             $user->setBrand($brandRepository->find($request->request->get('brand')));
+            $role = $user->getRoles();
+            if (!in_array('ROLE_ADMIN', $role))
+                $user->setRoles(array_merge($role, ['ROLE_ADMIN']));
         }
         else {
             $user->setBrand(null);
