@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\UserMoodPrompt;
 use App\Repository\BrandRepository;
 use App\Repository\ClothingListRepository;
 use App\Repository\InteractionRepository;
 use App\Repository\PostRepository;
+use App\Repository\UserMoodPromptRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,14 +32,25 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/bookmark', name: 'app_user_bookmark')]
-    public function bookmark(): Response
+    #[Route('/edit-mood-prompt', name: 'app_edit_mood_prompt', methods: ['POST'])]
+    public function editMoodPrompt(Request $request, UserMoodPromptRepository $userMoodPromptRepository, EntityManagerInterface $entityManager): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
-        return $this->render('user/bookmark.html.twig', [
-            'user' => $user
-        ]);
-    }
+        $body = $request->toArray();
+        $moodPromptReq = $body['mood'];
+        $userMoodPrompt = $userMoodPromptRepository->findOneBy(['owner' => $user]);
+        
+        if ($userMoodPrompt) {
+            $userMoodPrompt->setPrompt($moodPromptReq);
+        } else {
+            $userMoodPrompt = new UserMoodPrompt();
+            $userMoodPrompt->setOwner($user);
+            $userMoodPrompt->setPrompt($moodPromptReq);
+        }
+        
+        $entityManager->persist($userMoodPrompt);
+        $entityManager->flush();
 
     #[Route('/admin/users', name: 'app_admin_users')]
     public function adminUsers(UserRepository $userRepository): Response
@@ -98,4 +112,16 @@ final class UserController extends AbstractController
             'brand' => $brand
         ]);
     }
+        return $this->redirectToRoute('app_user');
+    }
+
+    #[Route('/profile/ai', name: 'app_user_ai')]
+    public function ai(): Response
+    {
+        $user = $this->getUser();
+        return $this->render('user/ai.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
 }

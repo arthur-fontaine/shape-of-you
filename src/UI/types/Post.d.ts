@@ -5,6 +5,6 @@ export interface IPost {
   mediaUrls: string[];
   myRate: number | null | undefined;
   createdAt: string;
-  postId: number;
   text: string;
+  isMyPost: boolean;
 }
