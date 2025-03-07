@@ -2,12 +2,36 @@
     import type { IUser } from "../types/User";
     import profile from "../assets/icons/profile.svg";
     import Avatar from "svelte-boring-avatars";
+    import { createMutation } from "../utils/query";
 
-    const {
+    let {
         user,
+        userRelationship = "self",
     }: {
         user: IUser;
+        userRelationship?: "self" | "friend" | "none";
     } = $props();
+
+    const addFriendMutation = createMutation(`${location.href}/add-friend`, undefined, {
+        onSuccess: () => {
+            userRelationship = "friend";
+            user = { ...user, friendsCount: user.friendsCount + 1 };
+        },
+    });
+    const removeFriendMutation = createMutation(`${location.href}/remove-friend`, undefined, {
+        onSuccess: () => {
+            userRelationship = "none";
+            user = { ...user, friendsCount: user.friendsCount - 1 };
+        },
+    });
+
+    const handleAddFriend = () => {
+        $addFriendMutation.mutate();
+    };
+
+    const handleRemoveFriend = () => {
+        $removeFriendMutation.mutate();
+    };
 </script>
 
 <div class="shadow-md mb-4">
@@ -29,6 +53,16 @@
                 >
             </div>
         </div>
+        {#if userRelationship !== "self"}
+            <button
+                class="button mt-6 w-full {userRelationship === "friend" ? "secondary" : "primary"}"
+                onclick={userRelationship === "friend"
+                    ? handleRemoveFriend
+                    : handleAddFriend}
+            >
+                {userRelationship === "friend" ? "Se désabonner" : "S'abonner"}
+            </button>
+        {/if}
         <div
             class="mt-8 flex *:flex-1 *:justify-center *:text-2xl *:flex *:pb-4"
         >
@@ -58,6 +92,15 @@
                     : "text-disabled"}
             >
                 <span class="icon-[tabler--hanger]"></span>
+            </a>
+            <a
+                href="/profile/ai"
+                aria-label="Intelligence Artificielle"
+                class={location.pathname === "/profile/ai"
+                    ? "border-b-2 border-b-label"
+                    : "text-disabled"}
+            >
+                <span class="icon-[tabler--sparkles]"></span>
             </a>
         </div>
     </div>

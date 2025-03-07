@@ -64,4 +64,17 @@ class UserRepository extends ServiceEntityRepository
             throw $e;
         }
     }
+
+    public function delete(User $user): void
+    {
+        $this->find($user->getId());
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function save(User $user): void
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
 }

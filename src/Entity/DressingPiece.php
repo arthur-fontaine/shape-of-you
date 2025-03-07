@@ -25,7 +25,7 @@ class DressingPiece
     private ?string $comment = null;
 
     #[ORM\ManyToOne(inversedBy: 'dressingPieces')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Clothing $clothing = null;
 
     public function getId(): ?int

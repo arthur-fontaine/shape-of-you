@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Brand;
 use App\Entity\Interaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
+
 
 /**
  * @extends ServiceEntityRepository<Interaction>
@@ -40,4 +43,29 @@ class InteractionRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findPageViewByBrand(Brand $brand): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT
+                COUNT(i.id)         AS interactionNb
+            FROM interaction i
+            WHERE i.interaction->>\'brand\' = :brand
+            AND i.interaction->>\'type\' = \'pageView\'
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('brand', $brand->getName());
+        $result = $stmt->executeQuery();
+        return array_map(function ($row) {
+            return $row;
+        }, $result->fetchAllAssociative());
+    }
+
+    public function save(Interaction $interaction): void
+    {
+        $this->getEntityManager()->persist($interaction);
+        $this->getEntityManager()->flush();
+    }
 }

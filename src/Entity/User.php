@@ -110,6 +110,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Brand $brand = null;
+
     #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
     private ?UserVector $vector = null;
 
@@ -591,8 +594,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'name' => $this->getName(),
             'email' => $this->getEmail(),
             'friendsCount' => $this->getFriends()->count(),
-            'posts' => $this->getPosts()->toArray(),
+            'posts' => array_map(fn($post) => $post->jsonSerialize($this), $this->getPosts()->toArray()),
             'clothingLists' => $this->getClothingLists()->toArray(),
         ];
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
     }
 }

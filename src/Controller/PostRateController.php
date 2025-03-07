@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class PostRateController extends AbstractController
 {
@@ -21,6 +22,7 @@ final class PostRateController extends AbstractController
         $this->postRateRepository = $postRateRepository;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/posts/{id}/rate', name: 'api_rate_post', methods: ['PATCH'], requirements: ['_format' => 'json'])]
     public function ratePost(Post $id, Request $request): Response
     {

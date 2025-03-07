@@ -68,7 +68,7 @@ class ClothingRepository extends ServiceEntityRepository
                         ->setParameter($descParam, '%' . strtolower($word) . '%');
                 }
                 
-                $qb->andWhere($qb->expr()->orX(...$conditions));
+                $qb->andWhere($qb->expr()->andX(...$conditions));
             }
             
             // Apply color filter
@@ -127,6 +127,18 @@ class ClothingRepository extends ServiceEntityRepository
             error_log('Error in searchByText: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function delete(Clothing $clothing): void
+    {
+        $this->getEntityManager()->remove($clothing);
+        $this->getEntityManager()->flush();
+    }
+
+    public function save(Clothing $clothing): void
+    {
+        $this->getEntityManager()->persist($clothing);
+        $this->getEntityManager()->flush();
     }
 
     public function findMaxPrice(): int

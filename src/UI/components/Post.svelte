@@ -4,8 +4,11 @@
   import { createMutation } from "../utils/query";
   import { debounce } from "lodash-es";
 
-  const { post, hideRateSlider }: { post: IPost; hideRateSlider?: boolean } =
-    $props();
+  const { post, hideRateSlider, currentUserId }: { 
+    post: IPost; 
+    hideRateSlider?: boolean;
+    currentUserId?: number; 
+  } = $props();
 
   let hasRated = $state<boolean>(
     post.myRate !== undefined && post.myRate !== null,
@@ -17,8 +20,20 @@
     {
       rate: number;
     }
-  >(`/posts/${post.postId}/rate`, "PATCH");
+  >(`/posts/${post.id}/rate`, "PATCH");
   const rateMutate = debounce($rateMutation.mutate, 500);
+
+  // Create delete mutation
+  const deleteMutation = createMutation<void, void>(`/posts/${post.id}/delete`, "POST");
+  
+  // Handle post deletion
+  function deletePost() {
+    if (confirm("Are you sure you want to delete this post?")) {
+      $deleteMutation.mutate();
+      // You might want to add logic to remove this post from the UI immediately
+      // or navigate away depending on your application structure
+    }
+  }
 
   $effect(() => {
     if (hasRated) {
@@ -27,18 +42,34 @@
   });
 </script>
 
-<div class="mb-3">
-  <header class="px-2 mb-4">
-    <h3 class="text-sm font-semibold">{post.authorName}</h3>
-    <p class="text-sm text-gray-500">{post.text}</p>
+<div class="mb-3 relative">
+  <header class="px-2 mb-4 flex justify-between items-start">
+    <div>
+      <h3 class="text-sm font-semibold">{post.authorName}</h3>
+      <p class="text-sm text-gray-500">{post.text}</p>
+    </div>
+    
+    {#if post.isMyPost}
+      <button 
+        on:click={deletePost}
+        class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-gray-100 transition"
+        aria-label="Delete post"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+      </button>
+    {/if}
   </header>
-  <img
-    src={post.mediaUrls[0] !== undefined && post.mediaUrls[0].startsWith("http")
+  
+  <img src={
+    post.mediaUrls[0]?.startsWith("http")
       ? post.mediaUrls[0]
-      : `/data/${post.mediaUrls[0]}`}
-    alt="Post"
-    class="w-full h-auto rounded-card"
-  />
+      : `/data/${post.mediaUrls[0]}`
+  } alt="Post" class="w-full h-auto rounded-card" />
+  
   {#if !hideRateSlider}
     <div class="p-4 flex items-center justify-between">
       <CustomSlider

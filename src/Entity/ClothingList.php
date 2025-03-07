@@ -22,7 +22,7 @@ class ClothingList implements \JsonSerializable
     /**
      * @var Collection<int, Clothing>
      */
-    #[ORM\ManyToMany(targetEntity: Clothing::class, inversedBy: 'clothingLists')]
+    #[ORM\ManyToMany(targetEntity: Clothing::class, inversedBy: 'clothingLists', orphanRemoval: true)]
     private Collection $clothings;
 
     #[ORM\Column(length: 50)]

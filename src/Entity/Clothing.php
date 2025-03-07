@@ -39,7 +39,7 @@ class Clothing implements JsonSerializable
     /**
      * @var Collection<int, ClothingLink>
      */
-    #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', cascade: ['persist'], orphanRemoval: true)]
     private Collection $links;
 
     /**
@@ -74,6 +74,9 @@ class Clothing implements JsonSerializable
 
     #[ORM\Column(length: 1000, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'clothing')]
+    private ?Brand $brand = null;
 
     public function __construct()
     {
@@ -339,6 +342,18 @@ class Clothing implements JsonSerializable
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): static
+    {
+        $this->brand = $brand;
 
         return $this;
     }
