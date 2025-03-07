@@ -415,7 +415,7 @@
     <ul class="flex flex-col gap-3">
       {#each results as item}
         <li>
-          <a href={`/clothing/${item.id}`}>
+          <a href={`/${'email' in item ? 'users' : 'clothing'}/${item.id}`}>
             <SearchResultSkeleton>
               <img slot="image" src={item.imageUrl} alt={item.name} />
               <span slot="name">{item.name}</span>
