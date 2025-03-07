@@ -39,7 +39,7 @@ class Clothing implements JsonSerializable
     /**
      * @var Collection<int, ClothingLink>
      */
-    #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ClothingLink::class, mappedBy: 'clothing', cascade: ['persist'], orphanRemoval: true)]
     private Collection $links;
 
     /**

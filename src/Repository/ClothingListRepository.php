@@ -49,9 +49,10 @@ class ClothingListRepository extends ServiceEntityRepository
         if ($bookmark->getCreator()->getId() !== $userId) {
             return;
         }
-        $clothing = $bookmark->getClothings()->filter(fn($clothing) => $clothing->getId() === $clothingId)->first();
-        $bookmark->removeClothing($clothing);
-        $this->getEntityManager()->flush();
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'DELETE FROM clothing_list_clothing WHERE clothing_list_id = :bookmarkId AND clothing_id = :clothingId';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery(['bookmarkId' => $bookmarkId, 'clothingId' => $clothingId]);
     }
 
     public function create(User $user, string $name, bool $isBookmark): ClothingList
